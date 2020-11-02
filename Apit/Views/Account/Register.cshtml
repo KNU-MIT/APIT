@@ -1,73 +1,76 @@
 ﻿@model RegisterViewModel
 
 @{
-    Layout = "_Layout";
+    ViewData["Title"] = "Странічка рєгістраціі";
 }
 
-<div>
-    <h1>Register</h1>
-    <form asp-area="" asp-controller="account" asp-action="register"
-          method="post" asp-route-returnUrl="@Model.ReturnUrl">
-        <div asp-validation-summary="All">
-            <div>
-                <label asp-for="FirstName" autofocus></label>
-                <input asp-for="FirstName" type="text" value="Тест"/>
-                <span asp-validation-for="FirstName"></span>
-            </div>
-            <div>
-                <label asp-for="LastName"></label>
-                <input asp-for="LastName" type="text" value="Тестович"/>
-                <span asp-validation-for="LastName"></span>
-            </div>
-            <div>
-                <label asp-for="MiddleName"></label>
-                <input asp-for="MiddleName" type="text" value="Тестенко"/>
-                <span asp-validation-for="MiddleName"></span>
-            </div>
+<div class="signin signup">
+    <div class="container">
 
-            <div>
-                <label asp-for="WorkingFor"></label>
-                <input asp-for="WorkingFor" type="text" value="КНУ"/>
-                <span asp-validation-for="WorkingFor"></span>
-            </div>
-            <div>
-                <label asp-for="ScienceDegree"></label>
-                <select asp-for="ScienceDegree" asp-items="Html.GetEnumSelectList<ScienceDegree>()"></select>
-                <input asp-for="AltScienceDegree" type="text">
-                <span asp-validation-for="ScienceDegree"></span>
-            </div>
-            <div>
-                <label asp-for="AcademicTitle"></label>
-                <select asp-for="AcademicTitle" asp-items="Html.GetEnumSelectList<AcademicTitle>()"></select>
-                <input asp-for="AltAcademicTitle" type="text">
-                <span asp-validation-for="AcademicTitle"></span>
-            </div>
-            <div>
-                <label asp-for="ParticipationForm"></label>
-                <select asp-for="ParticipationForm" asp-items="Html.GetEnumSelectList<ParticipationForm>()"></select>
-                <span asp-validation-for="ParticipationForm"></span>
-            </div>
+        <div class="signin__inner">
 
-            <div>
-                <label asp-for="Email"></label>
-                <input asp-for="Email" type="email"/>
-                <span asp-validation-for="Email"></span>
-            </div>
+            <h2 class="signin__title title">Зареєструватися</h2>
 
-            <div>
-                <label asp-for="Password"></label>
-                <input asp-for="Password" type="password"/>
-                <span asp-validation-for="Password"></span>
-            </div>
-            <div>
-                <label asp-for="PasswordConfirm"></label>
-                <input asp-for="PasswordConfirm" type="password"/>
-                <span asp-validation-for="PasswordConfirm"></span>
-            </div>
+            <div asp-validation-summary="All"></div>
 
-            <div>
-                <input type="submit" value="Register">
-            </div>
+            <form class="register__form" id="signup" method="post"
+                  asp-controller="account" asp-action="register"
+                  asp-route-returnUrl="@Model.ReturnUrl">
+
+                <div class="form__blck form__blck--trpl">
+                    <input asp-for="MiddleName" type="text" placeholder="Прізвище">
+                    <input asp-for="FirstName" type="text" placeholder="Ім'я">
+                    <input asp-for="LastName" type="text" placeholder="По-батькові">
+                </div>
+
+                <div class="form__blck form__blck--select form__blck--dbl">
+                    <input asp-for="WorkingFor" type="text" placeholder="Тема праці">
+                    <div class="signup__select">
+                        <select type="select" asp-for="ScienceDegree" asp-items="Html.GetEnumSelectList<ScienceDegree>()">
+                            <option disabled selected="selected">Науковий ступінь</option>
+                            <option class="signup__difference" value="difference">Інше...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form__blck form__blck--select form__blck--dbl">
+                    <div class="signup__select">
+                        <select type="select" asp-for="AcademicTitle" asp-items="Html.GetEnumSelectList<AcademicTitle>()">
+                            <option value="" disabled selected>Вчене звання</option>
+                            <option class="signup__difference" value="difference">Інше...</option>
+                        </select>
+                    </div>
+
+                    <div class="signup__select">
+                        <select type="select" asp-for="ParticipationForm" asp-items="Html.GetEnumSelectList<ParticipationForm>()">
+                            <option value="" disabled selected>Форма участі</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form__blck">
+                    <input asp-for="Email" type="email" placeholder="Email">
+                </div>
+
+                <div class="form__blck form__blck--dbl">
+                    <input asp-for="Password" type="password" placeholder="Пароль">
+                    <input asp-for="PasswordConfirm" type="password" placeholder="Повторіть пароль">
+                </div>
+
+                <div class="form__buttons">
+                    <button class="signin__button" type="submit">Реєстрація</button>
+                    <a class="button signin__button" asp-action="index" asp-controller="home">
+                        На головну
+                        <picture>
+                            <source srcset="~/img/icons/atom.webp" type="image/webp">
+                            <img src="~/img/icons/atom.png" alt="">
+                        </picture>
+                    </a>
+                </div>
+
+            </form>
+
         </div>
-    </form>
+
+    </div>
 </div>

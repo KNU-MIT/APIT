@@ -1,12 +1,23 @@
 ﻿@model ArticlesListViewModel
 
-<h1>Articles list</h1>
+@{
 
-@if (Model.Collection.Count() == 0)
+}
+
+
+@if (!Model.Collection.Any())
 {
     <h2>Empty.</h2>
 }
 else
 {
-    @await Html.PartialAsync("Components/ArticlesList", Model.Collection)
+    <section class="articles">
+        <div class="container">
+            <div class="articles__inner">
+                @await Html.PartialAsync("Components/SearchPanel", Model.Collection)
+                <h2 class="articles__title title">Статті</h2>
+                @await Html.PartialAsync("Components/ArticlesList", Model.Collection)
+            </div>
+        </div>
+    </section>
 }

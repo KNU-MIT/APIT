@@ -75,7 +75,8 @@ namespace Apit.Controllers
         [AllowAnonymous]
         public IActionResult Archive(int page = 1)
         {
-            return View();
+            var conferences = _dataManager.Conferences.GetAll();
+            return View(conferences);
         }
 
         [Route("move-to-archive")]

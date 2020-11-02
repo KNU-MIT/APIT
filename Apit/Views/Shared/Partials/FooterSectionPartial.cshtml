@@ -1,3 +1,64 @@
-﻿<div class="container">
-    &copy; 2020 - Apit - <a asp-area="" asp-controller="home" asp-action="privacy">Privacy</a>
-</div>
+﻿@{
+    var user = await userManager.GetUserAsync(User);
+}
+
+<!-- Section.register втавляется только по условию -->
+@if (user == null)
+{
+    <section class="register">
+        <div class="container">
+
+            <div class="register__inner">
+
+                <div class="register__text">
+                    <h2 class="register__title title">Приєднуйтеся до нас</h2>
+
+                    <h3 class="register__subtitle">Будьте у центрі подій</h3>
+
+                    <h4 class="register__heading">Реєструйтеся прямо зараз!</h4>
+                </div>
+
+                <form action="#" class="register__form" name="signin" id="signin" method="post">
+
+                    <div class="form__blck">
+                        <img src="img/icons/mail-r.png" alt="">
+                        <input type="email" placeholder="Email">
+                    </div>
+
+                    <div class="form__blck">
+                        <img src="img/icons/lock.svg" alt="">
+                        <input type="password" placeholder="Пароль">
+                    </div>
+
+                    <div class="form__buttons">
+                        <a class="button" href="signup.html">Реєстрація<img src="img/icons/atom.png" alt=""></a>
+                        <button type="submit">Увійти у кабінет</button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div> <!-- /container -->
+    </section>
+    <!-- /register -->
+}
+
+<footer class="footer">
+    <div class="container">
+
+        <div class="footer__inner">
+            <div class="footer__conference">
+                <img class="footer__logo" src="img/fit.png">
+                <div class="footer__text">
+                    Міжнародна науково-практична конференція
+                </div>
+            </div>
+
+            <div class="footer__rights">
+                © 2020 - Apit2020 - <a asp-area="" asp-controller="home" asp-action="privacy">Privacy</a>
+            </div>
+        </div>
+
+    </div> <!-- /container -->
+</footer> <!-- /footer -->

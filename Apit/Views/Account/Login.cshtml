@@ -4,29 +4,44 @@
     Layout = "_Layout";
 }
 
-<div>
-    <h1>Log In</h1>
-    <form asp-area="" asp-controller="account" asp-action="login"
-          method="post" asp-route-returnUrl="@Model.ReturnUrl">
-        <div asp-validation-summary="All">
-            <div>
-                <label asp-for="Email" autofocus></label>
-                <input asp-for="Email" type="text"/>
-                <span asp-validation-for="Email"></span>
-            </div>
-            <div>
-                <label asp-for="Password"></label>
-                <input asp-for="Password" type="password"/>
-                <span asp-validation-for="Password"></span>
-            </div>
-            <div>
-                <label asp-for="RememberMe"></label>
-                <input asp-for="RememberMe" type="checkbox"/>
-                <span asp-validation-for="RememberMe"></span>
-            </div>
-            <div>
-                <input type="submit" value="Sign In">
-            </div>
+<div class="signin">
+    <div class="container">
+        <div class="signin__inner">
+
+            <h2 class="signin__title title">Увійти у свій аккаунт</h2>
+
+            <div asp-validation-summary="All"></div>
+
+            <form class="register__form" id="signin" method="post"
+                  asp-controller="account" asp-action="login"
+                  asp-route-returnUrl="@Model.ReturnUrl">
+
+                <div class="form__blck">
+                    <picture>
+                        <source srcset="img/icons/mail-r.webp" type="image/webp">
+                        <img src="img/icons/mail-r.png" alt="">
+                    </picture>
+                    <input asp-for="Email" class="signin__input" type="email" placeholder="Email">
+                </div>
+
+                <div class="form__blck">
+                    <picture>
+                        <source srcset="img/icons/lock.svg" type="image/webp"><img src="img/icons/lock.svg" alt="">
+                    </picture>
+                    <input class="signin__input" asp-for="Password" type="password" placeholder="Пароль">
+                </div>
+
+                <div class="form__buttons">
+                    <button class="signin__button" type="submit">Увійти у кабінет</button>
+                    <a class="button signin__button" asp-action="index" asp-controller="home">
+                        На головну
+                        <picture>
+                            <source srcset="img/icons/atom.webp" type="image/webp"><img src="img/icons/atom.png">
+                        </picture>
+                    </a>
+                </div>
+            </form>
+
         </div>
-    </form>
+    </div>
 </div>

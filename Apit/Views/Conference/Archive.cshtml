@@ -10,14 +10,26 @@ else
 {
     @foreach (var conference in Model)
     {
-        <article>
-            <h3>@conference.Title</h3>
-            <p>
-                <span>Topic:</span>@conference.ShortDescription
-            </p>
-            <p>@conference.DateCreated.ToString(CultureInfo.CurrentCulture)</p>
-            @Html.ActionLink("Read more", "index", "conference", conference.UniqueAddress, null)
-        </article>
-        <br/>
+        <div class="archive__item">
+
+            <div class="archive__img">
+                <img src="~/img/meeting-1.jpg" alt="" class="archive__pht">
+                <div class="archive__date"><!-- Начало - конец добавить даты!!! --></div>
+            </div>
+
+            <div class="archive__description">
+
+                <h3 class="archive__heading">
+                    @conference.Title
+                </h3>
+
+                <article class="archive__text">
+                    @conference.DateCreated.ToString(CultureInfo.CurrentCulture)
+                    @Html.ActionLink("Read more", "index", "conference", conference.UniqueAddress, null)
+                </article>
+
+            </div>
+
+        </div>
     }
 }

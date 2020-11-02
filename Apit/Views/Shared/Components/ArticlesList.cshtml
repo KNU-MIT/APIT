@@ -2,13 +2,37 @@
 
 @foreach (var article in Model)
 {
-    <article>
-        <h3>@article.Title</h3>
-        <p>
-            <span>Topic:</span>@article.Topic?.Name
-        </p>
-        <p>@article.DateCreated.ToString(CultureInfo.CurrentCulture)</p>
-        <a asp-action="index" asp-controller="articles" asp-route-id="@article.UniqueAddress">Read mode</a>
-    </article>
-    <br/>
+    <div class="articles__item">
+        <h3 class="articles__heading">
+            @article.Title
+        </h3>
+
+        <div class="articles__keywords">
+            @foreach (var keyWord in article.KeyWords)
+            {
+                <a href="#@keyWord">@keyWord</a>
+            }
+        </div>
+
+        <div class="articles__author">
+            @* <!-- Сделать автора статьи--> *@
+        </div>
+
+        <div class="articles__description">
+            @article.Topic?.Name
+        </div>
+
+        <div class="articles__buttons">
+            <a class="articles__button" asp-action="document"
+               asp-controller="resources" asp-route-id="@article.DocFileAddress">
+                Завантажити
+            </a>
+            <a class="articles__button button" asp-action="index"
+               asp-controller="articles" asp-route-id="@article.UniqueAddress">
+                Переглянути
+            </a>
+        </div>
+
+        <div class="articles__date">@article.DateCreated.ToString("dd/MM/yyyy")</div>
+    </div>
 }
