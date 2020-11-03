@@ -9,8 +9,8 @@ namespace BusinessLayer.Interfaces
         ICollectedData<Guid, ArticleViewModel, Article>,
         IAddressedData<ArticleViewModel>
     {
-        IEnumerable<ArticleViewModel> GetByCodeWord(string word);
-        IEnumerable<ArticleViewModel> GetByCreator(string userId);
+        IEnumerable<ArticleViewModel> GetByKeyWord(string word);
+        IEnumerable<ArticleViewModel> GetByAuthor(string userId);
         IEnumerable<Article> GetByConference(Conference conf);
     }
 }

@@ -3,7 +3,7 @@
 
         <div class="header__inner">
             <!-- reg -->
-            <partial name="_LoginPartial"/>
+            @await Html.PartialAsync("Partials/LoginPartial")
             <!-- /reg -->
 
             <div class="header__burger">
@@ -15,7 +15,7 @@
                 <ul class="nav__inner">
                     <!-- 1 -->
                     <li class="nav__link">
-                        <a asp-controller="home" asp-action="index">Apit 2019</a>
+                        <a asp-controller="home" asp-action="index">Apit 2020</a>
                     </li> <!-- 3 ready -->
                     <!-- 2 -->
                     <li class="nav__link">
@@ -29,7 +29,7 @@
                                 <a href="secretariat.html">Секретаріат</a>
                             </li>
                             <li class="subnav__link">
-                                <a href="archive.html">Архів минулих конференцій</a>
+                                <a asp-action="archive" asp-controller="conference">Архів минулих конференцій</a>
                             </li>
                         </ul>
                     </li>

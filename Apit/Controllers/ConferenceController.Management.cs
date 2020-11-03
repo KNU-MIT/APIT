@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Apit.Service;
 using BusinessLayer.Models;
-using DatabaseLayer.Entities;
+using DatabaseLayer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -12,6 +11,7 @@ namespace Apit.Controllers
 {
     public partial class ConferenceController
     {
+        [Authorize(Roles = RoleNames.SEMPAI)]
         public IActionResult Create()
         {
             var dateNow = DateTime.Now;
@@ -25,8 +25,8 @@ namespace Apit.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(NewConferenceViewModel model)
+        [HttpPost, Authorize(Roles = RoleNames.SEMPAI)]
+        public IActionResult Create(NewConferenceViewModel model)
         {
             // if (!ModelState.IsValid) return View(model);
 
@@ -56,7 +56,7 @@ namespace Apit.Controllers
                 hasIncorrectData = true;
             }
 
-
+            // nut-nullable filed: ShortDescription
             if (string.IsNullOrWhiteSpace(model.ShortDescription))
             {
                 ModelState.AddModelError(nameof(NewConferenceViewModel.ShortDescription),
@@ -64,6 +64,7 @@ namespace Apit.Controllers
                 hasIncorrectData = true;
             }
 
+            // nut-nullable filed: Description
             if (string.IsNullOrWhiteSpace(model.Description))
             {
                 ModelState.AddModelError(nameof(NewConferenceViewModel.Description),
@@ -71,6 +72,7 @@ namespace Apit.Controllers
                 hasIncorrectData = true;
             }
 
+            // apply topics
             if (model.Topics.All(item => item == null))
             {
                 ModelState.AddModelError(nameof(NewConferenceViewModel.Topics),
@@ -78,49 +80,7 @@ namespace Apit.Controllers
                 hasIncorrectData = true;
             }
 
-            var user = await _userManager.GetUserAsync(User);
-            var adminKeys = model.AdminKeys.Distinct();
-            model.Admins = new List<ConferenceAdmin>();
-            model.Admins.Add(new ConferenceAdmin
-            {
-                Id = Guid.NewGuid(),
-                UserId = user.Id
-            });
-
-            foreach (var adminKey in adminKeys)
-            {
-                if (string.IsNullOrWhiteSpace(adminKey)) continue;
-                if (adminKey == user.ProfileAddress)
-                {
-                    ModelState.AddModelError(nameof(NewConferenceViewModel.AdminKeys),
-                        "ви автоматично матимете повний доступ");
-                    continue;
-                }
-
-                var admin = _dataManager.Users.GetByUniqueAddress(adminKey);
-                if (admin == null)
-                {
-                    ModelState.AddModelError(nameof(NewConferenceViewModel.AdminKeys),
-                        $"користувача {adminKey} не існує");
-                    hasIncorrectData = true;
-                }
-                else
-                {
-                    model.Admins.Add(new ConferenceAdmin
-                    {
-                        Id = Guid.NewGuid(),
-                        UserId = admin.Id
-                    });
-                }
-            }
-
-            if (model.Admins.All(item => item == null))
-            {
-                ModelState.AddModelError(nameof(NewConferenceViewModel.AdminKeys),
-                    "задайте як мінімум одного адманістратора");
-                hasIncorrectData = true;
-            }
-
+            // disable past dates for DateStart
             if (model.DateStart < DateTime.Today)
             {
                 ModelState.AddModelError(nameof(NewConferenceViewModel.DateStart),
@@ -128,6 +88,7 @@ namespace Apit.Controllers
                 hasIncorrectData = true;
             }
 
+            // disable past dates for DateFinish
             if (model.DateFinish < DateTime.Today)
             {
                 ModelState.AddModelError(nameof(NewConferenceViewModel.DateFinish),
@@ -135,6 +96,7 @@ namespace Apit.Controllers
                 hasIncorrectData = true;
             }
 
+            // end date is always later than start date
             if (model.DateStart > model.DateFinish)
             {
                 ModelState.AddModelError(nameof(NewConferenceViewModel.DateFinish),
@@ -152,12 +114,13 @@ namespace Apit.Controllers
             return RedirectToAction("index", "conference");
         }
 
+        [Authorize(Roles = RoleNames.SEMPAI)]
         public IActionResult Edit()
         {
             return View();
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = RoleNames.SEMPAI)]
         public IActionResult Delete()
         {
             return RedirectToAction("index", "conference");

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DatabaseLayer.Migrations
 {
-    public partial class Development_4 : Migration
+    public partial class Development_5s : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -182,69 +182,13 @@ namespace DatabaseLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Articles",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    UniqueAddress = table.Column<string>(nullable: false),
-                    TopicId = table.Column<Guid>(nullable: false),
-                    CreatorId = table.Column<string>(nullable: false),
-                    Title = table.Column<string>(nullable: false),
-                    Status = table.Column<short>(nullable: false),
-                    KeyWords = table.Column<string>(nullable: false),
-                    HtmlFilePath = table.Column<string>(nullable: false),
-                    DocxFilePath = table.Column<string>(nullable: false),
-                    ConferenceId = table.Column<Guid>(nullable: true),
-                    DateCreated = table.Column<DateTime>(nullable: false),
-                    DateLastModified = table.Column<DateTime>(nullable: false),
-                    UserId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Articles", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Articles_Conferences_ConferenceId",
-                        column: x => x.ConferenceId,
-                        principalTable: "Conferences",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Articles_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ConfAdmins",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<string>(nullable: true),
-                    ConferenceId = table.Column<Guid>(nullable: true),
-                    CanAddAdmins = table.Column<bool>(nullable: false),
-                    CanEditContent = table.Column<bool>(nullable: false),
-                    CanSendMailing = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ConfAdmins", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ConfAdmins_Conferences_ConferenceId",
-                        column: x => x.ConferenceId,
-                        principalTable: "Conferences",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ConfImages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    ImagePath = table.Column<string>(nullable: true),
-                    ConferenceId = table.Column<Guid>(nullable: true)
+                    ImagePath = table.Column<string>(nullable: false),
+                    AltText = table.Column<string>(nullable: true),
+                    ConferenceId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -254,7 +198,7 @@ namespace DatabaseLayer.Migrations
                         column: x => x.ConferenceId,
                         principalTable: "Conferences",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -262,8 +206,9 @@ namespace DatabaseLayer.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<string>(nullable: true),
-                    ConferenceId = table.Column<Guid>(nullable: true)
+                    UserId = table.Column<string>(nullable: false),
+                    Subscribed = table.Column<bool>(nullable: false),
+                    ConferenceId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -273,7 +218,7 @@ namespace DatabaseLayer.Migrations
                         column: x => x.ConferenceId,
                         principalTable: "Conferences",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -295,15 +240,74 @@ namespace DatabaseLayer.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "c664fe35-a376-4c80-b8b5-adac7e40084d", "9569b820-ba19-42f3-9712-eda796645711", "superman", "SUPERMAN" });
+            migrationBuilder.CreateTable(
+                name: "Articles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    UniqueAddress = table.Column<string>(nullable: false),
+                    TopicId = table.Column<Guid>(nullable: false),
+                    Title = table.Column<string>(nullable: false),
+                    Status = table.Column<short>(nullable: false),
+                    KeyWords = table.Column<string>(nullable: true),
+                    HtmlFilePath = table.Column<string>(nullable: false),
+                    DocxFilePath = table.Column<string>(nullable: false),
+                    ConferenceId = table.Column<Guid>(nullable: true),
+                    DateCreated = table.Column<DateTime>(nullable: false),
+                    DateLastModified = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Articles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Articles_Conferences_ConferenceId",
+                        column: x => x.ConferenceId,
+                        principalTable: "Conferences",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Articles_Topics_TopicId",
+                        column: x => x.TopicId,
+                        principalTable: "Topics",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserOwnArticlesLinking",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    ArticleId = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false),
+                    IsCreator = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserOwnArticlesLinking", x => new { x.UserId, x.ArticleId });
+                    table.ForeignKey(
+                        name: "FK_UserOwnArticlesLinking_Articles_ArticleId",
+                        column: x => x.ArticleId,
+                        principalTable: "Articles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserOwnArticlesLinking_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "cf6379fe-a7d6-4e98-82bd-6c55b03a93b8", "95c6b5b4-0646-421b-a9b2-8063bb0ed877", "organizer", "ORGANIZER" });
+                values: new object[] { "d415b6db-4d3e-4b85-affa-76fec676554f", "7047d359-763f-4474-8a88-1c8c5438be77", "admin", "ADMIN" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "680c4561-2fe7-4338-8c32-71db945d7016", "786984f1-7c77-4436-861c-923cfeb08c73", "organizer", "ORGANIZER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Articles_ConferenceId",
@@ -311,9 +315,9 @@ namespace DatabaseLayer.Migrations
                 column: "ConferenceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Articles_UserId",
+                name: "IX_Articles_TopicId",
                 table: "Articles",
-                column: "UserId");
+                column: "TopicId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -355,11 +359,6 @@ namespace DatabaseLayer.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ConfAdmins_ConferenceId",
-                table: "ConfAdmins",
-                column: "ConferenceId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ConfImages_ConferenceId",
                 table: "ConfImages",
                 column: "ConferenceId");
@@ -373,13 +372,15 @@ namespace DatabaseLayer.Migrations
                 name: "IX_Topics_ConferenceId",
                 table: "Topics",
                 column: "ConferenceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserOwnArticlesLinking_ArticleId",
+                table: "UserOwnArticlesLinking",
+                column: "ArticleId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Articles");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -396,22 +397,25 @@ namespace DatabaseLayer.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ConfAdmins");
-
-            migrationBuilder.DropTable(
                 name: "ConfImages");
 
             migrationBuilder.DropTable(
                 name: "ConfParticipants");
 
             migrationBuilder.DropTable(
-                name: "Topics");
+                name: "UserOwnArticlesLinking");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Articles");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Topics");
 
             migrationBuilder.DropTable(
                 name: "Conferences");

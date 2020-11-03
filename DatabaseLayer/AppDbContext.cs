@@ -23,14 +23,23 @@ namespace DatabaseLayer
         public DbSet<Conference> Conferences { get; set; }
 
         public DbSet<ConferenceParticipant> ConfParticipants { get; set; }
-        public DbSet<ConferenceAdmin> ConfAdmins { get; set; }
-
         public DbSet<ConferenceImage> ConfImages { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            // Define uncertain relationships and linking tables
+
+            builder.Entity<UserOwnArticlesLinking>()
+                .HasKey(x => new {x.UserId, x.ArticleId});
+
+            builder.Entity<UserOwnArticlesLinking>()
+                .HasOne(a => a.Article)
+                .WithMany(a => a.Authors)
+                .HasForeignKey(a => a.ArticleId);
+
 
             builder.Entity<IdentityRole>().HasData(
                 new IdentityRole
@@ -59,14 +68,14 @@ namespace DatabaseLayer
                 EmailConfirmed = true,
                 PasswordHash = new PasswordHasher<User>()
                     .HashPassword(null, "admin"),
-
+    
                 ScienceDegree = ScienceDegree.First,
                 AcademicTitle = AcademicTitle.BestOfTheBest,
                 ParticipationForm = ParticipationForm.Admin,
-
+    
                 ProfileAddress = "admin-the-best"
             });
-
+    
             builder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
             {
                 RoleId = roleId,
@@ -75,25 +84,12 @@ namespace DatabaseLayer
             */
         }
 
-        public static void ClearDatabase(DbContext context)
+        public void ClearDatabase()
         {
-            var objectContext = ((IObjectContextAdapter) context).ObjectContext;
-            var entities = objectContext.MetadataWorkspace
-                .GetEntityContainer(objectContext.DefaultContainerName, DataSpace.CSpace).BaseEntitySets;
-            var method = objectContext.GetType().GetMethods().First(x => x.Name == "CreateObjectSet");
-            var objectSets = entities.Select(x =>
-                    method.MakeGenericMethod(Type.GetType(x.ElementType.FullName)))
-                .Select(x => x.Invoke(objectContext, null));
-            var tableNames = objectSets.Select(objectSet =>
-                (objectSet.GetType().GetProperty("EntitySet")
-                    .GetValue(objectSet, null) as EntitySet).Name).ToList();
-
-            foreach (var tableName in tableNames)
-            {
-                context.Database.ExecuteSqlCommand(string.Format("DELETE FROM {0}", tableName));
-            }
-
-            context.SaveChanges();
+            Articles.RemoveRange(Articles);
+            Users.RemoveRange(Users);
+            Topics.RemoveRange(Topics);
+            SaveChanges();
         }
     }
 }

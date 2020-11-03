@@ -11,17 +11,14 @@ namespace BusinessLayer.Repositories
 {
     public partial class ConferenceRepository
     {
-        public IEnumerable<User> GetConfParticipants(Conference conference) =>
-            _ctx.ConfParticipants.Where(a => a.Conference == conference).Select(a => _users.GetById(a.UserId));
-
-        public IEnumerable<User> GetConfAdmins(Conference conference) =>
-            _ctx.ConfAdmins.Where(a => a.Conference == conference).Select(a => _users.GetById(a.UserId));
+        public IEnumerable<ConferenceParticipant> GetConfParticipants(Conference conference) =>
+            _ctx.ConfParticipants.Where(a => a.Conference == conference);
 
         public IEnumerable<ArticleViewModel> GetConfArticles(Conference conference) =>
             _ctx.Articles.Where(a => a.Conference == conference).Select(a => _articles.GetById(a.Id));
 
-        public IEnumerable<string> GetConfImages(Conference conference) =>
-            _ctx.ConfImages.Where(a => a.Conference == conference).Select(a => a.ImagePath);
+        public IEnumerable<ConferenceImage> GetConfImages(Conference conference) =>
+            _ctx.ConfImages.Where(a => a.Conference == conference);
 
 
         public void AddParticipant(Conference conference, User user)
@@ -43,31 +40,6 @@ namespace BusinessLayer.Repositories
             _ctx.ConfParticipants.Add(participant);
         }
 
-        public void AddAdmin(Conference conference, User user)
-        {
-            if (conference.Admins.Any(a => a.UserId == user.Id))
-            {
-                Console.WriteLine($"Conference {conference.Id} already contains admin {user.Id}");
-                return;
-            }
-
-            var participant = conference.Participants.FirstOrDefault(a => a.UserId == user.Id);
-            if (participant != null)
-            {
-                conference.Participants.Remove(new ConferenceParticipant {Id = participant.Id});
-                _ctx.ConfParticipants.Remove(participant);
-            }
-
-            var organizer = new ConferenceAdmin
-            {
-                Id = Guid.NewGuid(),
-                UserId = user.Id,
-                Conference = conference
-            };
-
-            conference.Admins.Add(organizer);
-            _ctx.ConfAdmins.Add(organizer);
-        }
 
         public void AddArticle(Conference conference, Article article)
         {
@@ -105,15 +77,6 @@ namespace BusinessLayer.Repositories
 
             conference.Participants.Remove(participant);
             _ctx.ConfParticipants.Remove(participant);
-        }
-
-        public void RemoveAdmin(Conference conference, User user)
-        {
-            var organizer = _ctx.ConfAdmins.FirstOrDefault(a => a.UserId == user.Id);
-            if (organizer == null) throw new KeyNotFoundException(nameof(user.Id));
-
-            conference.Admins.Add(organizer);
-            _ctx.ConfAdmins.Add(organizer);
         }
 
         public void RemoveArticle(Conference conference, Article article)

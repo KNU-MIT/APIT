@@ -5,8 +5,8 @@
     var user = await userManager.GetUserAsync(User);
     bool isOwnPage = user.Id == Model.Id;
 
-    var conference = dataManager.Conferences.GetCurrent();
-    var articles = dataManager.Articles.GetByCreator(Model.Id)
+    var conference = dataManager.Conferences.Current;
+    var articles = dataManager.Articles.GetByAuthor(Model.Id)
         .OrderBy(a => a.DateLastModified).Reverse().ToArray();
 }
 
@@ -32,7 +32,7 @@
     <div class="conferences-workshop">
         @if (conference != null)
         {
-            @if (conference.Admins.Contains(user))
+            @if (await userManager.IsInRoleAsync(user, RoleNames.SEMPAI))
             {
                 <a asp-action="edit" asp-controller="conference">EDIT</a>
                 <a asp-action="moveToArchive" asp-controller="conference">Move to archive</a>

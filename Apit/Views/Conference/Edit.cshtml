@@ -40,17 +40,17 @@
             <span asp-validation-for="Description"></span>
         </div>
 
-        <div>
-            <label asp-for="AdminKeys"></label>
-            @foreach (var admin in Model.Admins)
-            {
-                <div>
-                    <span>@admin.FullName</span>
-                    <input type="text" asp-for="AdminKeys" value="@admin.ProfileAddress">
-                    <span asp-validation-for="AdminKeys"></span>
-                </div>
-            }
-        </div>
+@*         <div> *@
+@*             <label asp-for="AdminKeys"></label> *@
+@*             @foreach (var admin in Model.Admins) *@
+@*             { *@
+@*                 <div> *@
+@*                     <span>@admin.FullName</span> *@
+@*                     <input type="text" asp-for="AdminKeys" value="@admin.ProfileAddress"> *@
+@*                     <span asp-validation-for="AdminKeys"></span> *@
+@*                 </div> *@
+@*             } *@
+@*         </div> *@
 
         <div>
             <label asp-for="Topics"></label>

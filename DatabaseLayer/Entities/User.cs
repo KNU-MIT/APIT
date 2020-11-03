@@ -24,7 +24,13 @@ namespace DatabaseLayer.Entities
         public string ProfilePhoto { get; set; }
         [Required] public string ProfileAddress { get; set; }
 
-        public ICollection<Article> OwnArticles { get; set; }
+        public ICollection<UserOwnArticlesLinking> OwnArticles { get; set; }
+
+
+        public User()
+        {
+            OwnArticles = new HashSet<UserOwnArticlesLinking>();
+        }
 
 
         [NotMapped] public string FullName => $"{LastName} {FirstName} {MiddleName}";

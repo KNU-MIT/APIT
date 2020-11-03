@@ -1,7 +1,8 @@
 ﻿@model LoginViewModel
 
 @{
-    Layout = "_Layout";
+    ViewData["Title"] = "Странічка логинизацый";
+    ViewData["DisableFooterLoginForm"] = true;
 }
 
 <div class="signin">
@@ -36,7 +37,8 @@
                     <a class="button signin__button" asp-action="index" asp-controller="home">
                         На головну
                         <picture>
-                            <source srcset="img/icons/atom.webp" type="image/webp"><img src="img/icons/atom.png">
+                            <source srcset="~/img/icons/atom.webp" type="image/webp">
+                            <img src="~/img/icons/atom.png" alt="">
                         </picture>
                     </a>
                 </div>

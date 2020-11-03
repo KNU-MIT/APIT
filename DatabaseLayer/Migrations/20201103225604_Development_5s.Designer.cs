@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatabaseLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201030232342_Development_4")]
-    partial class Development_4
+    [Migration("20201103225604_Development_5s")]
+    partial class Development_5s
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,10 +30,6 @@ namespace DatabaseLayer.Migrations
                     b.Property<Guid?>("ConferenceId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("CreatorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
@@ -49,7 +45,6 @@ namespace DatabaseLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("KeyWords")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<short>("Status")
@@ -66,14 +61,11 @@ namespace DatabaseLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ConferenceId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("TopicId");
 
                     b.ToTable("Articles");
                 });
@@ -118,44 +110,20 @@ namespace DatabaseLayer.Migrations
                     b.ToTable("Conferences");
                 });
 
-            modelBuilder.Entity("DatabaseLayer.Entities.ConferenceAdmin", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("CanAddAdmins")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("CanEditContent")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("CanSendMailing")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("ConferenceId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConferenceId");
-
-                    b.ToTable("ConfAdmins");
-                });
-
             modelBuilder.Entity("DatabaseLayer.Entities.ConferenceImage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ConferenceId")
+                    b.Property<string>("AltText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ConferenceId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ImagePath")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -171,10 +139,14 @@ namespace DatabaseLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ConferenceId")
+                    b.Property<Guid>("ConferenceId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("Subscribed")
+                        .HasColumnType("bit");
+
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -300,6 +272,27 @@ namespace DatabaseLayer.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("DatabaseLayer.Entities.UserOwnArticlesLinking", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("ArticleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsCreator")
+                        .HasColumnType("bit");
+
+                    b.HasKey("UserId", "ArticleId");
+
+                    b.HasIndex("ArticleId");
+
+                    b.ToTable("UserOwnArticlesLinking");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -329,15 +322,15 @@ namespace DatabaseLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c664fe35-a376-4c80-b8b5-adac7e40084d",
-                            ConcurrencyStamp = "9569b820-ba19-42f3-9712-eda796645711",
-                            Name = "superman",
-                            NormalizedName = "SUPERMAN"
+                            Id = "d415b6db-4d3e-4b85-affa-76fec676554f",
+                            ConcurrencyStamp = "7047d359-763f-4474-8a88-1c8c5438be77",
+                            Name = "admin",
+                            NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "cf6379fe-a7d6-4e98-82bd-6c55b03a93b8",
-                            ConcurrencyStamp = "95c6b5b4-0646-421b-a9b2-8063bb0ed877",
+                            Id = "680c4561-2fe7-4338-8c32-71db945d7016",
+                            ConcurrencyStamp = "786984f1-7c77-4436-861c-923cfeb08c73",
                             Name = "organizer",
                             NormalizedName = "ORGANIZER"
                         });
@@ -453,30 +446,29 @@ namespace DatabaseLayer.Migrations
                         .WithMany("Articles")
                         .HasForeignKey("ConferenceId");
 
-                    b.HasOne("DatabaseLayer.Entities.User", null)
-                        .WithMany("OwnArticles")
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("DatabaseLayer.Entities.ConferenceAdmin", b =>
-                {
-                    b.HasOne("DatabaseLayer.Entities.Conference", "Conference")
-                        .WithMany("Admins")
-                        .HasForeignKey("ConferenceId");
+                    b.HasOne("DatabaseLayer.Entities.Topic", "Topic")
+                        .WithMany()
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DatabaseLayer.Entities.ConferenceImage", b =>
                 {
                     b.HasOne("DatabaseLayer.Entities.Conference", "Conference")
                         .WithMany("Images")
-                        .HasForeignKey("ConferenceId");
+                        .HasForeignKey("ConferenceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DatabaseLayer.Entities.ConferenceParticipant", b =>
                 {
                     b.HasOne("DatabaseLayer.Entities.Conference", "Conference")
                         .WithMany("Participants")
-                        .HasForeignKey("ConferenceId");
+                        .HasForeignKey("ConferenceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DatabaseLayer.Entities.Topic", b =>
@@ -484,6 +476,21 @@ namespace DatabaseLayer.Migrations
                     b.HasOne("DatabaseLayer.Entities.Conference", "Conference")
                         .WithMany("Topics")
                         .HasForeignKey("ConferenceId");
+                });
+
+            modelBuilder.Entity("DatabaseLayer.Entities.UserOwnArticlesLinking", b =>
+                {
+                    b.HasOne("DatabaseLayer.Entities.Article", "Article")
+                        .WithMany("Authors")
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DatabaseLayer.Entities.User", "User")
+                        .WithMany("OwnArticles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

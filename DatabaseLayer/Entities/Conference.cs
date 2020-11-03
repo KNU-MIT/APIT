@@ -19,7 +19,6 @@ namespace DatabaseLayer.Entities
         public string Description { get; set; }
 
         public ICollection<ConferenceParticipant> Participants { get; set; }
-        public ICollection<ConferenceAdmin> Admins { get; set; }
         public ICollection<ConferenceImage> Images { get; set; }
         public ICollection<Article> Articles { get; set; }
         public ICollection<Topic> Topics { get; set; }
@@ -32,23 +31,17 @@ namespace DatabaseLayer.Entities
 
         public Conference()
         {
-            Participants = new List<ConferenceParticipant>();
-            Admins = new List<ConferenceAdmin>();
-
-            Articles = new List<Article>();
-            Images = new List<ConferenceImage>();
-
-            Topics = new List<Topic>();
+            Participants = new HashSet<ConferenceParticipant>();
+            Articles = new HashSet<Article>();
+            Images = new HashSet<ConferenceImage>();
+            Topics = new HashSet<Topic>();
         }
 
-        public Conference(IEnumerable<ConferenceAdmin> admins, IEnumerable<string> topicNames)
+        public Conference(IEnumerable<string> topicNames)
         {
-            Participants = new List<ConferenceParticipant>();
-            Articles = new List<Article>();
-            Images = new List<ConferenceImage>();
-
-            Admins = admins as ConferenceAdmin[] ?? admins.ToArray();
-            foreach (var admin in Admins) admin.Conference = this;
+            Participants = new HashSet<ConferenceParticipant>();
+            Articles = new HashSet<Article>();
+            Images = new HashSet<ConferenceImage>();
 
             Topics = topicNames.Select(topicName => new Topic
             {
@@ -70,7 +63,7 @@ namespace DatabaseLayer.Entities
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((User) obj);
+            return obj.GetType() == GetType() && Equals((Conference) obj);
         }
     }
 }

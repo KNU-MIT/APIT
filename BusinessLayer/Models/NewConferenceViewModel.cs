@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using DatabaseLayer;
-using DatabaseLayer.Entities;
 
 namespace BusinessLayer.Models
 {
     // Why don't we use the ConferenceViewModel for represent the new instance of the Conference?
+    // ANSWER: because there are a lot of unnecessary redundant fields
     public class NewConferenceViewModel
     {
         [Required(ErrorMessage = MSG.OnRequired)]
@@ -31,11 +30,6 @@ namespace BusinessLayer.Models
         [Required(ErrorMessage = "Вкажіть як мінімум одну тему")]
         [Display(Name = "Теми")]
         public string[] Topics { get; set; }
-
-        [Display(Name = "Адміністрація конференції")]
-        public string[] AdminKeys { get; set; }
-
-        public IList<ConferenceAdmin> Admins { get; set; }
 
 
         [Required(ErrorMessage = MSG.OnRequired)]

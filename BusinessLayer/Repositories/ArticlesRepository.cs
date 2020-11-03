@@ -31,7 +31,7 @@ namespace BusinessLayer.Repositories
         public ArticleViewModel GetByUniqueAddress(string address) =>
             ConvertToViewModel(_ctx.Articles.FirstOrDefault(a => a.UniqueAddress == address)).Result;
 
-        public IEnumerable<ArticleViewModel> GetByCodeWord(string word)
+        public IEnumerable<ArticleViewModel> GetByKeyWord(string word)
         {
             bool SelectorFunction(Article a)
             {
@@ -46,9 +46,8 @@ namespace BusinessLayer.Repositories
         public IEnumerable<ArticleViewModel> GetLatest(ushort count) =>
             ConvertToViewModel(_ctx.Articles.OrderByDescending(a => a.DateCreated).Take(count));
 
-        // What happens in the case when one article has many authors and vice versa?
-        public IEnumerable<ArticleViewModel> GetByCreator(string userId) =>
-            ConvertToViewModel(_ctx.Articles.Where(a => a.CreatorId == userId));
+        public IEnumerable<ArticleViewModel> GetByAuthor(string userId) =>
+            ConvertToViewModel(_ctx.Articles.Where(a => a.Authors.Any(b => b.UserId == userId)));
 
         public IEnumerable<Article> GetByConference(Conference conf) =>
             _ctx.Articles.Where(a => a.Conference == conf);
@@ -79,8 +78,10 @@ namespace BusinessLayer.Repositories
             return new ArticleViewModel
             {
                 Id = article.Id,
-                Topic = _ctx.Topics.FirstOrDefault(t => t.Id == article.TopicId),
-                Creator = _ctx.Users.FirstOrDefault(u => u.Id == article.CreatorId),
+                Topic = article.Topic,
+
+                Creator = article.Authors.FirstOrDefault(a => a.IsCreator)?.User,
+                Authors = article.Authors.Select(a => a.User),
 
                 UniqueAddress = article.UniqueAddress,
                 DocFileAddress = article.DocxFilePath,

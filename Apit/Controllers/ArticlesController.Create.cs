@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -89,11 +90,19 @@ namespace Apit.Controllers
             var dateNow = DateTime.Now;
             var user = await _userManager.GetUserAsync(User);
 
+            var authors = new List<UserOwnArticlesLinking>();
+            authors.Add(new UserOwnArticlesLinking
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                User = user
+            });
+
             var article = new Article
             {
                 Id = Guid.NewGuid(),
-                TopicId = topic.Id,
-                CreatorId = user.Id,
+                Topic = topic,
+                Authors = authors,
                 UniqueAddress = model.UniqueAddress,
 
                 Title = model.Title,
@@ -108,6 +117,12 @@ namespace Apit.Controllers
                 DateCreated = dateNow,
                 DateLastModified = dateNow
             };
+
+            foreach (var author in article.Authors)
+            {
+                author.ArticleId = article.Id;
+                author.Article = article;
+            }
 
             var currentConf = _dataManager.Conferences.GetCurrentAsDbModel();
             _dataManager.Conferences.AddArticle(currentConf, article);

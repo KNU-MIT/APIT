@@ -26,7 +26,7 @@ namespace BusinessLayer.Repositories
         public string GenerateUniqueAddress() => DataUtil.GenerateUniqueAddress(this, 8);
 
 
-        public ConferenceViewModel GetCurrent() => ConvertToViewModel(GetCurrentAsDbModel());
+        public ConferenceViewModel Current => ConvertToViewModel(GetCurrentAsDbModel());
         public Conference GetCurrentAsDbModel() => _ctx.Conferences.FirstOrDefault(a => a.IsActual);
 
 
@@ -57,7 +57,7 @@ namespace BusinessLayer.Repositories
 
             var dateNow = DateTime.Now;
 
-            var newConference = new Conference(entity.Admins, entity.Topics)
+            var newConference = new Conference(entity.Topics)
             {
                 Id = Guid.NewGuid(),
                 UniqueAddress = entity.UniqueAddress,
@@ -74,13 +74,6 @@ namespace BusinessLayer.Repositories
             };
 
             _ctx.Conferences.Add(newConference);
-
-            foreach (var admin in newConference.Admins)
-            {
-                admin.Conference = newConference;
-                _ctx.ConfAdmins.Add(admin);
-            }
-
             SaveChanges();
         }
 
@@ -111,7 +104,6 @@ namespace BusinessLayer.Repositories
                 Description = conf.Description,
 
                 Participants = GetConfParticipants(conf),
-                Admins = GetConfAdmins(conf),
                 Articles = GetConfArticles(conf),
                 Images = GetConfImages(conf),
 

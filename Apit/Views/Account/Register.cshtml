@@ -2,15 +2,15 @@
 
 @{
     ViewData["Title"] = "Странічка рєгістраціі";
+    ViewData["DisableFooterLoginForm"] = true;
 }
+
 
 <div class="signin signup">
     <div class="container">
-
         <div class="signin__inner">
 
             <h2 class="signin__title title">Зареєструватися</h2>
-
             <div asp-validation-summary="All"></div>
 
             <form class="register__form" id="signup" method="post"
@@ -40,7 +40,6 @@
                             <option class="signup__difference" value="difference">Інше...</option>
                         </select>
                     </div>
-
                     <div class="signup__select">
                         <select type="select" asp-for="ParticipationForm" asp-items="Html.GetEnumSelectList<ParticipationForm>()">
                             <option value="" disabled selected>Форма участі</option>
@@ -49,7 +48,7 @@
                 </div>
 
                 <div class="form__blck">
-                    <input asp-for="Email" type="email" placeholder="Email">
+                    <input asp-for="Email" type="email" placeholder="Поштова скринька">
                 </div>
 
                 <div class="form__blck form__blck--dbl">
@@ -67,10 +66,8 @@
                         </picture>
                     </a>
                 </div>
-
             </form>
 
         </div>
-
     </div>
 </div>

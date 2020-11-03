@@ -3,7 +3,7 @@
 }
 
 <!-- Section.register втавляется только по условию -->
-@if (user == null)
+@if (user == null && ViewData["DisableFooterLoginForm"] != null)
 {
     <section class="register">
         <div class="container">

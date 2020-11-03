@@ -59,21 +59,13 @@ namespace Apit.Controllers
                 default:
                 {
                     model.Filter = "current";
-                    model.Collection = _dataManager.Conferences.GetCurrent().Articles
+                    model.Collection = _dataManager.Conferences.Current.Articles
                         .OrderBy(a => a.DateLastModified).Reverse();
                     break;
                 }
             }
 
             return View(model);
-        }
-
-        public IActionResult Example()
-        {
-            if (!User.Identity.IsAuthenticated)
-                return RedirectToAction("login", "account");
-            
-            return View();
         }
 
 

@@ -36,10 +36,10 @@ maxlength="@config.ShortDescriptionMaxLength" placeholder="Короткий оп
                 </div>
 
 
-                <div class="form__blck form__blck--todo">
-                    <input asp-for="AdminKeys" type="text" id="adminInput" placeholder="Адміністрація конференції">
-                    <button id="adminButton" class="button conferencecreate__button">Додати</button>
-                </div>
+                @* <div class="form__blck form__blck--todo"> *@
+                @*     <input asp-for="AdminKeys" type="text" id="adminInput" placeholder="Адміністрація конференції"> *@
+                @*     <button id="adminButton" class="button conferencecreate__button">Додати</button> *@
+                @* </div> *@
 
                 <ul id="adminList" class="conferencecreate__list">
                     <li asp-for="AdminKeys" class="conferencecreate__topic">@user.FullName [@user.ProfileAddress]</li>

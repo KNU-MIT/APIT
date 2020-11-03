@@ -36,8 +36,8 @@ namespace Apit.Controllers
                 var article = _dataManager.Articles.GetByUniqueAddress(id);
                 var user = await _userManager.GetUserAsync(User);
 
-                if (user == article.Creator) _dataManager.Articles.Delete(article.Id);
-                else ModelState.AddModelError(nameof(ArticleViewModel.Creator), "доступ заблоковано");
+                if (article.IsAuthor(user)) _dataManager.Articles.Delete(article.Id);
+                else ModelState.AddModelError(nameof(ArticleViewModel.Authors), "доступ заблоковано");
 
                 return LocalRedirect(returnUrl ?? "/");
             }

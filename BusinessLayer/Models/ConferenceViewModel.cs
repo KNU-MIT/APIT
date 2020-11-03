@@ -18,17 +18,9 @@ namespace BusinessLayer.Models
         public string ShortDescription { get; set; }
         public string Description { get; set; }
 
-        public IEnumerable<User> Participants { get; set; }
-
-
-        // The admin user must have access to the whole conferences data independently of the active instance of the conference.
-        public IEnumerable<User> Admins { get; set; }
-
-        public string[] AdminKeys { get; set; }
-
+        public IEnumerable<ConferenceParticipant> Participants { get; set; }
         public IEnumerable<ArticleViewModel> Articles { get; set; }
-        public IEnumerable<string> Images { get; set; }
-
+        public IEnumerable<ConferenceImage> Images { get; set; }
         public IEnumerable<Topic> Topics { get; set; }
 
 

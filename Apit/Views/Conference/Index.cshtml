@@ -11,9 +11,9 @@
 }
 else
 {
-    if (!Model.Admins.Contains(user))
+    if (!await userManager.IsInRoleAsync(user, RoleNames.SEMPAI))
     {
-        @if (Model.Participants.Contains(user))
+        @if (Model.Participants.Any(a => a.UserId == user.Id))
         {
             <p>You arleady subscribed</p>
             <a asp-action="Unsubscribe" asp-controller="conference">Unsubscribe</a>
@@ -23,16 +23,7 @@ else
             <a asp-action="JoinNow" asp-controller="conference">Join now!</a>
         }
 
-        @ViewBag.ResultMessage
-    }
-
-    @foreach (var admin in Model.Admins)
-    {
-        <div>
-            <a asp-controller="account" asp-action="index" asp-route-x="@admin.ProfileAddress">
-                @admin.FullName
-            </a>
-        </div>
+        @ViewData["ResultMessage"]
     }
 
     <div>
