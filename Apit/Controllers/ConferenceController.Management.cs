@@ -28,7 +28,7 @@ namespace Apit.Controllers
         [HttpPost, Authorize(Roles = RoleNames.SEMPAI)]
         public IActionResult Create(NewConferenceViewModel model)
         {
-            // if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid) return View(model);
 
             // Combine all errors and return them back if this variable is set to true
             bool hasIncorrectData = false;
@@ -53,22 +53,6 @@ namespace Apit.Controllers
             {
                 ModelState.AddModelError(nameof(NewConferenceViewModel.UniqueAddress),
                     "ця адреса вже використовується, оберіть іншу");
-                hasIncorrectData = true;
-            }
-
-            // nut-nullable filed: ShortDescription
-            if (string.IsNullOrWhiteSpace(model.ShortDescription))
-            {
-                ModelState.AddModelError(nameof(NewConferenceViewModel.ShortDescription),
-                    "введіть скорочений опис");
-                hasIncorrectData = true;
-            }
-
-            // nut-nullable filed: Description
-            if (string.IsNullOrWhiteSpace(model.Description))
-            {
-                ModelState.AddModelError(nameof(NewConferenceViewModel.Description),
-                    "введіть опис");
                 hasIncorrectData = true;
             }
 

@@ -9,6 +9,9 @@ namespace BusinessLayer.Models
 
     public class ResetPasswordViewModel
     {
+        public string User { get; set; }
+        public string Token { get; set; }
+
         [Required] public string Password { get; set; }
 
         [Required]

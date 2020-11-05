@@ -48,8 +48,8 @@ namespace DatabaseLayer
                     NormalizedName = "ADMIN"
                 }, new IdentityRole
                 {
-                    Name = "organizer",
-                    NormalizedName = "ORGANIZER"
+                    Name = "manager",
+                    NormalizedName = "MANAGER"
                 }
             );
 

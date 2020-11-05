@@ -29,7 +29,7 @@ namespace BusinessLayer.Models
         [Display(Name = "Форма участі")] public ParticipationForm ParticipationForm { get; set; }
 
 
-        [Required]
+        [Required(ErrorMessage = MSG.OnRequired)]
         [Compare("Password", ErrorMessage = "Пароли не совпадают")]
         public string PasswordConfirm { get; set; }
     }

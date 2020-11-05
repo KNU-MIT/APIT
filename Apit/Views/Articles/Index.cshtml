@@ -1,9 +1,19 @@
 ﻿@model ArticleViewModel
 
 @{
-    Layout = "_Layout";
     var article = Model;
-    var isMine = userManager.GetUserId(User) == article.Creator.Id;
+    ViewData["Title"] = article.Title;
+    
+    ViewData["meta_description"] = article.ShortDescription;
+    ViewData["meta_google"] = article.ShortDescription;
+    ViewData["meta_keywords"] = string.Join(", ", article.KeyWords);
+    // ViewData["meta_robots"] = "";
+    
+    ViewData["meta_socials_title"] =article.Title;
+    ViewData["meta_socials_description"] = article.ShortDescription;
+    // ViewData["meta_socials_image"] = null;
+    
+    var isMine = userManager.GetUserId(User) == article?.Creator?.Id;
 }
 
 @if (isMine)
@@ -27,7 +37,7 @@
     @Html.Raw(article.HTMLContent)
 
     <hr>
-    @if (!string.IsNullOrWhiteSpace(@article.DocFileAddress))
+    @if (!string.IsNullOrWhiteSpace(article.DocFileAddress))
     {
         <a asp-controller="resources" asp-action="document" asp-route-id="@article.DocFileAddress">
             Download as document

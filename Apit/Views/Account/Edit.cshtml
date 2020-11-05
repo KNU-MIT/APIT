@@ -3,7 +3,7 @@
 @model EditUserViewModel
 
 @{
-    Layout = "_Layout";
+    ViewData["Title"] = "Редагування акаунту";
     var user = await userManager.GetUserAsync(User);
     var resultMessage = Model?.ResultMessage ?? "";
 

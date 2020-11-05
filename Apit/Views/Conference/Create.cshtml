@@ -2,8 +2,7 @@
 @inject ProjectConfig ProjectConfig
 
 @{
-    ViewBag.Title = "Створення нової конференції";
-    Layout = "_Layout";
+    ViewData["Title"] = "Створення нової конференції";
     var config = ProjectConfig.Content.Conference;
 
     var user = await userManager.GetUserAsync(User);
@@ -66,8 +65,8 @@ maxlength="@config.ShortDescriptionMaxLength" placeholder="Короткий оп
                     <a class="button signin__button" asp-controller="home" asp-action="index">
                         На головну
                         <picture>
-                            <source srcset="img/icons/atom.webp" type="image/webp">
-                            <img src="img/icons/atom.png" alt="">
+                            <source srcset="~/img/icons/atom.webp" type="image/webp">
+                            <img src="~/img/icons/atom.png" alt="">
                         </picture>
                     </a>
                 </div>

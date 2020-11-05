@@ -1,17 +1,29 @@
 ﻿@model User
 
 @{
-    Layout = "_Layout";
     var user = await userManager.GetUserAsync(User);
-    bool isOwnPage = user.Id == Model.Id;
+    bool isOwnPage = user?.Id == Model.Id;
+    ViewData["Title"] = "Кабінет користувача - " + user?.FullName;
 
     var conference = dataManager.Conferences.Current;
     var articles = dataManager.Articles.GetByAuthor(Model.Id)
         .OrderBy(a => a.DateLastModified).Reverse().ToArray();
+
 }
 
+<style>
+    a {
+    color: red !important;
+    }
+    a:hover {
+    color: orangered !important;
+    }
+</style>
+
+@if (user != null)
+{
 <div class="user-info">
-    <h2>@Model.LastName @Model.FirstName @Model.MiddleName</h2>
+    <h2>@Model.FullName</h2>
     @if (isOwnPage)
     {
         @if (user.EmailConfirmed)
@@ -32,7 +44,7 @@
     <div class="conferences-workshop">
         @if (conference != null)
         {
-            @if (await userManager.IsInRoleAsync(user, RoleNames.SEMPAI))
+            @if (await userManager.IsInRoleAsync(user, RoleNames.MANAGER))
             {
                 <a asp-action="edit" asp-controller="conference">EDIT</a>
                 <a asp-action="moveToArchive" asp-controller="conference">Move to archive</a>
@@ -42,11 +54,12 @@
                     <a asp-action="delete" asp-controller="conference">Delete</a>
                 }
             }
+            
             <a asp-action="index" asp-controller="conference">Current conference</a>
         }
         else
         {
-            @if (await userManager.IsInRoleAsync(user, "organizer"))
+            @if (await userManager.IsInRoleAsync(user, RoleNames.MANAGER))
             {
                 <a asp-action="create" asp-controller="conference">CREATE</a>
             }
@@ -70,7 +83,7 @@
         }
         else
         {
-            <p>Немає жодної конференції, до якої була би можливість створити матеріал :(</p>
+            <p>Немає жодної конференції, до якої була би можливість додати матеріал</p>
         }
     }
     else
@@ -87,3 +100,4 @@
         <p>Порожньо</p>
     }
 </div>
+}

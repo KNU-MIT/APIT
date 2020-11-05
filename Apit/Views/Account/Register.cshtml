@@ -1,7 +1,7 @@
 ﻿@model RegisterViewModel
 
 @{
-    ViewData["Title"] = "Странічка рєгістраціі";
+    ViewData["Title"] = "Зареєструватися у системі";
     ViewData["DisableFooterLoginForm"] = true;
 }
 
@@ -57,14 +57,16 @@
                 </div>
 
                 <div class="form__buttons">
-                    <button class="signin__button" type="submit">Реєстрація</button>
-                    <a class="button signin__button" asp-action="index" asp-controller="home">
+                    <a class="signin__button" style="padding-top: 15px;" asp-action="index" asp-controller="home">
                         На головну
+                    </a>
+                    <button class="button signin__button" style="padding-top: 10px; padding-right: 20px;" type="submit">
+                        Реєстрація
                         <picture>
                             <source srcset="~/img/icons/atom.webp" type="image/webp">
                             <img src="~/img/icons/atom.png" alt="">
                         </picture>
-                    </a>
+                    </button>
                 </div>
             </form>
 

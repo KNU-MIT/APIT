@@ -3,12 +3,12 @@
 namespace Apit.Areas.Admin.Models
 {
     [Serializable]
-    public class SetPermissionsAnswerObject
+    public class SetPermissionsResponse
     {
-        public string Status { get; set; }
+        public int Status { get; set; }
         public UserData User { get; set; }
-
-
+        
+        
         [Serializable]
         public class UserData
         {

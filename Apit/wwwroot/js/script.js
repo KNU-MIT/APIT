@@ -196,21 +196,11 @@ if (document.querySelector('.preview__button')) {
 	more.addEventListener('click', function(e) {
 	    e.preventDefault();
 
-	    if (window.innerWidth <= 1050 ) {
-
-	    	document.querySelector("#ways").scrollIntoView({
-		      behavior: 'smooth',
-		      block: 'start'
-		    })
-			
-		} else {
-
-			document.querySelector("#ways").scrollIntoView({
-		      behavior: 'smooth',
-		      block: 'center'
-		    })
-
-		}
+		document.querySelector("#footer").scrollIntoView({
+	      behavior: 'smooth',
+	      block: 'center'
+	    })
+		
 	})
 }
 
@@ -223,8 +213,11 @@ if (document.querySelector('#adminInput')) {
 
 	button.addEventListener('click', e => {
 		e.preventDefault()
-		if (input.value === '') return
-		createDeleteElem(input.value)
+		if (input.value == 0) {
+			return
+		} else {
+			createDeleteElem(input.value)
+		}
 	})
 
 	function createDeleteElem(value) {
@@ -285,12 +278,47 @@ if (document.querySelector('#conferenceInput')) {
 	}
 }
 
-// Option difference
+// Option difference TODO
 
 if (document.querySelector('.signup__difference')) {
 	const option = document.querySelector('.signup__difference')
 
-	option.addEvent
+	option.addEventListener('select', () => {
+		console.log('select')
+	})
+}
+
+// Choose file at the article creating
+
+if (document.querySelector('#articleFile')) {
+	const fileTypeInput = document.querySelector('#articleFile'),
+	 	  labelForInput = document.querySelector('label[for="articleFile"]')
+
+	fileTypeInput.addEventListener('change', e => {
+
+		if( this.files && this.files.length > 1 ) {
+		    fileName = ( this.getAttribute( 'data-multiple-caption' ) || '' ).replace( '{count}', this.files.length );
+		}
+	    else {
+	      fileName = e.target.value.split( "\\" ).pop()
+	    }
+	    if( fileName ) {
+	      labelForInput.innerHTML = fileName;
+	    }
+	    else {
+	      labelForInput.innerHTML = labelVal;
+	    }
+	})
+}
+
+// Validation window
+
+if(document.querySelector('.validation-summary-errors')) {
+	const validationBlock = document.querySelector('.validation-summary-errors')
+
+	window.addEventListener('click', () => {
+		validationBlock.style = "opacity: 0;visibility: hidden;top: -100%;"
+	})
 }
 
 // Get Offset

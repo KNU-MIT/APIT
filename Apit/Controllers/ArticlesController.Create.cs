@@ -18,10 +18,7 @@ namespace Apit.Controllers
         [Authorize]
         public IActionResult Create()
         {
-            return View(new NewArticleViewModel
-            {
-                UniqueAddress = _dataManager.Articles.GenerateUniqueAddress()
-            });
+            return View();
         }
 
         [HttpPost, Authorize]
@@ -53,6 +50,7 @@ namespace Apit.Controllers
 
             // Check uploaded file
             var extension = Path.GetExtension(model.DocFile.FileName);
+            string uniqueAddress = _dataManager.Articles.GenerateUniqueAddress();
             _logger.LogInformation("Upload file with extension: " + extension);
             if (model.DocFile.Length > 0)
             {
@@ -64,7 +62,7 @@ namespace Apit.Controllers
                 }
                 else if (!hasIncorrectData)
                 {
-                    string err = await DataUtil.TrySaveDocFile(model.DocFile, model.UniqueAddress, extension);
+                    string err = await DataUtil.TrySaveDocFile(model.DocFile, uniqueAddress, extension);
                     if (err != null)
                     {
                         _logger.LogError("Document converter error\n" + err);
@@ -103,14 +101,15 @@ namespace Apit.Controllers
                 Id = Guid.NewGuid(),
                 Topic = topic,
                 Authors = authors,
-                UniqueAddress = model.UniqueAddress,
+                UniqueAddress = uniqueAddress,
 
                 Title = model.Title,
+                ShortDescription = model.ShortDescription,
                 Status = ArticleStatus.Uploaded,
                 KeyWords = _keyWordsSeparatorRegex.Replace(model.KeyWords, ";"),
 
-                HtmlFilePath = model.UniqueAddress + ".htm",
-                DocxFilePath = model.UniqueAddress + extension,
+                HtmlFilePath = uniqueAddress + ".htm",
+                DocxFilePath = uniqueAddress + extension,
 
                 Conference = _dataManager.Conferences.GetCurrentAsDbModel(),
 
@@ -128,7 +127,7 @@ namespace Apit.Controllers
             _dataManager.Conferences.AddArticle(currentConf, article);
             _dataManager.Articles.Create(article);
 
-            return RedirectToAction("index", "articles", new {id = model.UniqueAddress});
+            return RedirectToAction("index", "articles", new {id = uniqueAddress});
         }
     }
 }

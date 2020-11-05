@@ -4,26 +4,25 @@ using Microsoft.AspNetCore.Http;
 namespace BusinessLayer.Models
 {
     // Why don't we use the ArticleViewModel for represent the new instance of the Article?
+    // ANSWER: because there are a lot of unnecessary redundant fields
+
+    // TODO: It is better to use the Localization and the Resource files.
+    
     public class NewArticleViewModel
     {
-        [Display(Name = "Унікальна адреса")]  // It is better to use the Localization and the Resource files.
-        [Required]
-        public string UniqueAddress { get; set; } // What does it mean?
-
-        [Display(Name = "Файл із матеріалами")] // It is better to use the Localization and the Resource files.
-        [Required]
+        [Required, Display(Name = "Файл із матеріалами")] 
         public IFormFile DocFile { get; set; }
 
-        [Display(Name = "Тематика")] // It is better to use the Localization and the Resource files.
-        [Required]
+        [Required, Display(Name = "Тематика")]
         public string TopicId { get; set; }
 
-        [Display(Name = "Ключові слова")] // It is better to use the Localization and the Resource files.
-        [Required]
+        [Required, Display(Name = "Ключові слова")]
         public string KeyWords { get; set; }
 
-        [Display(Name = "Заголовок")] // It is better to use the Localization and the Resource files.
-        [Required]
+        [Required, Display(Name = "Заголовок")]
         public string Title { get; set; }
+        
+        [Required, Display(Name = "Короткий опис")]
+        public string ShortDescription { get; set; }
     }
 }

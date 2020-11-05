@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Apit.Service;
 using BusinessLayer.Models;
+using DatabaseLayer;
 using DatabaseLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Apit.Controllers
 {
-    public partial class AccountController // Maybe it is better to use the integrated Account ASP.NET functionality (Areas/Identity/Pages/Account(/Manage))
+    public partial class
+        AccountController // Maybe it is better to use the integrated Account ASP.NET functionality (Areas/Identity/Pages/Account(/Manage))
     {
         public IActionResult Register(string returnUrl)
         {
@@ -47,15 +50,11 @@ namespace Apit.Controllers
             {
                 if (isFirst)
                 {
-                    var roleResult = await _userManager.AddToRoleAsync(user, "superman");
+                    var roleResult = await _userManager.AddToRoleAsync(user, RoleNames.MANAGER);
 
                     if (roleResult.Succeeded)
-                    {
-                        roleResult = await _userManager.AddToRoleAsync(user, "organizer");
+                        _logger.LogInformation("First user authorized as admin with full access");
 
-                        if (!roleResult.Succeeded)
-                            _logger.LogInformation("First user authorized as admin with full access");
-                    }
                     else ModelState.AddModelError(string.Empty, "You are not admin!");
                 }
 
@@ -68,9 +67,9 @@ namespace Apit.Controllers
                     token = confirmationToken
                 }, protocol: HttpContext.Request.Scheme);
 
-                _mailService.SendEmail(user.Email,
+                _mailService.SendActionEmail(user.Email,
                     "Confirm your email | Підтвердіть Вашу пошту",
-                    confirmationLink);
+                    MailService.Presets.ConfirmEmail, confirmationLink);
                 _logger.LogDebug("Confirmation email was sent to: " + user.Email);
 
                 await _signInManager.SignInAsync(user, false);
@@ -89,22 +88,22 @@ namespace Apit.Controllers
         public async Task<IActionResult> ConfirmEmail(string id, string token)
         {
             if (string.IsNullOrEmpty(id) || string.IsNullOrWhiteSpace(token))
-                return View("Error");
+                return View("error");
 
             var user = await _userManager.FindByIdAsync(id);
-            if (user == null) return View("Error");
+            if (user == null) return View("error");
             var result = await _userManager.ConfirmEmailAsync(user, token);
 
             if (result.Succeeded)
             {
                 _logger.LogDebug($"User {user.ProfileAddress} confirmed mail");
-                ViewBag.Message = "Email confirmed successfully!";
-                return View("Success");
+                ViewBag.Message = "Ви успішно підтвердили Вашу пошту!";
+                return View("success");
             }
 
             _logger.LogError($"User {user.ProfileAddress} NOT confirmed mail");
-            ViewBag.Message = "Error while confirming your email!";
-            return View("Error");
+            ViewBag.Message = "Упс, виникла помилка...";
+            return View("error");
         }
     }
 }

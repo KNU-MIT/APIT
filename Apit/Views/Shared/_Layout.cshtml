@@ -1,6 +1,9 @@
 ﻿@{
-    var title = ViewData["Title"] ?? "Apit";
-    var language = (string) ViewData["Lang"] ?? "ua";
+    string title = ViewData["Title"] == null
+        ? "APIT 2020 - Науково-технічна конференція"
+        : "APIT | " + (string) ViewData["Title"];
+    
+    string language = (string) ViewData["Lang"] ?? "ua";
 }
 
 <!DOCTYPE html>

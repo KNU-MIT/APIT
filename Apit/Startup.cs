@@ -9,11 +9,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Apit.Service;
-using DatabaseLayer;
-using DatabaseLayer.Entities;
 using BusinessLayer;
 using BusinessLayer.Interfaces;
 using BusinessLayer.Repositories;
+using DatabaseLayer;
+using DatabaseLayer.Entities;
+using DatabaseLayer.Localization;
 
 namespace Apit
 {
@@ -70,8 +71,11 @@ namespace Apit
 
                     options.SignIn.RequireConfirmedPhoneNumber = SECURITY.SignIn.RequireConfirmedPhoneNumber;
                     options.SignIn.RequireConfirmedAccount = SECURITY.SignIn.RequireConfirmedAccount;
-                }).AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+                })
+                .AddRoles<IdentityRole>()
+                .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -103,11 +107,13 @@ namespace Apit
 
             // To use MVC
             services.AddControllersWithViews(options =>
-            {
-                options.Conventions.Add(
-                    new AdminAuthorization("Admin", "AdminArea"));
-                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddSessionStateTempDataProvider();
+                {
+                    options.Conventions.Add(
+                        new AdminAuthorization("Admin", "AdminArea"));
+                    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddSessionStateTempDataProvider();
 
             // To use .cshtml easily 
             services.AddRazorPages();

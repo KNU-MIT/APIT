@@ -13,16 +13,19 @@ namespace BusinessLayer.Models
 
         public string UniqueAddress { get; set; }
         public string DocFileAddress { get; set; }
-        
+
         public string HTMLContent { get; set; }
 
         public Topic Topic { get; set; }
+
+        public string ShortDescription { get; set; }
+
 
         /// <summary>
         /// User with full access to the current article controls
         /// </summary>
         public User Creator { get; set; }
-        
+
         /// <summary>
         /// Users without permissions but appear as authors
         /// </summary>
@@ -37,6 +40,9 @@ namespace BusinessLayer.Models
         [DataType(DataType.DateTime)] public DateTime DateCreated { get; set; }
         [DataType(DataType.DateTime)] public DateTime DateLastModified { get; set; }
 
+
         public bool IsAuthor(User user) => Authors.Any(a => a == user);
+
+        public string GetFormatCreatingDate() => DateCreated.ToString("dd/MM/yyy");
     }
 }

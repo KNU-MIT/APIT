@@ -1,7 +1,8 @@
 ﻿@model ConferenceViewModel
 
 @{
-    Layout = "_Layout";
+    ViewData["Title"] = Model?.Title;
+
     var user = await userManager.GetUserAsync(User);
 }
 

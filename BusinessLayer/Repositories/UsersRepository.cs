@@ -40,9 +40,11 @@ namespace BusinessLayer.Repositories
             SaveChanges();
         }
 
-        public string GenerateUniqueAddress() => DataUtil.GenerateUniqueAddress(this, 8);
+        public string GenerateUniqueAddress() => 
+            DataUtil.GenerateUniqueAddress(this, UniqueAddressSizes.USERS);
 
-        public User GetByUniqueAddress(string address) => _ctx.Users.FirstOrDefault(a => a.ProfileAddress == address);
+        public User GetByUniqueAddress(string address) => 
+            _ctx.Users.FirstOrDefault(a => a.ProfileAddress == address);
 
         public IEnumerable<User> GetLatest(ushort count) => throw new NotImplementedException();
     }

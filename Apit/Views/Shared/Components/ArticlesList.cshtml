@@ -10,16 +10,26 @@
         <div class="articles__keywords">
             @foreach (var keyWord in article.KeyWords)
             {
-                <a href="#@keyWord">@keyWord</a>
+                <a href="#@keyWord">@keyWord </a>
             }
         </div>
 
         <div class="articles__author">
-            @* <!-- Сделать автора статьи--> *@
+            @foreach (var author in article.Authors)
+            {
+                @if (author != null)
+                {
+                    @author.FullName
+                    <br/>
+                }
+            }
         </div>
 
         <div class="articles__description">
-            @article.Topic?.Name
+            <h4>
+                @article.Topic?.Name
+            </h4>
+            @article.ShortDescription
         </div>
 
         <div class="articles__buttons">
@@ -33,6 +43,8 @@
             </a>
         </div>
 
-        <div class="articles__date">@article.DateCreated.ToString("dd/MM/yyyy")</div>
+        <div class="articles__date">
+            @article.GetFormatCreatingDate()
+        </div>
     </div>
 }

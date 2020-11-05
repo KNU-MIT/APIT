@@ -14,8 +14,7 @@ namespace Apit.Controllers
     public partial class ConferenceController : Controller
     {
         private readonly ILogger<ConferenceController> _logger;
-        private readonly DataManager _dataManager;
-
+        private readonly DataManager _dataManager; 
         private readonly UserManager<User> _userManager;
         // private readonly ProjectConfig.ContentDataConfig _config;
 

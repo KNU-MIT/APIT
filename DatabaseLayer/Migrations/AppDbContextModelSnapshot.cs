@@ -45,6 +45,10 @@ namespace DatabaseLayer.Migrations
                     b.Property<string>("KeyWords")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ShortDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<short>("Status")
                         .HasColumnType("smallint");
 
@@ -320,15 +324,15 @@ namespace DatabaseLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d415b6db-4d3e-4b85-affa-76fec676554f",
-                            ConcurrencyStamp = "7047d359-763f-4474-8a88-1c8c5438be77",
+                            Id = "d23a4613-6d7d-42c4-aa9d-a75f6831a97d",
+                            ConcurrencyStamp = "6f7142a7-7bcc-4e2c-9416-111a606b117e",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "680c4561-2fe7-4338-8c32-71db945d7016",
-                            ConcurrencyStamp = "786984f1-7c77-4436-861c-923cfeb08c73",
+                            Id = "35694013-b775-45ec-ad37-3bf0f5e4d049",
+                            ConcurrencyStamp = "581ceaca-2b33-40a2-9b64-30ece0cf049c",
                             Name = "organizer",
                             NormalizedName = "ORGANIZER"
                         });

@@ -1,11 +1,12 @@
 ﻿# APIT - 2020
-> version 1.2.1 alpha (front-end)
+> version 1.2.3 alpha (front-end+)
 
 | Role       | Developer           | GitHub    | 
 |------------|---------------------|-----------| 
 | back-end   | Yurii Yermakav      | JuriLents | 
 | front-end  | Miroslav Toloshnyi  | MiTo      | 
-| testing    | Donylo Baida        | Dan4ef    | 
+
+and other...
 
 -----------------------------------------------------------------------------------
 

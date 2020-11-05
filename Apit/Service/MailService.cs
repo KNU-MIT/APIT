@@ -1,8 +1,8 @@
 ﻿using System;
-using BusinessLayer;
+using System.IO;
+using MimeKit;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
-using MimeKit;
 
 namespace Apit.Service
 {
@@ -17,6 +17,36 @@ namespace Apit.Service
             _config = config.Mailbox;
         }
 
+
+        public class Presets
+        {
+            public const string ConfirmEmail = "ConfirmEmail.htm";
+            public const string ResetPassword = "ResetPassword.htm";
+        }
+
+        /// <summary>
+        /// Send HTML email with linking button via SMTP-client
+        /// </summary>
+        /// <param name="recipient">User email address</param>
+        /// <param name="subject">Mail title</param>
+        /// <param name="resourceName">Mail content name</param>
+        /// <param name="href">Specific URL to embed in an email</param>
+        public void SendActionEmail(string recipient,
+            string subject, string resourceName, string href)
+        {
+            try
+            {
+                string html = File.ReadAllText(Path.Combine("Service/HtmlEmails/", resourceName));
+                href = href.Replace("\n", "");
+                html = html.Replace("{{HYPERLINK}}", href);
+                _logger.LogDebug(html);
+                SendEmail(recipient, subject, html);
+            }
+            catch (Exception e)
+            {
+                _logger.LogCritical("Mail service error: " + e.Message);
+            }
+        }
 
         /// <summary>
         /// Send email via default configured SMTP-client
@@ -33,7 +63,7 @@ namespace Apit.Service
                     Subject = subject,
                     Body = new BodyBuilder
                     {
-                        HtmlBody = "<div style=\"color: green;\"><a href=\"" + body + "\">Press ME!</a></div>"
+                        HtmlBody = body,
                     }.ToMessageBody()
                 };
 

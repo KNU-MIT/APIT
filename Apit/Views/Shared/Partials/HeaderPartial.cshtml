@@ -1,4 +1,8 @@
-﻿<header class="header _anim-items">
+﻿@{
+    string year = DateTime.Now.ToString("yyyy");
+}
+
+<header class="header _anim-items">
     <div class="container">
 
         <div class="header__inner">
@@ -15,7 +19,7 @@
                 <ul class="nav__inner">
                     <!-- 1 -->
                     <li class="nav__link">
-                        <a asp-controller="home" asp-action="index">Apit 2020</a>
+                        <a asp-controller="conference" asp-action="index">Apit @year</a>
                     </li> <!-- 3 ready -->
                     <!-- 2 -->
                     <li class="nav__link">
@@ -23,10 +27,10 @@
                         <!-- 2.1 -->
                         <ul class="nav__subnav subnav">
                             <li class="subnav__link">
-                                <a href="date_address.html">Дати та адреса</a>
+                                <a asp-action="dates" asp-controller="info">Дати та адреса</a>
                             </li>
                             <li class="subnav__link">
-                                <a href="secretariat.html">Секретаріат</a>
+                                <a asp-action="secretariat" asp-controller="info">Секретаріат</a>
                             </li>
                             <li class="subnav__link">
                                 <a asp-action="archive" asp-controller="conference">Архів минулих конференцій</a>
@@ -39,19 +43,16 @@
                         <!-- 3.1 -->
                         <ul class="nav__subnav subnav">
                             <li class="subnav__link">
-                                <a href="requirements.html">Вимоги до тез доповідей</a>
+                                <a asp-action="requirements" asp-controller="info">Вимоги до тез доповідей</a>
                             </li>
                             <li class="subnav__link">
-                                <a href="others/Зразок-оформлення-тез.docx">Зразок оформлення тез доповідей</a>
-                            </li>
-                            <li class="subnav__link">
-                                <a href="articles.html">Завантажені статті авторів</a>
+                                <a asp-action="list" asp-controller="articles">Завантажені статті авторів</a>
                             </li>
                         </ul>
                     </li>
                     <!-- 4 -->
                     <li class="nav__link">
-                        <a href="others/APIT2019.pdf" target="blank">Матеріали конференції</a>
+                        <a href="~/static/APIT2019.pdf" target="blank">Матеріали конференції</a>
                     </li>
 
                 </ul>

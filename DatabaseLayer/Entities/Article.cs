@@ -15,7 +15,8 @@ namespace DatabaseLayer.Entities
         public ICollection<UserOwnArticlesLinking> Authors { get; set; }
         [Required] public string Title { get; set; }
 
-
+        [Required] public string ShortDescription { get; set; }
+        
         public ArticleStatus Status { get; set; }
         public string KeyWords { get; set; }
 

@@ -10,7 +10,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Apit.Controllers
 {
-    public partial class AccountController : Controller // Maybe it is better to use the integrated Account ASP.NET functionality (Areas/Identity/Pages/Account(/Manage))
+    public partial class
+        AccountController : Controller // Maybe it is better to use the integrated Account ASP.NET functionality (Areas/Identity/Pages/Account(/Manage))
     {
         private readonly ILogger<AccountController> _logger;
         private readonly UserManager<User> _userManager;
@@ -36,7 +37,7 @@ namespace Apit.Controllers
                 ? await _userManager.GetUserAsync(User)
                 : _dataManager.Users.GetByUniqueAddress(x);
 
-            return View(user);
+            return user == null ? View("error") : View(user);
         }
 
         [Authorize]

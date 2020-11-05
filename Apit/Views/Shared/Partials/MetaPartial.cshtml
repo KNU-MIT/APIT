@@ -1,10 +1,40 @@
-﻿<!-- Meta -->
-<meta charset="UTF-8">
+﻿<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 
-<!-- GOOGLE -->
-<meta name="description" content="">
-<meta name="google" content="notranslate">
 
-<!-- Yandex -->
-<meta name="keywords" content="">
+<!-- Search engines -->
+@if (ViewData["meta_description"] != null)
+{
+    <meta name="description" content="@ViewData["meta_description"]">
+}
+@if (ViewData["meta_google"] != null)
+{
+    <meta name="google" content="@(ViewData["meta_google"] ?? "notranslate")">
+}
+@if (ViewData["meta_keywords"] != null)
+{
+    <meta name="keywords" content="@ViewData["meta_keywords"]">
+}
+@if (ViewData["meta_robots"] != null)
+{
+    <meta name="robots" content="@ViewData["meta_robots"]">
+}
+
+
+<!-- Socials -->
+@if (ViewData["meta_socials_title"] != null)
+{
+    <meta property="og:title" content="@ViewData["meta_socials_title"]">
+}
+@if (ViewData["meta_socials_description"] != null)
+{
+    <meta property="og:description" content="@ViewData["meta_socials_description"]">
+}
+@if (ViewData["meta_socials_url"] != null)
+{
+    <meta property="og:url" content="@ViewData["meta_socials_url"]">
+}
+@if (ViewData["meta_socials_image"] != null)
+{
+    <meta property="og:image" content="@ViewData["meta_socials_image"]">
+}
