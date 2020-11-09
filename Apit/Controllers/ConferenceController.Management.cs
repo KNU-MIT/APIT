@@ -101,13 +101,17 @@ namespace Apit.Controllers
         [Authorize(Roles = RoleNames.SEMPAI)]
         public IActionResult Edit()
         {
-            return View();
+            return View("error");
         }
 
-        [HttpPost, Authorize(Roles = RoleNames.SEMPAI)]
+        [Authorize(Roles = RoleNames.SEMPAI)]
         public IActionResult Delete()
         {
-            return RedirectToAction("index", "conference");
+            var conference = _dataManager.Conferences.Current;
+            if (conference.Participants.Any())
+                return RedirectToAction("index", "conference");
+            _dataManager.Conferences.Delete(conference.Id);
+            return RedirectToAction("index", "account");
         }
     }
 }

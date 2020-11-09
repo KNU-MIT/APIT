@@ -7,6 +7,7 @@ namespace BusinessLayer.Models
 {
     public class ConferenceViewModel
     {
+        public User User { get; set; }
         public bool IsActual { get; set; }
 
         public Guid Id { get; set; }

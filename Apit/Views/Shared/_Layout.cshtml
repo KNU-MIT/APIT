@@ -2,7 +2,7 @@
     string title = ViewData["Title"] == null
         ? "APIT 2020 - Науково-технічна конференція"
         : "APIT | " + (string) ViewData["Title"];
-    
+
     string language = (string) ViewData["Lang"] ?? "ua";
 }
 
@@ -31,10 +31,14 @@
 
 @RenderBody()
 
-@await Html.PartialAsync("Partials/FooterPartial")
+@if (ViewData["WithoutFooter"] != null)
+{
+    @await Html.PartialAsync("Partials/FooterPartial")
+}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.9.7/jquery.fullpage.min.js" crossorigin="anonymous"></script>
-<script src="~/js/script.min.js" asp-append-version="true"></script>
+@* <script src="~/js/script.min.js" asp-append-version="true"></script> *@
+<script src="~/js/script.js" asp-append-version="true"></script>
 
 </body>
 </html>

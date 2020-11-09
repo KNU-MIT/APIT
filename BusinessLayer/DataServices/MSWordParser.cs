@@ -41,8 +41,10 @@ namespace BusinessLayer.DataServices
             string htmlText = await reader.ReadToEndAsync();
             reader.Close();
 
+            // apply file content review
             CleanHtmlContent(ref htmlText);
-            RegexFixHtml(ref htmlText);
+            string fileName = Path.GetFileName(destFile);
+            RegexFixHtml(ref htmlText, fileName);
             RemoveTags(ref htmlText, "script");
 
             // save result HTML back to the file
@@ -62,6 +64,7 @@ namespace BusinessLayer.DataServices
         {
             string styles = GetFirstTagContent(htmlText, "style");
             string content = GetFirstTagContent(htmlText, "div", true);
+            content = Regex.Replace(content, "Trial ", "");
             htmlText = $"<article>\n{styles}{content}</article>";
         }
 
@@ -93,9 +96,10 @@ namespace BusinessLayer.DataServices
             return htmlText;
         }
 
-        private static void RegexFixHtml(ref string htmlText)
+        private static void RegexFixHtml(ref string htmlText, string fileName)
         {
             htmlText = Regex.Replace(htmlText, "0pt", "0");
+            htmlText = Regex.Replace(htmlText, fileName + "_images", "/img/articles/");
         }
 
         private static void RemoveTags(ref string htmlText, string tagName)

@@ -6,16 +6,16 @@ namespace BusinessLayer.Models
 {
     public class RegisterViewModel : LoginViewModel
     {
-        [Required] public string FirstName { get; set; }
+        [Required(ErrorMessage = "Введіть ім'я")] public string FirstName { get; set; }
 
-        [Required(ErrorMessage = MSG.OnRequired)]
+        [Required(ErrorMessage = "Введіть прізвище")]
         public string LastName { get; set; }
 
-        [Required(ErrorMessage = MSG.OnRequired)]
+        [Required(ErrorMessage = "Введіть по-батькові")]
         public string MiddleName { get; set; }
 
 
-        [Required(ErrorMessage = MSG.OnRequired)]
+        [Required(ErrorMessage = "Введіть мисце навчання/роботи")]
         [Display(Name = "Місце навчання/роботи")]
         public string WorkingFor { get; set; }
 
@@ -29,7 +29,7 @@ namespace BusinessLayer.Models
         [Display(Name = "Форма участі")] public ParticipationForm ParticipationForm { get; set; }
 
 
-        [Required(ErrorMessage = MSG.OnRequired)]
+        [Required(ErrorMessage = "Введіть пароль та пидтвердіть його")]
         [Compare("Password", ErrorMessage = "Пароли не совпадают")]
         public string PasswordConfirm { get; set; }
     }

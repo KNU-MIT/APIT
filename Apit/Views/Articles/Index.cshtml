@@ -3,20 +3,21 @@
 @{
     var article = Model;
     ViewData["Title"] = article.Title;
-    
+
     ViewData["meta_description"] = article.ShortDescription;
     ViewData["meta_google"] = article.ShortDescription;
     ViewData["meta_keywords"] = string.Join(", ", article.KeyWords);
     // ViewData["meta_robots"] = "";
-    
-    ViewData["meta_socials_title"] =article.Title;
+
+    ViewData["meta_socials_title"] = article.Title;
     ViewData["meta_socials_description"] = article.ShortDescription;
     // ViewData["meta_socials_image"] = null;
-    
-    var isMine = userManager.GetUserId(User) == article?.Creator?.Id;
+
+    var user = await userManager.GetUserAsync(User);
+    var isMine = user != null && user == article?.Creator;
 }
 
-@if (isMine)
+@if (isMine || await userManager.IsInRoleAsync(user, RoleNames.ADMIN))
 {
     <div>
         <a asp-controller="articles" asp-action="edit" asp-route-id="@article.UniqueAddress">Edit</a>

@@ -2,6 +2,7 @@
 using Apit.Service;
 using BusinessLayer;
 using BusinessLayer.Models;
+using DatabaseLayer;
 using DatabaseLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -10,8 +11,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Apit.Controllers
 {
-    public partial class
-        AccountController : Controller // Maybe it is better to use the integrated Account ASP.NET functionality (Areas/Identity/Pages/Account(/Manage))
+    // Maybe it is better to use the integrated Account ASP.NET functionality (Areas/Identity/Pages/Account(/Manage))
+    public partial class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
         private readonly UserManager<User> _userManager;
@@ -51,6 +52,21 @@ namespace Apit.Controllers
         public IActionResult AccessDenied()
         {
             return View();
+        }
+
+        [Authorize(Roles = RoleNames.ADMIN)]
+        public async Task<IActionResult> SetManager(string x, string newState)
+        {
+            var user = _dataManager.Users.GetByUniqueAddress(x);
+            if (user == null) return View("error");
+            
+            var result = newState == "manager"
+                ? await _userManager.AddToRoleAsync(user, RoleNames.MANAGER)
+                : await _userManager.RemoveFromRoleAsync(user, RoleNames.MANAGER);
+
+            return result.Succeeded
+                ? RedirectToAction("index", "account", new {x = x})
+                : (IActionResult) ViewBag("error");
         }
 
         [Authorize, HttpPost]
@@ -100,7 +116,6 @@ namespace Apit.Controllers
 
             if (user.ParticipationForm != model.ParticipationForm)
                 user.ParticipationForm = model.ParticipationForm;
-
 
             //TODO: two-factor auth with phone number
 

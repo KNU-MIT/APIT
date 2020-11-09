@@ -2,16 +2,18 @@
 
 @{
     ViewData["Title"] = "Зареєструватися у системі";
-    ViewData["DisableFooterLoginForm"] = true;
+    ViewData["DisableFooter"] = true;
 }
 
 
 <div class="signin signup">
     <div class="container">
+
+        <div asp-validation-summary="All"></div>
+
         <div class="signin__inner">
 
             <h2 class="signin__title title">Зареєструватися</h2>
-            <div asp-validation-summary="All"></div>
 
             <form class="register__form" id="signup" method="post"
                   asp-controller="account" asp-action="register"
@@ -24,7 +26,7 @@
                 </div>
 
                 <div class="form__blck form__blck--select form__blck--dbl">
-                    <input asp-for="WorkingFor" type="text" placeholder="Тема праці">
+                    <input asp-for="WorkingFor" type="text" placeholder="Місце навчання/роботи">
                     <div class="signup__select">
                         <select type="select" asp-for="ScienceDegree" asp-items="Html.GetEnumSelectList<ScienceDegree>()">
                             <option disabled selected="selected">Науковий ступінь</option>
@@ -48,26 +50,27 @@
                 </div>
 
                 <div class="form__blck">
-                    <input asp-for="Email" type="email" placeholder="Поштова скринька">
+                    <input asp-for="Email" type="email" placeholder="Email">
                 </div>
 
                 <div class="form__blck form__blck--dbl">
                     <input asp-for="Password" type="password" placeholder="Пароль">
-                    <input asp-for="PasswordConfirm" type="password" placeholder="Повторіть пароль">
+                    <input asp-for="PasswordConfirm" type="password" placeholder="Підтвердіть пароль">
                 </div>
 
                 <div class="form__buttons">
-                    <a class="signin__button" style="padding-top: 15px;" asp-action="index" asp-controller="home">
-                        На головну
-                    </a>
-                    <button class="button signin__button" style="padding-top: 10px; padding-right: 20px;" type="submit">
-                        Реєстрація
+                    <button class="button signin__button" type="submit">
+                        Зареєструватися
                         <picture>
                             <source srcset="~/img/icons/atom.webp" type="image/webp">
                             <img src="~/img/icons/atom.png" alt="">
                         </picture>
                     </button>
+                    <a class="signin__button" href="@(Model.ReturnUrl ?? "/")">
+                        Назад
+                    </a>
                 </div>
+
             </form>
 
         </div>

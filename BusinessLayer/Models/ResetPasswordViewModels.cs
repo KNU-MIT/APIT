@@ -1,18 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using DatabaseLayer.Entities;
 
 namespace BusinessLayer.Models
 {
-    public class EmailViewModel
-    {
-        public string Email { get; set; }
-    }
-
     public class ResetPasswordViewModel
     {
-        public string User { get; set; }
+        public User User { get; set; }
         public string Token { get; set; }
 
-        [Required] public string Password { get; set; }
+        [Required(ErrorMessage = "Введіть новий пароль")]
+        public string Password { get; set; }
 
         [Required]
         [Compare("Password", ErrorMessage = "Пароли не совпадают")]

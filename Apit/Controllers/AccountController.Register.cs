@@ -10,8 +10,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Apit.Controllers
 {
-    public partial class
-        AccountController // Maybe it is better to use the integrated Account ASP.NET functionality (Areas/Identity/Pages/Account(/Manage))
+    // Maybe it is better to use the integrated Account ASP.NET functionality (Areas/Identity/Pages/Account(/Manage))
+    public partial class AccountController
     {
         public IActionResult Register(string returnUrl)
         {
@@ -50,9 +50,10 @@ namespace Apit.Controllers
             {
                 if (isFirst)
                 {
-                    var roleResult = await _userManager.AddToRoleAsync(user, RoleNames.MANAGER);
+                    var roleResult1 = await _userManager.AddToRoleAsync(user, RoleNames.ADMIN);
+                    var roleResult2 = await _userManager.AddToRoleAsync(user, RoleNames.MANAGER);
 
-                    if (roleResult.Succeeded)
+                    if (roleResult1.Succeeded && roleResult2.Succeeded)
                         _logger.LogInformation("First user authorized as admin with full access");
 
                     else ModelState.AddModelError(string.Empty, "You are not admin!");
@@ -77,6 +78,7 @@ namespace Apit.Controllers
                 return LocalRedirect(model.ReturnUrl ?? "/");
             }
 
+            ModelState.AddModelError(model.Email, "Неможливо створити користувача");
             foreach (var error in result.Errors)
                 ModelState.AddModelError(string.Empty, error.Description);
 

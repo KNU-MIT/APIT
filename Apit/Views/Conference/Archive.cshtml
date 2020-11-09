@@ -1,51 +1,68 @@
 @model IEnumerable<ConferenceViewModel>
 
-@{ 
+@{
     ViewData["Title"] = "Архів попередніх конференцій";
-    
+
     ViewData["meta_description"] = "";
     ViewData["meta_google"] = "";
     ViewData["meta_keywords"] = "";
     // ViewData["meta_robots"] = "";
-    
+
     ViewData["meta_socials_title"] = "";
     // ViewData["meta_socials_url"] = "";
     ViewData["meta_socials_description"] = "";
     // ViewData["meta_socials_image"] = null;
 }
 
-<h1>Articles list</h1>
 
-@if (!Model?.Any() ?? true)
-{
-    <h2>Empty.</h2>
-}
-else
-{
-    @foreach (var conference in Model)
-    {
-        <div class="archive__item">
+<section class="archive">
+    <div class="container">
+        <div class="archive__inner">
 
-            <div class="archive__img">
-                <img src="~/img/meeting-1.jpg" alt="" class="archive__pht">
-                <div class="archive__date"><!-- Начало - конец добавить даты!!! --></div>
-            </div>
+            <h2 class="archive__title title">Архів</h2>
+            <h3 class="archive__subtitle">Список минулих конференцій</h3>
 
-            <div class="archive__description">
+            @if (!Model?.Any() ?? true)
+            {
+                <h2>Поки тут порожньо...</h2>
+            }
+            else
+            {
+                @foreach (var conference in Model)
+                {
+                    <div class="archive__item">
 
-                <h3 class="archive__heading">
-                    @conference.Title
-                </h3>
+                        <div class="archive__img">
+                            <picture>
+                                <source srcset="img/meeting-1.webp" type="image/webp">
+                                <img src="~/img/meeting-1.jpg" alt="" class="archive__pht">
+                            </picture>
+                            <div class="archive__date">
+                                з @conference.DateCreated.ToString("dd.MM.yyyy") по @conference.DateFinish.ToString("dd.MM.yyyy")
+                            </div>
+                        </div>
 
-                <article class="archive__text">
-                    @conference.DateCreated.ToString(CultureInfo.CurrentCulture)
-                    @Html.ActionLink("Read more", "index", "conference", conference.UniqueAddress, null)
-                </article>
+                        <div class="archive__description">
+                            <h3 class="archive__heading">@conference.Title</h3>
 
-            </div>
+                            <div class="archive__text">
+                                @conference.ShortDescription
+
+                                <div class="register__form" style="margin-top: 40px;">
+                                    <a class="signin__button download__button" asp-action="index" asp-controller="conference">
+                                        Детальніше
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                        
+                    </div>
+                }
+
+                <partial name="Components/ScrollButton"/>
+            }
 
         </div>
-    }
-
-    <partial name="Components/ScrollButton"/>
-}
+    </div>
+</section>

@@ -7,22 +7,22 @@ namespace BusinessLayer.Models
     // ANSWER: because there are a lot of unnecessary redundant fields
 
     // TODO: It is better to use the Localization and the Resource files.
-    
+
     public class NewArticleViewModel
     {
-        [Required, Display(Name = "Файл із матеріалами")] 
+        [Required(ErrorMessage = "Оберіть файл з матеріалом"), Display(Name = "Файл із матеріалами")]
         public IFormFile DocFile { get; set; }
 
-        [Required, Display(Name = "Тематика")]
+        [Required(ErrorMessage = "Оберіть тему Вашої роботи"), Display(Name = "Тематика")]
         public string TopicId { get; set; }
 
-        [Required, Display(Name = "Ключові слова")]
+        [Required(ErrorMessage = "Вкажіть через кому (,) ключові слова"), Display(Name = "Ключові слова")]
         public string KeyWords { get; set; }
 
-        [Required, Display(Name = "Заголовок")]
+        [Required(ErrorMessage = "Матеріал повинен мати заголовок"), Display(Name = "Заголовок")]
         public string Title { get; set; }
-        
-        [Required, Display(Name = "Короткий опис")]
+
+        [Required(ErrorMessage = "Введіть короткий опис"), Display(Name = "Короткий опис")]
         public string ShortDescription { get; set; }
     }
 }

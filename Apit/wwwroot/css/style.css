@@ -1189,12 +1189,20 @@ h3.title__alert {
 
 .register__form button,
 .register__form a {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   padding: 10px 20px;
   max-width: 255px;
   width: 100%;
   height: 50px;
   background: transparent;
-  text-align: center;
   font-size: 18px;
   font-weight: 700;
   border: 1px solid #be0000;
@@ -1217,10 +1225,11 @@ h3.title__alert {
   position: relative;
   top: 0;
   left: 0;
-  padding: 15px 85px 10px 30px;
   max-width: 255px;
   width: 100%;
   height: 50px;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
   text-align: left;
   font-size: 18px;
   font-weight: 700;
@@ -2632,12 +2641,20 @@ li.slick-active {
 
 .register__form button,
 .register__form a {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   padding: 10px 20px;
   max-width: 255px;
   width: 100%;
   height: 50px;
   background: transparent;
-  text-align: center;
   font-size: 18px;
   font-weight: 700;
   border: 1px solid #be0000;
@@ -2660,10 +2677,11 @@ li.slick-active {
   position: relative;
   top: 0;
   left: 0;
-  padding: 15px 85px 10px 30px;
   max-width: 255px;
   width: 100%;
   height: 50px;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
   text-align: left;
   font-size: 18px;
   font-weight: 700;
@@ -3051,6 +3069,17 @@ input:-ms-input-placeholder {
 
 .signin__button {
   margin: 0 auto;
+}
+
+.signin__password {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.signin__password--link {
+  color: #fff;
+  font-size: 16px;
+  text-decoration: underline;
 }
 
 .signup {
@@ -3582,9 +3611,8 @@ input:-ms-input-placeholder {
   width: 100%;
   padding: 80px 0 100px;
   position: relative;
-  min-height: 750px;
+  min-height: 1000px;
   max-height: 2000px;
-  height: 100%;
   background: url("../img/bg-.jpg") center no-repeat;
   background-size: cover;
 }
@@ -3682,9 +3710,59 @@ input:-ms-input-placeholder {
   background: #8e0101;
 }
 
+.conferencecreate .signup__select {
+  position: relative;
+}
+
+.conferencecreate .signup__select:after {
+  position: absolute;
+  top: 40%;
+  right: 30px;
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 7px 5px 0 5px;
+  border-color: #000000 transparent transparent transparent;
+  pointer-events: none;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+
+.conferencecreate .signup__select select {
+  max-width: 320px;
+  width: 100%;
+  padding-right: 40px;
+  background: #fff;
+  border: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+       appearance: none;
+}
+
+.conferencecreate .form__blck--select {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
 .conferencecreate .form__buttons button,
 .conferencecreate .form__buttons a {
-  padding: 10px 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   max-width: 255px;
   width: 100%;
   height: 50px;
@@ -3712,7 +3790,8 @@ input:-ms-input-placeholder {
   position: relative;
   top: 0;
   left: 0;
-  padding: 15px 85px 10px 30px;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
   max-width: 255px;
   width: 100%;
   height: 50px;
@@ -3945,6 +4024,123 @@ input:-ms-input-placeholder {
 .update__button:hover {
   color: #fff;
   background: #be0000;
+}
+
+.passrecovery {
+  width: 100%;
+  min-height: 750px;
+  max-height: 2000px;
+  height: 100%;
+  position: relative;
+  z-index: 0;
+  background: url("../img/bg.jpg") center no-repeat;
+  background-size: cover;
+}
+
+.passrecovery:after {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.passrecovery__inner {
+  margin: 0 auto;
+  padding-top: 200px;
+  position: relative;
+  z-index: 10;
+  text-align: center;
+}
+
+.passrecovery__title {
+  margin-bottom: 30px;
+  text-transform: none;
+  color: #be0000;
+}
+
+.passrecovery__description {
+  margin: 0 auto;
+  max-width: 415px;
+  margin-bottom: 80px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.passrecovery__form {
+  margin: 0 auto;
+  max-width: 560px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.passrecovery__form input,
+.passrecovery__form button {
+  margin: 0 auto;
+  max-height: 50px;
+  padding: 20px 40px;
+  border-radius: 26px;
+}
+
+.passrecovery__input {
+  display: block;
+  width: 100%;
+}
+
+.passrecovery__button {
+  max-width: 320px;
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background: transparent;
+  border: 1px solid #be0000;
+  color: #be0000;
+  font-weight: 700;
+  font-size: 18px;
+  -webkit-transition: all .4s ease;
+  -o-transition: all .4s ease;
+  transition: all .4s ease;
+}
+
+.passrecovery__button:hover {
+  background: #be0000;
+  color: #fff;
+}
+
+.passrecovery .form__blck {
+  margin-bottom: 10px;
+  position: relative;
+  max-width: 320px;
+  width: 100%;
+}
+
+.passrecovery .form__blck img {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
 }
 
 .requirements .container {
@@ -4706,9 +4902,12 @@ input:-ms-input-placeholder {
     width: 100%;
   }
 
-  .conferencecreate .form__buttons a.button {
-    max-width: 320px;
+  .conferencecreate .form__buttons a {
     margin-bottom: 0;
+  }
+
+  .conferencecreate .form__buttons button.button {
+    max-width: 320px;
   }
 }
 
@@ -4777,6 +4976,10 @@ input:-ms-input-placeholder {
     max-width: 320px;
     width: 100%;
     min-width: 255px;
+  }
+
+  .conferencecreate {
+    min-height: 1200px;
   }
 
   .conferencecreate .form__blck--todo button.conferencecreate__button {
@@ -4852,3 +5055,5 @@ input:-ms-input-placeholder {
 .webp .conferencecreate { background: url(../img/bg-.webp) center no-repeat; }
 
 .webp .update { background: url(../img/bg.webp) center no-repeat; }
+
+.webp .passrecovery { background: url(../img/bg.webp) center no-repeat; }

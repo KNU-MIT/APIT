@@ -6,28 +6,42 @@
     var user = await userManager.GetUserAsync(User);
 }
 
+
+@* TODO: remove this styles *@
+<style>
+    a {
+    color: red !important;
+    }
+    a:hover {
+    color: orangered !important;
+    }
+</style>
+
+
 @if (Model == null)
 {
     <h2>Is empty yet.</h2>
 }
 else
 {
-    if (!await userManager.IsInRoleAsync(user, RoleNames.SEMPAI))
+    <span>Topics:</span> @Model.Topics.Count()
+        
+    if (!await userManager.IsInRoleAsync(user, RoleNames.MANAGER))
     {
         @if (Model.Participants.Any(a => a.UserId == user.Id))
         {
-            <p>You arleady subscribed</p>
-            <a asp-action="Unsubscribe" asp-controller="conference">Unsubscribe</a>
+            <p>Ви приєдналися до конференції</p>
+            <a asp-action="Unsubscribe" asp-controller="conference">Покинути конференцію</a>
         }
         else
         {
-            <a asp-action="JoinNow" asp-controller="conference">Join now!</a>
+            <a asp-action="JoinNow" asp-controller="conference">Приєднатися!</a>
         }
 
         @ViewData["ResultMessage"]
     }
 
     <div>
-        <p>@Model.Description</p>
+        @Html.Raw(Model.Description)
     </div>
 }

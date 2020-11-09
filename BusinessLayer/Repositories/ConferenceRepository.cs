@@ -6,6 +6,7 @@ using BusinessLayer.Interfaces;
 using BusinessLayer.Models;
 using DatabaseLayer;
 using DatabaseLayer.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLayer.Repositories
 {
@@ -57,7 +58,17 @@ namespace BusinessLayer.Repositories
 
             var dateNow = DateTime.Now;
 
-            var newConference = new Conference(entity.Topics)
+            var topics = entity.Topics
+                .Where(topic => !string.IsNullOrWhiteSpace(topic))
+                .Select(topic => new Topic
+                {
+                    Id = Guid.NewGuid(),
+                    Name = topic,
+                }).ToList();
+
+            Console.WriteLine("Topics: " + topics.Count);
+
+            var newConference = new Conference()
             {
                 Id = Guid.NewGuid(),
                 UniqueAddress = entity.UniqueAddress,
@@ -67,11 +78,19 @@ namespace BusinessLayer.Repositories
                 ShortDescription = entity.ShortDescription,
                 Description = entity.Description,
 
+                Topics = topics,
+
                 DateCreated = dateNow,
                 DateLastModified = dateNow,
                 DateStart = entity.DateStart,
                 DateFinish = entity.DateFinish
             };
+
+            foreach (var topic in newConference.Topics)
+            {
+                topic.Conference = newConference;
+                _ctx.Topics.Add(topic);
+            }
 
             _ctx.Conferences.Add(newConference);
             SaveChanges();
@@ -85,7 +104,12 @@ namespace BusinessLayer.Repositories
 
         public void Delete(Guid id)
         {
-            _ctx.Conferences.Remove(new Conference {Id = id});
+            var instance = _ctx.Conferences.FirstOrDefault(conf => conf.Id == id);
+            if (instance == null) return;
+
+            foreach (var topic in _ctx.Topics.Where(a => a.Conference == instance))
+                _ctx.Entry(topic).State = EntityState.Deleted;
+            _ctx.Entry(instance).State = EntityState.Deleted;
             SaveChanges();
         }
 
@@ -103,6 +127,7 @@ namespace BusinessLayer.Repositories
                 ShortDescription = conf.ShortDescription,
                 Description = conf.Description,
 
+                Topics = GetConfTopics(conf),
                 Participants = GetConfParticipants(conf),
                 Articles = GetConfArticles(conf),
                 Images = GetConfImages(conf),

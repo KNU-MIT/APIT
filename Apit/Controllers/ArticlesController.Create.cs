@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BusinessLayer.DataServices;
@@ -18,6 +19,9 @@ namespace Apit.Controllers
         [Authorize]
         public IActionResult Create()
         {
+            var conference = _dataManager.Conferences.Current;
+            if (conference == null || (!conference.Topics?.Any() ?? true))
+                return RedirectToAction("index", "account");
             return View();
         }
 

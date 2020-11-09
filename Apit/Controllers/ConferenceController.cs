@@ -14,7 +14,8 @@ namespace Apit.Controllers
     public partial class ConferenceController : Controller
     {
         private readonly ILogger<ConferenceController> _logger;
-        private readonly DataManager _dataManager; 
+        private readonly DataManager _dataManager;
+
         private readonly UserManager<User> _userManager;
         // private readonly ProjectConfig.ContentDataConfig _config;
 
@@ -28,18 +29,21 @@ namespace Apit.Controllers
         }
 
 
-        [AllowAnonymous]
-        public IActionResult Index(string id)
+        [Authorize]
+        public async Task<IActionResult> Index(string id)
         {
             var current = string.IsNullOrWhiteSpace(id)
                 ? _dataManager.Conferences.Current
                 : _dataManager.Conferences.GetByUniqueAddress(id);
 
+            var user = await _userManager.GetUserAsync(User);
+            current.User = user;
+
             return View(current);
         }
 
 
-        [Route("join-now"), AllowAnonymous]
+        [Route("/conference/join-now"), AllowAnonymous]
         public async Task<IActionResult> JoinNow()
         {
             if (!User.Identity.IsAuthenticated)
@@ -77,10 +81,10 @@ namespace Apit.Controllers
             return View(conferences);
         }
 
-        [Route("move-to-archive"), Authorize(Roles = RoleNames.SEMPAI)]
+        [Route("/conference/move-to-archive"), Authorize(Roles = RoleNames.ADMIN)]
         public IActionResult MoveToArchive()
         {
-            var current = _dataManager.Conferences.Current;
+            var current = _dataManager.Conferences.GetCurrentAsDbModel();
             current.IsActual = false;
             _dataManager.Conferences.SaveChanges();
 

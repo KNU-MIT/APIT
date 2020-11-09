@@ -37,8 +37,8 @@
         public class ContentDataConfig
         {
             public int TitleMaxLength { get; set; }
+            public int TopicMaxLength { get; set; }
             public int ShortDescriptionMaxLength { get; set; }
         }
-
     }
 }

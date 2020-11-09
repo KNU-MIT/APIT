@@ -21,6 +21,9 @@ namespace BusinessLayer.Repositories
             _ctx.ConfImages.Where(a => a.Conference == conference);
 
 
+        public IEnumerable<Topic> GetConfTopics(Conference conference) =>
+            _ctx.Topics.Where(a => a.Conference == conference);
+        
         public void AddParticipant(Conference conference, User user)
         {
             if (conference.Participants.Any(a => a.UserId == user.Id))

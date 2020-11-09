@@ -1,5 +1,5 @@
 ﻿@{
-    // var user = await userManager.GetUserAsync(User);
+    var user = await userManager.GetUserAsync(User);
     // bool disableLoginForm = ViewData["DisableFooterLoginForm"] != null;
 }
 
@@ -60,6 +60,12 @@
             </div>
 
             <div class="footer__rights">
+                @if (user != null)
+                {
+                    @user.FullName
+                    <a asp-action="logout" asp-controller="account" style="line-height: 6px;">(Вийти з системи)</a>
+                    <br>
+                }
                 © 2020 - Apit2020 - <a asp-action="privacy" asp-controller="home">Privacy</a>
             </div>
         </div>

@@ -4,14 +4,16 @@ using DatabaseLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatabaseLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201107102132_Development_7b")]
+    partial class Development_7b
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -324,15 +326,15 @@ namespace DatabaseLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e0e8c82a-abce-4fe9-8e5b-82bbd2c4b1ef",
-                            ConcurrencyStamp = "d1a14b5c-5415-47d2-bd4a-7c2896a12067",
+                            Id = "8db5c8fd-53b9-4ae5-a7ad-e62bfb269088",
+                            ConcurrencyStamp = "9ab665b2-804d-4656-bf67-78f05d1da3db",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "ee4d8e14-1722-4607-b187-1ef7a49b6281",
-                            ConcurrencyStamp = "0ad09c88-0414-4987-844f-fdd901271724",
+                            Id = "aceb5a31-8a76-4aca-b6eb-48a3089d710f",
+                            ConcurrencyStamp = "157ddbc7-0ef1-4c68-9566-5c3711735e57",
                             Name = "manager",
                             NormalizedName = "MANAGER"
                         });

@@ -1,10 +1,32 @@
-﻿@model EmailViewModel
+﻿@model LoginViewModel
 
-@{ 
-    ViewData["Title"] = "Відправити лист для збросу пароля";
+@{
+    ViewData["Title"] = "Забули пароль? Замініть його на новий!";
 }
 
-<form method="post" asp-action="SendReset" asp-controller="account">
-    <input type="email" asp-for="Email">
-    <button type="submit">Відправити лист для збросу пароля</button>
-</form>
+<div class="passrecovery">
+    <div class="container">
+        <div class="passrecovery__inner">
+
+            <h2 class="title passrecovery__title">Введіть Вашу пошту для видновлення пароля</h2>
+            <div class="passrecovery__description">Якщо Ви справді забули пароль і хочете встановити новий, то введіть Вашу пошту і Вам на скриньку прийде лист з посиланням для його зміни.</div>
+            
+            <div asp-validation-summary="All"></div>
+
+            <form method="post" class="passrecovery__form form" asp-action="SendReset" asp-controller="account">
+
+                <div class="form__blck">
+                    <picture>
+                        <source srcset="~/img/icons/mail-r.webp" type="image/webp">
+                        <img src="~/img/icons/mail-r.png" alt="">
+                    </picture>
+                    <input class="passrecovery__input" type="email" asp-for="Email" placeholder="Ваш Email">
+                </div>
+
+                <button class="passrecovery__button" type="submit">Відіслати</button>
+
+            </form>
+
+        </div>
+    </div>
+</div>

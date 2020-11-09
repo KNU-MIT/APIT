@@ -37,20 +37,6 @@ namespace DatabaseLayer.Entities
             Topics = new HashSet<Topic>();
         }
 
-        public Conference(IEnumerable<string> topicNames)
-        {
-            Participants = new HashSet<ConferenceParticipant>();
-            Articles = new HashSet<Article>();
-            Images = new HashSet<ConferenceImage>();
-
-            Topics = topicNames.Select(topicName => new Topic
-            {
-                Id = Guid.NewGuid(),
-                Name = topicName,
-                Conference = this
-            }).ToList();
-        }
-
 
         public static bool operator ==(Conference a, Conference b) => a?.Id == b?.Id;
         public static bool operator !=(Conference a, Conference b) => !(a == b);

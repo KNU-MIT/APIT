@@ -24,7 +24,7 @@ namespace Apit.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
 
             var result = await _signInManager.PasswordSignInAsync
-                (model.Email, model.Password, model.RememberMe, false);
+                (model.Email, model.Password, true, false);
 
             if (result.Succeeded)
             {
@@ -44,57 +44,68 @@ namespace Apit.Controllers
             return RedirectToAction("index", "home");
         }
 
-
-        [Route("send-reset"), HttpPost]
-        public async Task<IActionResult> SendReset(string email)
+        [Route("/account/send-reset")]
+        public IActionResult SendReset()
         {
-            ModelState.AddModelError(nameof(LoginViewModel.Password),
-                "Вам на пошту вудпрвлено лист для зміни пароля");
+            return View();
+        }
 
-            var user = await _userManager.GetUserAsync(User);
+        [Route("/account/send-reset"), HttpPost]
+        public IActionResult SendReset(LoginViewModel model)
+        {
+            var user = _dataManager.Users.GetByEmail(model.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError(nameof(model.Email),
+                    "Користувача з такою поштою не знайдено");
+                return View(model);
+            }
+
             string confirmationToken = _userManager.GeneratePasswordResetTokenAsync(user).Result;
 
-            string confirmationLink = Url.Action
-            ("ConfirmEmail", "account", new
+            string confirmationLink = Url.Action("ChangePassword", "account", new
             {
                 id = user.Id,
                 token = confirmationToken
             }, protocol: HttpContext.Request.Scheme);
 
             _mailService.SendActionEmail(user.Email,
-                "Зміна пароля на сайті конференції",
+                "APIT | Зміна пароля на сайті конференції",
                 MailService.Presets.ResetPassword, confirmationLink);
             _logger.LogDebug("Password reset email was sent to: " + user.Email);
 
-            return View("login");
+            ModelState.AddModelError(string.Empty,
+                "Вам на пошту відпрвлено лист для зміни пароля");
+
+            return RedirectToAction("login", "account");
         }
 
-        [Route("change-password"), Authorize]
-        public async Task<IActionResult> ChangePassword(string id, string token)
+        [Route("/account/change-password")]
+        public IActionResult ChangePassword(string id, string token)
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user.Id != id) return View("error");
+            var userFromEmail = _dataManager.Users.GetById(id);
+            if (userFromEmail == null) return View("error");
             return View(new ResetPasswordViewModel
             {
-                User = id,
+                User = userFromEmail,
                 Token = token
             });
         }
 
-        [Route("change-password"), Authorize, HttpPost]
-        public async Task<IActionResult> ChangePassword(ResetPasswordViewModel model)
+        [Route("/account/change-password"), HttpPost]
+        public async Task<IActionResult> ChangePassword(ResetPasswordViewModel model, string id, string token)
         {
             if (!ModelState.IsValid) return View(model);
 
-            var user = await _userManager.GetUserAsync(User);
-            if (user.Id != model.User) return View("error");
+            var user = _dataManager.Users.GetById(id);
+            if (user == null) return View("error");
 
-            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.PasswordConfirm);
+            var result = await _userManager.ResetPasswordAsync(user, token, model.PasswordConfirm);
             if (result.Succeeded)
             {
                 _logger.LogError($"User {user.ProfileAddress} password changed");
                 ViewBag.Message = "Ви успішно змінили пароль!";
-                return View("success");
+                return View("login");
             }
 
             _logger.LogError($"User {user.ProfileAddress} NOT changed password");

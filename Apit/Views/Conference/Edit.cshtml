@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Редагування конференції";
+    ViewData["DisableFooter"] = true;
 
     var config = ProjectConfig.Content.Conference;
     var user = await userManager.GetUserAsync(User);

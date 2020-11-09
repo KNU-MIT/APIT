@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using Aspose.Words;
 using BusinessLayer.Interfaces;
 using Microsoft.AspNetCore.Http;
 using SautinSoft;
@@ -13,9 +12,17 @@ namespace BusinessLayer.DataServices
     {
         public const string DOCS_DIR = "../Local/ArticlesDocs/";
         public const string HTML_DIR = "../Local/ArticlesHtml/";
+        public const string DEST_IMG_DIR = "../Apit/wwwroot/img/articles/";
         public const string IMAGES_DIR = "../Local/Gallery/";
 
 
+        /// <summary>
+        /// Generate some unique key to use it as object route address
+        /// </summary>
+        /// <param name="data">Repository reference object</param>
+        /// <param name="length">key chars summary count</param>
+        /// <typeparam name="TKey">IAddressedData Type</typeparam>
+        /// <returns>Fixed size (from length param) string</returns>
         public static string GenerateUniqueAddress<TKey>(IAddressedData<TKey> data, int length)
         {
             int iter = 0;
@@ -32,23 +39,34 @@ namespace BusinessLayer.DataServices
 
         public static async Task<string> TrySaveDocFile(IFormFile docFile, string fileName, string extension)
         {
-            try
-            {
-                var docxPath = Path.Combine(DOCS_DIR, fileName + extension);
-                var htmlPath = Path.Combine(HTML_DIR, fileName + Extension.Htm);
+            // try
+            // {
+            string docxPath = Path.Combine(DOCS_DIR, fileName + extension);
+            string htmlPath = Path.Combine(HTML_DIR, fileName + Extension.Htm);
 
-                await using var stream = new FileStream(docxPath, FileMode.Create);
+            await using (var stream = new FileStream(docxPath, FileMode.Create))
                 await docFile.CopyToAsync(stream);
-                stream.Close();
 
-                await MSWordParser.Save(docxPath, htmlPath, RtfToHtml.eOutputFormat.HTML_5);
+            // Save original .doc(x) and .htm(l) copy 
+            await MSWordParser.Save(docxPath, htmlPath, RtfToHtml.eOutputFormat.HTML_5);
 
-                return null;
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
+            string imagesPath = htmlPath + "_images";
+
+            if (!Directory.Exists(imagesPath)) return null;
+            string imgDestDir = Path.Combine(DEST_IMG_DIR, fileName + Extension.Htm);
+            if (!Directory.Exists(imgDestDir)) Directory.CreateDirectory(imgDestDir);
+
+            foreach (string imgPath in Directory.EnumerateFiles(imagesPath))
+                File.Move(imgPath, Path.Combine(imgDestDir, Path.GetFileName(imgPath)));
+
+            Directory.Delete(imagesPath);
+
+            return null;
+            // }
+            // catch (Exception e)
+            // {
+            // return e.Message;
+            // }
         }
 
         public static async void SaveFile(IFormFile sourceFile, string fileName)
