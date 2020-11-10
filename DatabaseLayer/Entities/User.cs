@@ -16,8 +16,8 @@ namespace DatabaseLayer.Entities
 
 
         [Required] public string WorkingFor { get; set; }
-        public string ScienceDegree { get; set; }
-        public string AcademicTitle { get; set; }
+        public ScienceDegree ScienceDegree { get; set; }
+        public AcademicTitle AcademicTitle { get; set; }
         public ParticipationForm ParticipationForm { get; set; }
 
 

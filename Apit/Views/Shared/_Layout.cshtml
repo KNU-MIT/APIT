@@ -31,7 +31,7 @@
 
 @RenderBody()
 
-@if (ViewData["WithoutFooter"] != null)
+@if (ViewData["WithoutFooter"] == null)
 {
     @await Html.PartialAsync("Partials/FooterPartial")
 }

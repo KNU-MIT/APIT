@@ -41,13 +41,6 @@ namespace Apit.Controllers
             return user == null ? View("error") : View(user);
         }
 
-        [Authorize]
-        public async Task<IActionResult> Edit()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            return View(new EditUserViewModel {EmailConfirmed = user.EmailConfirmed});
-        }
-
         [Route("access-denied")]
         public IActionResult AccessDenied()
         {
@@ -73,10 +66,10 @@ namespace Apit.Controllers
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
             if (!ModelState.IsValid)
-                return View(new EditUserViewModel
-                {
-                    ResultMessage = "не вдалось дані змінити"
-                });
+            {
+                ViewData["ResultMessage"] = "не вдалось дані змінити";
+                return LocalRedirect("account#popup");
+            }
 
 
             var user = await _userManager.GetUserAsync(User);
@@ -97,33 +90,41 @@ namespace Apit.Controllers
             if (!string.IsNullOrWhiteSpace(model.WorkingFor))
                 user.WorkingFor = model.WorkingFor;
 
-            if (!string.IsNullOrWhiteSpace(model.AltScienceDegree))
-            {
-                var str = model.ScienceDegree.ToString();
-                if (user.ScienceDegree != str) user.ScienceDegree = str;
-            }
-            else if (user.ScienceDegree != model.AltScienceDegree)
-                user.ScienceDegree = model.AltScienceDegree;
+            
+            // if (!string.IsNullOrWhiteSpace(model.AltScienceDegree))
+            // {
+            //     var str = model.ScienceDegree.ToString();
+            //     if (user.ScienceDegree != str) user.ScienceDegree = str;
+            // }
+            // else if (user.ScienceDegree != model.AltScienceDegree)
+            //     user.ScienceDegree = model.AltScienceDegree;
 
-
-            if (!string.IsNullOrWhiteSpace(model.AltAcademicTitle))
-            {
-                var strAcad = model.AcademicTitle.ToString();
-                if (user.AcademicTitle != strAcad) user.AcademicTitle = strAcad;
-            }
-            else if (user.AcademicTitle != model.AltAcademicTitle)
-                user.AcademicTitle = model.AltAcademicTitle;
+            if (user.ScienceDegree != model.ScienceDegree)
+                user.ScienceDegree = model.ScienceDegree;
+            
+            // if (!string.IsNullOrWhiteSpace(model.AltAcademicTitle))
+            // {
+            //     var strAcad = model.AcademicTitle.ToString();
+            //     if (user.AcademicTitle != strAcad) user.AcademicTitle = strAcad;
+            // }
+            // else if (user.AcademicTitle != model.AltAcademicTitle)
+            //     user.AcademicTitle = model.AltAcademicTitle;
+            
+            if (user.AcademicTitle != model.AcademicTitle)
+                user.AcademicTitle = model.AcademicTitle;
+            
 
             if (user.ParticipationForm != model.ParticipationForm)
                 user.ParticipationForm = model.ParticipationForm;
 
-            //TODO: two-factor auth with phone number
+            //TODO: (or not to do) two-factor auth with phone number
 
             _dataManager.Users.SaveChanges();
 
             _logger.LogDebug($"User {user.ProfileAddress} has changed his data");
 
-            return View(new EditUserViewModel {ResultMessage = "дані успішно змінено"});
+            ViewData["ResultMessage"] = "дані успішно змінено";
+            return LocalRedirect("account#popup");
         }
     }
 }

@@ -34,8 +34,8 @@ namespace Apit.Controllers
                 MiddleName = model.MiddleName,
 
                 WorkingFor = model.WorkingFor,
-                ScienceDegree = model.ScienceDegree.ToString(),
-                AcademicTitle = model.AcademicTitle.ToString(),
+                ScienceDegree = model.ScienceDegree,
+                AcademicTitle = model.AcademicTitle,
                 ParticipationForm = model.ParticipationForm,
 
                 Email = model.Email,

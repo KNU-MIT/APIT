@@ -20,33 +20,38 @@
                   asp-route-returnUrl="@Model.ReturnUrl">
 
                 <div class="form__blck form__blck--trpl">
-                    <input asp-for="MiddleName" type="text" placeholder="Прізвище">
-                    <input asp-for="FirstName" type="text" placeholder="Ім'я">
-                    <input asp-for="LastName" type="text" placeholder="По-батькові">
+                    <input asp-for="MiddleName" type="text" placeholder="Прізвище" maxlength="100">
+                    <input asp-for="FirstName" type="text" placeholder="Ім'я" maxlength="100">
+                    <input asp-for="LastName" type="text" placeholder="По-батькові" maxlength="100">
                 </div>
 
                 <div class="form__blck form__blck--select form__blck--dbl">
+
                     <input asp-for="WorkingFor" type="text" placeholder="Місце навчання/роботи">
+
                     <div class="signup__select">
                         <select type="select" asp-for="ScienceDegree" asp-items="Html.GetEnumSelectList<ScienceDegree>()">
                             <option disabled selected="selected">Науковий ступінь</option>
                             <option class="signup__difference" value="difference">Інше...</option>
                         </select>
                     </div>
+
                 </div>
 
                 <div class="form__blck form__blck--select form__blck--dbl">
+
                     <div class="signup__select">
                         <select type="select" asp-for="AcademicTitle" asp-items="Html.GetEnumSelectList<AcademicTitle>()">
                             <option value="" disabled selected>Вчене звання</option>
-                            <option class="signup__difference" value="difference">Інше...</option>
                         </select>
                     </div>
+
                     <div class="signup__select">
                         <select type="select" asp-for="ParticipationForm" asp-items="Html.GetEnumSelectList<ParticipationForm>()">
                             <option value="" disabled selected>Форма участі</option>
                         </select>
                     </div>
+
                 </div>
 
                 <div class="form__blck">
@@ -59,6 +64,7 @@
                 </div>
 
                 <div class="form__buttons">
+
                     <button class="button signin__button" type="submit">
                         Зареєструватися
                         <picture>
@@ -66,9 +72,11 @@
                             <img src="~/img/icons/atom.png" alt="">
                         </picture>
                     </button>
+
                     <a class="signin__button" href="@(Model.ReturnUrl ?? "/")">
                         Назад
                     </a>
+
                 </div>
 
             </form>

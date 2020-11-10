@@ -10,7 +10,7 @@ namespace BusinessLayer.Models
 
     public class NewArticleViewModel
     {
-        [Required(ErrorMessage = "Оберіть файл з матеріалом"), Display(Name = "Файл із матеріалами")]
+        [Display(Name = "Файл із матеріалами")]
         public IFormFile DocFile { get; set; }
 
         [Required(ErrorMessage = "Оберіть тему Вашої роботи"), Display(Name = "Тематика")]

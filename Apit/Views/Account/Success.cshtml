@@ -6,19 +6,19 @@
     var user = await userManager.GetUserAsync(User);
 }
 
-<h1>@Model</h1>
-<p>@ViewBag.Message</p>
 
+<h3 class="title__alert">@Model</h3>
+<h3 class="title__alert">@ViewBag.Message</h3>
 
-@if (user != null)
-{
-    <a class="nav-link text-dark" asp-controller="account" asp-action="index"
-       asp-route-x="@user.ProfileAddress" title="Manage">
-        Return to my page
-    </a>
-}
-else
-{
-    <a asp-action="login" asp-controller="account">Log in</a>
-}
-<hr>
+<form>
+    @if (user != null)
+    {
+        <a class="signin__button" asp-controller="account" asp-action="index" asp-route-x="@user.ProfileAddress">
+            Назад
+        </a>
+    }
+    else
+    {
+        <a class="signin__button" asp-action="login" asp-controller="account">Вхід</a>
+    }
+</form>

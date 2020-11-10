@@ -39,34 +39,34 @@ namespace BusinessLayer.DataServices
 
         public static async Task<string> TrySaveDocFile(IFormFile docFile, string fileName, string extension)
         {
-            // try
-            // {
-            string docxPath = Path.Combine(DOCS_DIR, fileName + extension);
-            string htmlPath = Path.Combine(HTML_DIR, fileName + Extension.Htm);
+            try
+            {
+                string docxPath = Path.Combine(DOCS_DIR, fileName + extension);
+                string htmlPath = Path.Combine(HTML_DIR, fileName + Extension.Htm);
 
-            await using (var stream = new FileStream(docxPath, FileMode.Create))
-                await docFile.CopyToAsync(stream);
+                await using (var stream = new FileStream(docxPath, FileMode.Create))
+                    await docFile.CopyToAsync(stream);
 
-            // Save original .doc(x) and .htm(l) copy 
-            await MSWordParser.Save(docxPath, htmlPath, RtfToHtml.eOutputFormat.HTML_5);
+                // Save original .doc(x) and .htm(l) copy 
+                await MSWordParser.Save(docxPath, htmlPath, RtfToHtml.eOutputFormat.HTML_5);
 
-            string imagesPath = htmlPath + "_images";
+                string imagesPath = htmlPath + "_images";
 
-            if (!Directory.Exists(imagesPath)) return null;
-            string imgDestDir = Path.Combine(DEST_IMG_DIR, fileName + Extension.Htm);
-            if (!Directory.Exists(imgDestDir)) Directory.CreateDirectory(imgDestDir);
+                if (!Directory.Exists(imagesPath)) return null;
+                string imgDestDir = Path.Combine(DEST_IMG_DIR, fileName + Extension.Htm);
+                if (!Directory.Exists(imgDestDir)) Directory.CreateDirectory(imgDestDir);
 
-            foreach (string imgPath in Directory.EnumerateFiles(imagesPath))
-                File.Move(imgPath, Path.Combine(imgDestDir, Path.GetFileName(imgPath)));
+                foreach (string imgPath in Directory.EnumerateFiles(imagesPath))
+                    File.Move(imgPath, Path.Combine(imgDestDir, Path.GetFileName(imgPath)));
 
-            Directory.Delete(imagesPath);
+                Directory.Delete(imagesPath);
 
-            return null;
-            // }
-            // catch (Exception e)
-            // {
-            // return e.Message;
-            // }
+                return null;
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
         }
 
         public static async void SaveFile(IFormFile sourceFile, string fileName)

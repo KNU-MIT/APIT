@@ -29,20 +29,23 @@
 }
 
 <section>
-    <h4>
-        <span>Topic: </span> @article.Topic?.Name
-    </h4>
-    <h3>@article.Title</h3>
-    <hr>
+    <div class="container">
+        <h2>@article.Title</h2>
+        <h3>@article.Topic</h3>
 
-    @Html.Raw(article.HTMLContent)
+        <div class="articles__date">
+            @article.GetFormatCreatingDate()
+        </div>
 
-    <hr>
-    @if (!string.IsNullOrWhiteSpace(article.DocFileAddress))
-    {
-        <a asp-controller="resources" asp-action="document" asp-route-id="@article.DocFileAddress">
-            Download as document
-        </a>
-    }
-    <span>Created at: @article.DateCreated.ToString(CultureInfo.CurrentCulture)</span>
+        @Html.Raw(article.HTMLContent)
+
+        <hr>
+        @if (!string.IsNullOrWhiteSpace(article.DocFileAddress))
+        {
+            <a asp-controller="resources" asp-action="document" asp-route-id="@article.DocFileAddress">
+                Завантажити документ
+            </a>
+        }
+
+    </div>
 </section>

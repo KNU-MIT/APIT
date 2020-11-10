@@ -17,14 +17,14 @@
 
 @if (!Model.Collection.Any())
 {
-    <h2>Empty.</h2>
+    <h3 class="title__alert">Поки тут порожньо...</h3>
 }
 else
 {
     <section class="articles">
         <div class="container">
             <div class="articles__inner">
-                @await Html.PartialAsync("Components/SearchPanel")
+                @* @await Html.PartialAsync("Components/SearchPanel") *@
                 <h2 class="articles__title title">Статті</h2>
                 @await Html.PartialAsync("Components/ArticlesList", Model.Collection)
             </div>

@@ -58,7 +58,7 @@ namespace Apit.Controllers
             _logger.LogInformation("Upload file with extension: " + extension);
             if (model.DocFile.Length > 0)
             {
-                if (!Regex.IsMatch(extension ?? "", @".docx?$"))
+                if (!Regex.IsMatch(extension ?? "", @"\.docx?$"))
                 {
                     ModelState.AddModelError(nameof(model.DocFile),
                         "невірний формат файлу (доступно лише .doc і .docx)");
@@ -92,13 +92,15 @@ namespace Apit.Controllers
             var dateNow = DateTime.Now;
             var user = await _userManager.GetUserAsync(User);
 
-            var authors = new List<UserOwnArticlesLinking>();
-            authors.Add(new UserOwnArticlesLinking
+            var authors = new List<UserOwnArticlesLinking> 
             {
-                Id = Guid.NewGuid(),
-                UserId = user.Id,
-                User = user
-            });
+                new UserOwnArticlesLinking
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = user.Id, 
+                    User = user
+                }
+            };
 
             var article = new Article
             {
