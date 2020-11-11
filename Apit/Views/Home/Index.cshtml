@@ -73,7 +73,7 @@
 
             <div class="preview__motto">Актуальні проблеми інформаційних технологій</div>
 
-            <a asp-action="index" asp-controller="conference" class="preview__button">
+            <a href="#footer" class="preview__button">
                 Приєднатися
                 <picture>
                     <source srcset="~/img/icons/atom.webp" type="image/webp">
@@ -400,11 +400,11 @@
 
                 <div class="new__text">
                     <h2 class="new__title title">@conference.Title</h2>
-                    <h3 class="new__subtitle">Відвідайте прямо зараз</h3>
+                    <h3 class="new__subtitle">@conference.ShortDescription</h3>
                 </div>
 
                 <a class="new__button button" asp-action="index" asp-controller="conference">
-                    Дивитися
+                    Приєднатися
                     <picture>
                         <source srcset="~/img/icons/atom.webp" type="image/webp">
                         <img src="~/img/icons/atom.png" alt="">

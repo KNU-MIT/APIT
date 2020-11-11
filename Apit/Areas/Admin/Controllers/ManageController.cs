@@ -29,6 +29,7 @@ namespace Apit.Areas.Admin.Controllers
 
         public JsonResult GetParticipantsData(string conf, string field)
         {
+            _logger.LogInformation("Attempt to get participants data detected");
             var conference = _dataManager.Conferences.GetByUniqueAddress(conf);
             if (conference == null) return new JsonResult(null);
             var users = conference.Participants

@@ -155,8 +155,9 @@
                         if (isAdmin)
                         {
                             <a class="profile__button" asp-action="moveToArchive" asp-controller="conference">Завершити</a>
-                            <a class="profile__button" href="/manage/conference/statistics">Статистика</a>
                         }
+                        
+                        <a class="profile__button" asp-area="admin" asp-action="ConferenceStatistics" asp-controller="manage">Статистика</a>
 
                         @if (conference.Participants.All(item => item == null))
                         {
@@ -175,7 +176,7 @@
                 @if (isOwnPage)
                 {
                     <h2 class="profile__title profile__title--nc title">Мої матеріали</h2>
-                    @if (conference != null)
+                    @if (conference != null && !needToConfirmEmail)
                     {
                         <a class="profile__button profile__button--red" asp-controller="articles" asp-action="create">Додати</a>
                     }

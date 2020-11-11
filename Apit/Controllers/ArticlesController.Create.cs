@@ -34,7 +34,7 @@ namespace Apit.Controllers
             bool hasIncorrectData = false;
 
             #region ================ Long form review ================
-            
+
             // Check selected topic existing
             var topic = model.TopicId == null ? null : _dataManager.Topics.GetById(Guid.Parse(model.TopicId));
             if (topic == null)
@@ -53,11 +53,13 @@ namespace Apit.Controllers
             }
 
             // Check uploaded file
-            var extension = Path.GetExtension(model.DocFile.FileName);
-            string uniqueAddress = _dataManager.Articles.GenerateUniqueAddress();
-            _logger.LogInformation("Upload file with extension: " + extension);
+            string extension = default, uniqueAddress = default;
             if (model.DocFile.Length > 0)
             {
+                extension = Path.GetExtension(model.DocFile.FileName);
+                uniqueAddress = _dataManager.Articles.GenerateUniqueAddress();
+                _logger.LogInformation("Upload file with extension: " + extension);
+
                 if (!Regex.IsMatch(extension ?? "", @"\.docx?$"))
                 {
                     ModelState.AddModelError(nameof(model.DocFile),
@@ -92,12 +94,12 @@ namespace Apit.Controllers
             var dateNow = DateTime.Now;
             var user = await _userManager.GetUserAsync(User);
 
-            var authors = new List<UserOwnArticlesLinking> 
+            var authors = new List<UserOwnArticlesLinking>
             {
                 new UserOwnArticlesLinking
                 {
                     Id = Guid.NewGuid(),
-                    UserId = user.Id, 
+                    UserId = user.Id,
                     User = user
                 }
             };

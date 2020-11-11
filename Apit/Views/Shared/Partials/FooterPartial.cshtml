@@ -1,6 +1,8 @@
 ﻿@{
     var user = await userManager.GetUserAsync(User);
-    // bool disableLoginForm = ViewData["DisableFooterLoginForm"] != null;
+    // bool disableLoginForm = ViewData["DisableFooterLoginForm"] != nul
+    
+    string currentYear = DateTime.Now.ToString("yyyy");
 }
 
 @*
@@ -48,7 +50,7 @@
 }
 *@
 
-<footer class="footer">
+<footer class="footer" id="footer">
     <div class="container">
 
         <div class="footer__inner">
@@ -63,12 +65,12 @@
                 @if (user != null)
                 {
                     @user.FullName
-                    <a asp-action="logout" asp-controller="account" style="line-height: 6px;">(Вийти з системи)</a>
+                    <a asp-action="logout" asp-controller="account" style="line-height: 6px; padding-bottom: 4px;"> – Вийти з системи</a>
                     <br>
                 }
-                © 2020 - Apit2020 - <a asp-action="privacy" asp-controller="home">Privacy</a>
+                © Apit @currentYear - <a asp-action="privacy" asp-controller="home">Privacy</a>
             </div>
         </div>
 
-    </div> <!-- /container -->
-</footer> <!-- /footer -->
+    </div>
+</footer>

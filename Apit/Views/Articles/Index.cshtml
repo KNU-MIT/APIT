@@ -18,34 +18,41 @@
     var conference = dataManager.Conferences.Current;
 }
 
-@if (conference != null && (isMine || await userManager.IsInRoleAsync(user, RoleNames.ADMIN)))
-{
-    <div class="profile__admin">
-        <a class="profile__button" asp-controller="articles" asp-action="edit" asp-route-x="@article.UniqueAddress">Редагувати</a>
-        <form method="post" asp-controller="articles" asp-action="delete" asp-route-x="@article.UniqueAddress">
-            <button type="submit" class="profile__button" asp-action="archive" asp-controller="conference">Видалити</button>
-        </form>
-    </div>
-}
 
-
-<section class="profile">
+<section class="article">
     <div class="container">
 
-        <h2>@article.Title</h2>
-        <h3>@article.Topic</h3>
-
-        <div class="articles__date">@article.GetFormatCreatingDate()</div>
-
-        @Html.Raw(article.HTMLContent)
-
-        <hr>
-        @if (!string.IsNullOrWhiteSpace(article.DocFileAddress))
+        @if (conference != null && (isMine || await userManager.IsInRoleAsync(user, RoleNames.ADMIN)))
         {
-            <a asp-controller="resources" asp-action="document" asp-route-id="@article.DocFileAddress">
-                Завантажити документ
-            </a>
+            <form class="profile__admin" method="post" asp-controller="articles"
+                  asp-action="delete" asp-route-x="@article.UniqueAddress">
+                <a class="profile__button" asp-controller="articles"
+                   asp-action="edit" asp-route-x="@article.UniqueAddress">
+                    Редагувати
+                </a>
+                <button type="submit" class="profile__button"
+                        asp-action="archive" asp-controller="conference">
+                    Видалити
+                </button>
+            </form>
         }
+        
+        <div class="article__inner">
 
+            <h2 class="article__title title">@article.Title</h2>
+            <h3 class="article__subtitle">@article.Topic</h3>
+
+            <div class="article__date">@article.GetFormatCreatingDate()</div>
+
+            @Html.Raw(article.HTMLContent)
+
+            @if (!string.IsNullOrWhiteSpace(article.DocFileAddress))
+            {
+                <a class="article__button" asp-controller="resources" asp-action="document" asp-route-id="@article.DocFileAddress">
+                    Завантажити документ
+                </a>
+            }
+
+        </div>
     </div>
 </section>

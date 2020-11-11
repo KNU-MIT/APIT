@@ -15,8 +15,8 @@
     <div class="header__links">
         @if (user != null)
         {
-            <a asp-controller="account" asp-action="index"
-               asp-route-x="@user.ProfileAddress" title="Manage">
+            <a class="header__sign" asp-controller="account"
+               asp-action="index" asp-route-x="@user.ProfileAddress" title="Особистий кабінет">
                 @user.FullName
             </a>
         }

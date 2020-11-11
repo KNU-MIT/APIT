@@ -8,30 +8,36 @@
     var allTopics = conference.Topics?.ToList() ?? new List<Topic>();
 }
 
-<section class="conferencecreate conferencecreate--fullpage">
+
+<section class="articlecreate conferencecreate conferencecreate--fullpage">
+    
+    <div asp-validation-summary="All"></div>
+
     <div class="container">
-
-        <div asp-validation-summary="All"></div>
-
         <div class="conferencecreate__inner">
 
             <div class="conferencecreate__title title">
                 Створити статтю
             </div>
 
-            <form class="conferencecreate__form" enctype="multipart/form-data" asp-controller="articles"
-                  asp-action="create" method="post" asp-route-returnUrl="@Url.Action("list", "articles")">
+            <form method="post" asp-controller="articles" asp-action="create"
+                  asp-route-returnUrl="@Url.Action("index", "articles")"
+                  class="conferencecreate__form" id="conferenceCreating">
 
                 @* <div class="form__blck form__blck--todo"> *@
-                @*     <input type="text" placeholder="Співавтор статті"> *@
+                @*     <input asp-for="AdminKeys" value="@user.ProfileAddress" type="text" id="adminInput" placeholder="Адміністрація конференції"> *@
                 @*     <button type="cancel" id="adminButton" class="button conferencecreate__button">Додати</button> *@
                 @* </div> *@
                 @* *@
-                @* <ul id="adminList" class="conferencecreate__list"></ul> *@
+                @* <ul id="adminList" class="conferencecreate__list"> *@
+                @*     <li class="conferencecreate__topic conferencecreate__topic--static"> *@
+                @*         <input class="form__input--static" asp-for="AdminKeys" value="@user.ProfileAddress" disabled type="text" placeholder="Адміністрація конференції"> *@
+                @*     </li> *@
+                @* </ul> *@
 
-                <div class="form__blck form__blck--select form__blck--dbl">
-                    <div class="signup__select">
-                        <select asp-for="TopicId">
+                <div class="form__blck form__blck--select">
+                    <div class="signup__select" style="width: 100%;">
+                        <select asp-for="TopicId" style="max-width: none;">
                             <option value="" disabled selected>Тема статті</option>
                             @foreach (var topic in allTopics)
                             {
@@ -51,7 +57,7 @@
 
                     <div class="form__blck--file">
                         <input asp-for="DocFile" type="file" accept=".docx, .doc" id="articleFile">
-                        <label data-multiple-caption="обрано {count} файл" for="articleFile">Оберіть файл</label>
+                        <label data-multiple-caption="{count} files selected" for="articleFile">Оберіть файл</label>
                     </div>
                 </div>
 
@@ -69,7 +75,8 @@
                 </div>
 
             </form>
-        </div>
 
+        </div>
     </div>
+    
 </section>
