@@ -12,29 +12,30 @@ namespace Apit.Controllers
             _logger = logger;
         }
 
-        [Route("/error/{statusCode}")]
-        public IActionResult HttpStatusCodeHandler(int statusCode)
+        [Route("/error")]
+        public IActionResult HttpStatusCodeHandler()
         {
-            if (statusCode == default) statusCode = 100500;
+            if (ViewData["ErrorTitle"] == default) ViewData["ErrorTitle"] = 100500;
             
-            string message;
-            switch (statusCode)
-            {
-                case 404:
-                    message = "Такої сторінки не існує :(";
-                    break;
-                default:
-                    if (statusCode >= 500)
-                        message = "На сервері виникла якась помилка... <br>" +
-                                  "Ми найближчим часом її обов'язково вирішино";
-                    else message = "Виникла невідома помилка";
-                    break;
-            }
+            // string message;
+            // switch (statusCode)
+            // {
+            //     case 404:
+            //         message = "Такої сторінки не існує :(";
+            //         break;
+            //     default:
+            //         if (statusCode >= 500)
+            //             message = "На сервері виникла якась помилка... <br>" +
+            //                       "Ми найближчим часом її обов'язково вирішино";
+            //         else message = "Виникла невідома помилка";
+            //         break;
+            // }
 
-            ViewData["ErrorTitle"] = statusCode;
-            ViewData["ErrorMessage"] = $"<h1><{statusCode}/h1>{message}";
+            // ViewData["ErrorTitle"] =  statusCode;
+            // ViewData["ErrorMessage"] = message;
 
-            if (statusCode != 404) _logger.LogError($"error handled [code:{statusCode}]");
+            if ((string) ViewData["ErrorTitle"] != "404") 
+                _logger.LogError($"error handled [code:{ViewData["ErrorTitle"]}]");
             return View("error");
         }
     }

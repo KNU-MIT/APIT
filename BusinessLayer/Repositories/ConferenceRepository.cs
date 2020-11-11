@@ -65,9 +65,7 @@ namespace BusinessLayer.Repositories
                     Id = Guid.NewGuid(),
                     Name = topic,
                 }).ToList();
-
-            Console.WriteLine("Topics: " + topics.Count);
-
+            
             var newConference = new Conference()
             {
                 Id = Guid.NewGuid(),
