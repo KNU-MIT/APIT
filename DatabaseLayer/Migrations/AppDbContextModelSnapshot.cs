@@ -182,8 +182,8 @@ namespace DatabaseLayer.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("AcademicTitle")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<short>("AcademicTitle")
+                        .HasColumnType("smallint");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -244,8 +244,8 @@ namespace DatabaseLayer.Migrations
                     b.Property<string>("ProfilePhoto")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ScienceDegree")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<short>("ScienceDegree")
+                        .HasColumnType("smallint");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -324,15 +324,15 @@ namespace DatabaseLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e0e8c82a-abce-4fe9-8e5b-82bbd2c4b1ef",
-                            ConcurrencyStamp = "d1a14b5c-5415-47d2-bd4a-7c2896a12067",
-                            Name = "admin",
-                            NormalizedName = "ADMIN"
+                            Id = "04ca4593-a2c9-4d7c-a7b7-d42bb04a47b8",
+                            ConcurrencyStamp = "532dbcab-581d-4929-91c9-e9742996518a",
+                            Name = "root_admin",
+                            NormalizedName = "ROOT_ADMIN"
                         },
                         new
                         {
-                            Id = "ee4d8e14-1722-4607-b187-1ef7a49b6281",
-                            ConcurrencyStamp = "0ad09c88-0414-4987-844f-fdd901271724",
+                            Id = "fd724de2-7465-49eb-bbd4-8599d388711f",
+                            ConcurrencyStamp = "cf80d98e-1de0-4d96-849f-e853de2527a4",
                             Name = "manager",
                             NormalizedName = "MANAGER"
                         });

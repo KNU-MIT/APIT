@@ -17,17 +17,17 @@
     bool needToConfirmEmail = !Model.EmailConfirmed && isOwnPage;
 
 
-    IHtmlContent AddOptionsFrom<TEnum>(TEnum selected) where TEnum : Enum
+    IHtmlContent AddOptionsFrom<TEnum>(TEnum selected) where TEnum : struct, Enum
     {
-        var enumOptionsArray = Enum.GetValues(typeof(TEnum));
+        var enumOptionsArray = EnumParser<TEnum>.GetDisplayValues().ToList();
         var options = new StringBuilder();
 
-        int lastIndex = enumOptionsArray.Length - 1;
+        int lastIndex = enumOptionsArray.Count - 1;
         int iter = 0;
-        foreach (TEnum item in enumOptionsArray)
+        foreach (string item in enumOptionsArray)
         {
-            string propValue = item.ToString().Replace('_', ' ');
-            string selectedOption = Equals(item, selected) ? "selected=\"selected\"" : "";
+            string propValue = item.Replace('_', ' ');
+            string selectedOption = item == selected.ToString() ? "selected=\"selected\"" : "";
             if (lastIndex == iter++)
             {
                 selectedOption += "class=\"signup__difference\"";
@@ -40,63 +40,47 @@
 
 
 <section class="profile">
-<div class="container">
+    <div class="container">
 
-    @if (conference != null)
-    {
-        <div class="profile__propose">
-            <div class="profile__heading">@conference.Title</div>
-            <a class="profile__button profile__button--redIn" asp-action="index" asp-controller="conference">Дивитися</a>
-        </div>
-    }
-
-    <div class="profile__inner">
-
-        @* <h2 class="profile__title title">Особистий кабінет</h2> *@
-
-        <div class="profile__panel">
-
-            <div class="profile__administrator">
-                <h3 class="profile__name">@Model.FullName</h3>
-                @if (needToConfirmEmail)
-                {
-                    <div class="profile__status">Підтвердіть вашу пошту</div>
-                }
-                else if (isManager || isAdmin)
-                {
-                    <div class="profile__status">Менеджер конференції</div>
-                }
-                else
-                {
-                    <div class="profile__status">@Model.ParticipationForm</div>
-                }
+        @if (user != null && conference != null && !conference.Participants.Any(a => a.UserId == user.Id))
+        {
+            <div class="profile__propose">
+                <div class="profile__heading">@conference.Title</div>
+                <a class="profile__button profile__button--redIn" asp-action="index" asp-controller="conference">Дивитися</a>
             </div>
+        }
 
-            <div class="user-info">
+        <div class="profile__inner">
 
-                <h2>@Model.FullName</h2>
+            <h2 class="profile__title title"> </h2>
 
-                @if (Model.EmailConfirmed)
-                {
-                    <div class="profile__params">
+            <div class="profile__panel">
 
+                <div class="profile__administrator">
+                    <h3 class="profile__name">@Model.FullName</h3>
+                    @if (needToConfirmEmail)
+                    {
+                        <div class="profile__status">Підтвердіть вашу пошту</div>
+                    }
+                    else if (isManager || isAdmin)
+                    {
+                        <div class="profile__status">Менеджер конференції</div>
+                    }
+                    else
+                    {
+                        <div class="profile__status">
+                            @(EnumParser<ParticipationForm>.GetDisplayValue(Model.ParticipationForm))
+                        </div>
+                    }
+                </div>
+
+                <div class="profile__params">
+
+                    @if (Model.EmailConfirmed)
+                    {
                         @if (isOwnPage)
                         {
-                            @if (isAdmin)
-                            {
-                                @if (canBeAddedToManagers)
-                                {
-                                    <button class="profile__button profile__button--red">Зробити менеджером</button>
-                                }
-                                else
-                                {
-                                    <button class="profile__button profile__button--red">Видалити з менеждерів</button>
-                                }
-                            }
-                        }
-                        else
-                        {
-                            <a href="#popup" class="profile__button profile__button--round popup__link">
+                            <a href="#edit" class="profile__button profile__button--round popup__link">
                                 <svg class="profile__settings" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                                      xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55.634 55.634"
                                      style="enable-background:new 0 0 55.634 55.634;" xml:space="preserve">
@@ -130,10 +114,30 @@
                                 </svg>
                             </a>
                         }
-                    </div>
-                }
-            </div>
+                        else
+                        {
+                            @if (isAdmin)
+                            {
+                                @if (canBeAddedToManagers)
+                                {
+@*                                         <form asp-action="SetManager" asp-controller="account" asp-route-x="@Model.ProfileAddress" *@
+                                    // asp-route-newState="@(canBeAddedToManagers ? "manager" : "default")">
+                                    <button type="submit" class="profile__button profile__button--red">Зробити менеджером</button>
+                                    // </form>
+                                }
+                                else
+                                {
+@*                                     <form asp-action="SetManager" asp-controller="account" asp-route-x="@Model.ProfileAddress" *@
+                                    // asp-route-newState="@(canBeAddedToManagers ? "manager" : "default")">
+                                    <button type="submit" class="profile__button profile__button--red">Видалити з менеждерів</button>
+                                    // </form>
+                                }
+                            }
+                        }
+                    }
+                </div>
 
+            </div>
 
             @if (isOwnPage && isManager)
             {
@@ -146,7 +150,7 @@
 
                         if (isAdmin)
                         {
-                            <a asp-action="moveToArchive" asp-controller="conference">Завершити</a>
+                            <a class="profile__button" asp-action="moveToArchive" asp-controller="conference">Завершити</a>
                         }
 
                         @if (conference.Participants.All(item => item == null))
@@ -161,7 +165,6 @@
                     }
                 </div>
             }
-
 
             <div class="profile__states">
                 @if (isOwnPage)
@@ -178,7 +181,6 @@
                 }
             </div>
 
-
             @if (articles.Any())
             {
                 @await Html.PartialAsync("Components/ArticlesList", articles)
@@ -187,70 +189,68 @@
             {
                 <h3 class="title__alert">Поки тут порожньо...</h3>
             }
-            
-            @if (isOwnPage)
-            {
-                <div id="popup" class="popup">
-                    <div class="popup__body">
-                        <div class="popup__inner">
+        </div>
 
-                            <a href="#" class="popup__close close__popup"></a>
+        @if (isOwnPage)
+        {
+            <div id="edit" class="popup">
+                <div class="popup__body">
+                    <div class="popup__inner">
 
-                            <form class="register__form" method="post" asp-action="edit" asp-controller="account">
+                        <a href="#" class="popup__close close__popup"></a>
 
-                                <div class="form__blck form__blck--trpl">
-                                    <input asp-for="LastName" type="text" value="@Model.LastName" placeholder="Прізвище" maxlength="100">
-                                    <input asp-for="FirstName" type="text" value="@Model.FirstName" placeholder="Ім'я"  maxlength="100">
-                                    <input asp-for="MiddleName" type="text" value="@Model.MiddleName" placeholder="По-батькові"  maxlength="100">
+                        <form class="register__form" method="post" asp-action="edit" asp-controller="account">
+
+                            <div class="form__blck form__blck--trpl">
+                                <input asp-for="LastName" type="text" value="@Model.LastName" placeholder="Прізвище" maxlength="100">
+                                <input asp-for="FirstName" type="text" value="@Model.FirstName" placeholder="Ім'я" maxlength="100">
+                                <input asp-for="MiddleName" type="text" value="@Model.MiddleName" placeholder="По-батькові" maxlength="100">
+                            </div>
+
+                            <div class="form__blck form__blck--select form__blck--dbl">
+                                <input type="text" value="@Model.WorkingFor" placeholder="Місце навчання/роботи">
+
+                                <div class="signup__select">
+                                    <select asp-for="ScienceDegree">
+                                        <option value="" disabled>Науковий ступінь</option>
+                                        @(AddOptionsFrom<ScienceDegree>(Model.ScienceDegree))
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form__blck form__blck--select form__blck--dbl">
+                                <div class="signup__select">
+                                    <select asp-for="AcademicTitle">
+                                        <option value="" disabled>Вчене звання</option>
+                                        @(AddOptionsFrom<AcademicTitle>(Model.AcademicTitle))
+                                    </select>
                                 </div>
 
-                                <div class="form__blck form__blck--select form__blck--dbl">
-                                    <input type="text" value="@Model.WorkingFor" placeholder="Місце навчання/роботи">
-                                    
-                                    <div class="signup__select">
-                                        <select asp-for="ScienceDegree">
-                                            <option value="" disabled>Науковий ступінь</option>
-                                            @(AddOptionsFrom<ScienceDegree>(Model.ScienceDegree))
-                                        </select>
-                                    </div>
+                                <div class="signup__select">
+                                    <select asp-for="ParticipationForm">
+                                        <option value="" disabled>Форма участі</option>
+                                        @(AddOptionsFrom<ParticipationForm>(Model.ParticipationForm))
+                                    </select>
                                 </div>
+                            </div>
 
-                                <div class="form__blck form__blck--select form__blck--dbl">
-                                    <div class="signup__select">
-                                        <select asp-for="AcademicTitle">
-                                            <option value="" disabled>Вчене звання</option>
-                                            @(AddOptionsFrom<AcademicTitle>(Model.AcademicTitle))
-                                        </select>
-                                    </div>
+                            <div class="form__buttons">
+                                <button class="button signin__button" type="submit">
+                                    Зберегти
+                                    <picture>
+                                        <source srcset="~/img/icons/atom.webp" type="image/webp">
+                                        <img src="~/img/icons/atom.png" alt="">
+                                    </picture>
+                                </button>
 
-                                    <div class="signup__select">
-                                        <select asp-for="ParticipationForm">
-                                            <option value="" disabled>Форма участі</option>
-                                            @(AddOptionsFrom<ParticipationForm>(Model.ParticipationForm))
-                                        </select>
-                                    </div>
-                                </div>
+                                <p>@ViewData["ResultMessage"]</p>
+                            </div>
 
-                                <div class="form__buttons">
-                                    <button class="button signin__button" type="submit">
-                                        Зберегти
-                                        <picture>
-                                            <source srcset="~/img/icons/atom.webp" type="image/webp">
-                                            <img src="~/img/icons/atom.png" alt="">
-                                        </picture>
-                                    </button>
-                                    
-                                    <p>@ViewData["ResultMessage"]</p>
-                                </div>
-                                
-                            </form>
+                        </form>
 
-                        </div>
                     </div>
                 </div>
-            }
-
-        </div>
+            </div>
+        }
     </div>
-</div>
 </section>

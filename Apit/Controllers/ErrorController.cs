@@ -12,9 +12,11 @@ namespace Apit.Controllers
             _logger = logger;
         }
 
-        [Route("error/{statusCode}")]
+        [Route("/error/{statusCode}")]
         public IActionResult HttpStatusCodeHandler(int statusCode)
         {
+            if (statusCode == default) statusCode = 100500;
+            
             string message;
             switch (statusCode)
             {
@@ -29,7 +31,8 @@ namespace Apit.Controllers
                     break;
             }
 
-            ViewBag.ErrorMessage = $"<h1><{statusCode}/h1>{message}";
+            ViewData["ErrorTitle"] = statusCode;
+            ViewData["ErrorMessage"] = $"<h1><{statusCode}/h1>{message}";
 
             if (statusCode != 404) _logger.LogError($"error handled [code:{statusCode}]");
             return View("error");

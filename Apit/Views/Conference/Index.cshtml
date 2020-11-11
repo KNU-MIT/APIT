@@ -24,8 +24,6 @@
 }
 else
 {
-    <span>Topics:</span> @Model.Topics.Count()
-        
     if (!await userManager.IsInRoleAsync(user, RoleNames.MANAGER))
     {
         @if (Model.Participants.Any(a => a.UserId == user.Id))

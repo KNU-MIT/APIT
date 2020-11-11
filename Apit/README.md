@@ -1,5 +1,5 @@
 ﻿# APIT - 2020
-> version 1.3.1 beta
+> version 1.3.2 beta
 
 | Role       | Developer           | GitHub    | 
 |------------|---------------------|-----------| 
@@ -15,20 +15,21 @@ and other...
 
 #### Init env variables and other support data
 
-`cd [Apit]`
+1. `cd [Apit]`
 
-UNIX: `. ./setenv.sh`
+2. `dotnet restore`
 
-WIN:  `setenv.cmd`
-
+*MAC OS: `brew install mono-libgdiplus`
 
 -----------------------------------------------------------------------------------
 
 #### Add new DB migration
 
-| Command                                   | Description                         | 
-|-------------------------------------------|-------------------------------------| 
-| `dotnet tool install --global dotnet-ef`  | install EntityFramework globally    | 
-| `cd [DatabaseLayer]`                      | change directory                    | 
-| `. ./migration.sh [migration_name] [-v]`  | run bash script (windows . => bash) | 
------------------------------------------------------------------------------------
+|   | Command                                      | Description                          | 
+|---|----------------------------------------------|--------------------------------------| 
+| 1 | `dotnet tool install --global dotnet-ef`     | install EntityFramework globally     | 
+| 2 | `cd [DatabaseLayer]`                         | change directory                     | 
+| 3 | `dotnet ef migrations add [migration_name]`  | add migration and name it            | 
+| 4 | `dotnet ef database update`                  | update database via stored migration | 
+| 5 | `. ./migration.sh [migration_name] [-v]`     | run bash script (windows . => bash)  | 
+------------------------------------------------------------------------------------------- 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DatabaseLayer.Migrations
 {
-    public partial class Development_5s : Migration
+    public partial class Development_7g : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,8 +44,8 @@ namespace DatabaseLayer.Migrations
                     LastName = table.Column<string>(nullable: false),
                     MiddleName = table.Column<string>(nullable: false),
                     WorkingFor = table.Column<string>(nullable: false),
-                    ScienceDegree = table.Column<string>(nullable: true),
-                    AcademicTitle = table.Column<string>(nullable: true),
+                    ScienceDegree = table.Column<short>(nullable: false),
+                    AcademicTitle = table.Column<short>(nullable: false),
                     ParticipationForm = table.Column<short>(nullable: false),
                     ProfilePhoto = table.Column<string>(nullable: true),
                     ProfileAddress = table.Column<string>(nullable: false)
@@ -248,6 +248,7 @@ namespace DatabaseLayer.Migrations
                     UniqueAddress = table.Column<string>(nullable: false),
                     TopicId = table.Column<Guid>(nullable: false),
                     Title = table.Column<string>(nullable: false),
+                    ShortDescription = table.Column<string>(nullable: false),
                     Status = table.Column<short>(nullable: false),
                     KeyWords = table.Column<string>(nullable: true),
                     HtmlFilePath = table.Column<string>(nullable: false),
@@ -302,12 +303,12 @@ namespace DatabaseLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "d415b6db-4d3e-4b85-affa-76fec676554f", "7047d359-763f-4474-8a88-1c8c5438be77", "admin", "ADMIN" });
+                values: new object[] { "04ca4593-a2c9-4d7c-a7b7-d42bb04a47b8", "532dbcab-581d-4929-91c9-e9742996518a", "root_admin", "ROOT_ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "680c4561-2fe7-4338-8c32-71db945d7016", "786984f1-7c77-4436-861c-923cfeb08c73", "organizer", "ORGANIZER" });
+                values: new object[] { "fd724de2-7465-49eb-bbd4-8599d388711f", "cf80d98e-1de0-4d96-849f-e853de2527a4", "manager", "MANAGER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Articles_ConferenceId",

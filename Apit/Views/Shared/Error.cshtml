@@ -3,8 +3,8 @@
     ViewData["Title"] = "Упс, щось пішло не так...";
 }
 
-<h1 class="text-danger">Виникла якась помилка.</h1>
-<h2 class="text-danger">Адміністрація вже розбираються, що не так.</h2>
+<h1 class="text-danger">@ViewData["ErrorTitle"]</h1>
+<h2 class="text-danger">@ViewData["ErrorMessage"]</h2>
 
 <a class="signin__button" style="padding-top: 15px;" asp-action="index" asp-controller="home">
     На головну

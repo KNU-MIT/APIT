@@ -42,9 +42,13 @@
     <div class="container">
 
         <div class="preview__inner">
-            <div class="preview__arrow _anim-items _anim-no-hide">
-                <span></span> Приєднуйтеся до нас
-            </div>
+            
+            @if (conference != null)
+            {
+                <div class="preview__arrow _anim-items _anim-no-hide">
+                    <span></span> Приєднуйтеся до нас
+                </div>
+            }
 
             <div class="preview__knu knu _anim-items _anim-no-hide">
 
@@ -67,10 +71,10 @@
 
             <h2 class="preview__subtitle">Конференція учених</h2>
 
-            <div class="preview__motto">«Актуальні проблеми інформаційних технологій»</div>
+            <div class="preview__motto">Актуальні проблеми інформаційних технологій</div>
 
-            <a href="#ways" class="preview__button">
-                Детальніше
+            <a asp-action="index" asp-controller="conference" class="preview__button">
+                Приєднатися
                 <picture>
                     <source srcset="~/img/icons/atom.webp" type="image/webp">
                     <img src="~/img/icons/atom.png" alt="">
@@ -83,11 +87,11 @@
 </section> <!-- /preview -->
 
 <section id="ways" class="ways">
-    <div class="container">
+<div class="container">
 
-    <div class="ways__inner">
+<div class="ways__inner">
 
-    <h2 class="ways__title title">Напрямки роботи конференції</h2>
+<h2 class="ways__title title">Напрямки роботи конференції</h2>
 
 <!-- cards1 -->
 <div class="ways__cards">
@@ -475,6 +479,7 @@
 {
     @model LoginViewModel
     
+    
     <section class="register">
         <div class="container">
             <div class="register__inner">
@@ -498,11 +503,17 @@
                     </div>
 
                     <div class="form__buttons">
-                        <a class="button" asp-action="register" asp-controller="account">
+                        <a class="signin__button" asp-action="register" asp-controller="account">
                             Реєстрація
-                            <img src="~/img/icons/atom.png" alt="">
                         </a>
-                        <button type="submit">Увійти у кабінет</button>
+
+                        <button class="button signin__button" type="submit">
+                            Увійти у кабінет
+                            <picture>
+                                <source srcset="~/img/icons/atom.webp" type="image/webp">
+                                <img src="~/img/icons/atom.png" alt="">
+                            </picture>
+                        </button>
                     </div>
 
                 </form>

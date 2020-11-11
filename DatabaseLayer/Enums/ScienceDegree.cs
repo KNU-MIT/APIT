@@ -9,6 +9,6 @@ namespace DatabaseLayer.Enums
         [Display(Name = "Аспірант")] Graduate,
         [Display(Name = "Кандидат наук")] Candidate,
         [Display(Name = "Доктор наук")] Doctor,
-        [Display(Name = "Інше")] Other
+        [Display(Name = "Інше")] Other = 10
     }
 }

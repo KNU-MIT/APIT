@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatabaseLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201104003134_Development_5t")]
-    partial class Development_5t
+    [Migration("20201110142646_Development_7g")]
+    partial class Development_7g
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -184,8 +184,8 @@ namespace DatabaseLayer.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("AcademicTitle")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<short>("AcademicTitle")
+                        .HasColumnType("smallint");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -246,8 +246,8 @@ namespace DatabaseLayer.Migrations
                     b.Property<string>("ProfilePhoto")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ScienceDegree")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<short>("ScienceDegree")
+                        .HasColumnType("smallint");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -326,17 +326,17 @@ namespace DatabaseLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e774621d-7409-4151-a8dd-dbd5e50d8d9d",
-                            ConcurrencyStamp = "ea3a71dd-bb0c-4f19-935b-4720ebe5d0a7",
-                            Name = "admin",
-                            NormalizedName = "ADMIN"
+                            Id = "04ca4593-a2c9-4d7c-a7b7-d42bb04a47b8",
+                            ConcurrencyStamp = "532dbcab-581d-4929-91c9-e9742996518a",
+                            Name = "root_admin",
+                            NormalizedName = "ROOT_ADMIN"
                         },
                         new
                         {
-                            Id = "21994968-f46f-40de-86df-15c6abac02d1",
-                            ConcurrencyStamp = "814600e8-2565-4579-b69d-cef94c30ddb4",
-                            Name = "organizer",
-                            NormalizedName = "ORGANIZER"
+                            Id = "fd724de2-7465-49eb-bbd4-8599d388711f",
+                            ConcurrencyStamp = "cf80d98e-1de0-4d96-849f-e853de2527a4",
+                            Name = "manager",
+                            NormalizedName = "MANAGER"
                         });
                 });
 

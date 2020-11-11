@@ -16,8 +16,11 @@ namespace Apit.Controllers
         private readonly UserManager<User> _userManager;
         private readonly DataManager _dataManager;
 
-        private readonly Regex _keyWordsAvailableRegex;
-        private readonly Regex _keyWordsSeparatorRegex;
+        private static readonly Regex keyWordsAvailableRegex =
+            new Regex(@"^[а-яА-Яa-zA-Z0-9- ,;'іїєґ!]+$", RegexOptions.Compiled);
+
+        private static readonly Regex keyWordsSeparatorRegex =
+            new Regex(@"[ ,;]+", RegexOptions.Compiled);
 
         public ArticlesController(ILogger<ArticlesController> logger,
             UserManager<User> userManager, DataManager dataManager)
@@ -25,9 +28,6 @@ namespace Apit.Controllers
             _logger = logger;
             _userManager = userManager;
             _dataManager = dataManager;
-
-            _keyWordsAvailableRegex = new Regex(@"^[а-яА-Яa-zA-Z0-9- ,;'іїєґ!]+$", RegexOptions.Compiled);
-            _keyWordsSeparatorRegex = new Regex(@"[ ,;]+", RegexOptions.Compiled);
         }
 
 

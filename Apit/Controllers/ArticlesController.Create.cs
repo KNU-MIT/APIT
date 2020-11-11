@@ -34,7 +34,7 @@ namespace Apit.Controllers
             bool hasIncorrectData = false;
 
             #region ================ Long form review ================
-
+            
             // Check selected topic existing
             var topic = model.TopicId == null ? null : _dataManager.Topics.GetById(Guid.Parse(model.TopicId));
             if (topic == null)
@@ -45,7 +45,7 @@ namespace Apit.Controllers
             }
 
             // "hello, wor/*+#ld1!" != "hello, world1!"
-            if (_keyWordsAvailableRegex.Replace(model.KeyWords, "") != "")
+            if (keyWordsAvailableRegex.Replace(model.KeyWords, "") != "")
             {
                 ModelState.AddModelError(nameof(model.KeyWords),
                     "Unsupported character detected");
@@ -112,7 +112,7 @@ namespace Apit.Controllers
                 Title = model.Title,
                 ShortDescription = model.ShortDescription,
                 Status = ArticleStatus.Uploaded,
-                KeyWords = _keyWordsSeparatorRegex.Replace(model.KeyWords, ";"),
+                KeyWords = keyWordsSeparatorRegex.Replace(model.KeyWords, ";"),
 
                 HtmlFilePath = uniqueAddress + ".htm",
                 DocxFilePath = uniqueAddress + extension,

@@ -71,10 +71,10 @@ namespace Apit.Controllers
                 _mailService.SendActionEmail(user.Email,
                     "Confirm your email | Підтвердіть Вашу пошту",
                     MailService.Presets.ConfirmEmail, confirmationLink);
-                _logger.LogDebug("Confirmation email was sent to: " + user.Email);
+                _logger.LogInformation("Confirmation email was sent to: " + user.Email);
 
                 await _signInManager.SignInAsync(user, false);
-                _logger.LogDebug($"User {user.ProfileAddress} has successfully registered");
+                _logger.LogInformation($"User {user.ProfileAddress} has successfully registered");
                 return LocalRedirect(model.ReturnUrl ?? "/");
             }
 
@@ -89,22 +89,25 @@ namespace Apit.Controllers
         [Route("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string id, string token)
         {
-            if (string.IsNullOrEmpty(id) || string.IsNullOrWhiteSpace(token))
-                return View("error");
-
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null) return View("error");
-            var result = await _userManager.ConfirmEmailAsync(user, token);
-
-            if (result.Succeeded)
+            if (!string.IsNullOrEmpty(id) && !string.IsNullOrWhiteSpace(token))
             {
-                _logger.LogDebug($"User {user.ProfileAddress} confirmed mail");
-                ViewBag.Message = "Ви успішно підтвердили Вашу пошту!";
-                return View("success");
-            }
+                var user = await _userManager.FindByIdAsync(id);
+                if (user != null)
+                {
+                    var result = await _userManager.ConfirmEmailAsync(user, token);
 
-            _logger.LogError($"User {user.ProfileAddress} NOT confirmed mail");
-            ViewBag.Message = "Упс, виникла помилка...";
+                    if (result.Succeeded)
+                    {
+                        _logger.LogInformation($"User {user.ProfileAddress} confirmed mail");
+                        ViewData["Message"] = "Ви успішно підтвердили Вашу пошту!";
+                        return View("success");
+                    }
+                    _logger.LogWarning($"User {user.FullName} NOT confirmed mail");
+                }
+            }
+            
+            ViewData["ErrorTitle"] = 403;
+            ViewData["ErrorMessage"] = "Упс, виникла помилка...";
             return View("error");
         }
     }

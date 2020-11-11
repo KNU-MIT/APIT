@@ -9,10 +9,10 @@ namespace Apit.Utils
 {
     public static class EnumParser<TEnum> where TEnum : struct, Enum
     {
-        public static IList<TEnum> GetValues(Enum value)
+        public static IList<TEnum> GetValues()
         {
-            return value.GetType().GetFields(BindingFlags.Static | BindingFlags.Public)
-                .Select(fi => (TEnum) Enum.Parse(value.GetType(), fi.Name, false)).ToList();
+            return typeof(TEnum).GetFields(BindingFlags.Static | BindingFlags.Public)
+                .Select(fi => (TEnum) Enum.Parse(typeof(TEnum), fi.Name, false)).ToList();
         }
 
         public static TEnum Parse(string value)
@@ -20,19 +20,19 @@ namespace Apit.Utils
             return (TEnum) Enum.Parse(typeof(TEnum), value, true);
         }
 
-        public static IEnumerable<string> GetNames(TEnum value)
+        public static IEnumerable<string> GetNames()
         {
-            return value.GetType().GetFields(BindingFlags.Static | BindingFlags.Public).Select(fi => fi.Name);
+            return typeof(TEnum).GetFields(BindingFlags.Static | BindingFlags.Public).Select(fi => fi.Name);
         }
 
         public static IEnumerable<string> GetDisplayValues()
         {
-            return GetNames(new TEnum()).Select(obj => GetDisplayValue(Parse(obj)));
+            return GetNames().Select(obj => GetDisplayValue(Parse(obj)));
         }
 
         public static string GetDisplayValue(TEnum value)
         {
-            var fieldInfo = value.GetType().GetField(value.ToString());
+            var fieldInfo = typeof(TEnum).GetField(value.ToString());
 
             var descriptionAttributes = fieldInfo.GetCustomAttributes(
                 typeof(DisplayAttribute), false) as DisplayAttribute[];

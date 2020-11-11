@@ -72,7 +72,7 @@ namespace Apit.Controllers
             _mailService.SendActionEmail(user.Email,
                 "APIT | Зміна пароля на сайті конференції",
                 MailService.Presets.ResetPassword, confirmationLink);
-            _logger.LogDebug("Password reset email was sent to: " + user.Email);
+            _logger.LogInformation("Password reset email was sent to: " + user.Email);
 
             ModelState.AddModelError(string.Empty,
                 "Вам на пошту відпрвлено лист для зміни пароля");
@@ -84,12 +84,17 @@ namespace Apit.Controllers
         public IActionResult ChangePassword(string id, string token)
         {
             var userFromEmail = _dataManager.Users.GetById(id);
-            if (userFromEmail == null) return View("error");
-            return View(new ResetPasswordViewModel
-            {
-                User = userFromEmail,
-                Token = token
-            });
+            if (userFromEmail != null)
+                return View(new ResetPasswordViewModel
+                {
+                    User = userFromEmail,
+                    Token = token
+                });
+            
+            ViewData["ErrorTitle"] = 404;
+            ViewData["ErrorMessage"] = "Щось пішло не так...";
+            return View("error");
+
         }
 
         [Route("/account/change-password"), HttpPost]
@@ -98,18 +103,26 @@ namespace Apit.Controllers
             if (!ModelState.IsValid) return View(model);
 
             var user = _dataManager.Users.GetById(id);
-            if (user == null) return View("error");
+            if (user == null)
+            {
+                ViewData["ErrorTitle"] = 404;
+                ViewData["ErrorMessage"] = "Щось пішло не так...";
+                return View("error");
+            }
 
             var result = await _userManager.ResetPasswordAsync(user, token, model.PasswordConfirm);
             if (result.Succeeded)
             {
-                _logger.LogError($"User {user.ProfileAddress} password changed");
-                ViewBag.Message = "Ви успішно змінили пароль!";
-                return View("login");
+                _logger.LogWarning($"User {user.ProfileAddress} password changed");
+                ViewData["Message"] = "Ви успішно змінили пароль Вашу пошту!";
+                return View("success");
             }
 
             _logger.LogError($"User {user.ProfileAddress} NOT changed password");
-            ViewBag.Message = "Упс, виникла помилка...";
+            
+            
+            ViewData["ErrorTitle"] = 403;
+            ViewData["ErrorMessage"] = "Щось пішло не так...";
             return View("error");
         }
     }

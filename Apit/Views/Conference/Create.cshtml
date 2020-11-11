@@ -3,7 +3,7 @@
 
 @{
     ViewData["Title"] = "Створення нової конференції";
-    ViewData["DisableFooter"] = true;
+    ViewData["WithoutFooter"] = true;
     var config = ProjectConfig.Content.Conference;
 
     var user = await userManager.GetUserAsync(User);

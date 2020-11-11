@@ -36,6 +36,8 @@ namespace Apit.Controllers
                 ? _dataManager.Conferences.Current
                 : _dataManager.Conferences.GetByUniqueAddress(id);
 
+            if (current == null) return RedirectToAction("index", "home");
+            
             var user = await _userManager.GetUserAsync(User);
             current.User = user;
 
@@ -55,7 +57,6 @@ namespace Apit.Controllers
             _dataManager.Conferences.AddParticipant(conference, user);
             _dataManager.Conferences.SaveChanges();
 
-            ViewData["ResultMessage"] = "<span>Добро пожаловать!</span>";
             return RedirectToAction("index", "conference");
         }
 
@@ -64,13 +65,10 @@ namespace Apit.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var conference = _dataManager.Conferences.GetCurrentAsDbModel();
-
-            _logger.LogDebug("Id" + user.Id);
-
+            
             _dataManager.Conferences.RemoveParticipant(conference, user);
             _dataManager.Conferences.SaveChanges();
 
-            ViewData["ResultMessage"] = "<span>Ви больше не с нами</span>";
             return RedirectToAction("index", "conference");
         }
 

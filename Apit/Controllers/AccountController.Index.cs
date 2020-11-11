@@ -37,7 +37,9 @@ namespace Apit.Controllers
             var user = x == null
                 ? await _userManager.GetUserAsync(User)
                 : _dataManager.Users.GetByUniqueAddress(x);
-
+            
+            ViewData["ErrorTitle"] = 404;
+            ViewData["ErrorMessage"] = "На превеликий жаль, такої людини серед нас немає :(";
             return user == null ? View("error") : View(user);
         }
 
@@ -51,12 +53,20 @@ namespace Apit.Controllers
         public async Task<IActionResult> SetManager(string x, string newState)
         {
             var user = _dataManager.Users.GetByUniqueAddress(x);
-            if (user == null) return View("error");
+            if (user == null)
+            {
+                ViewData["ErrorTitle"] = 404;
+                ViewData["ErrorMessage"] = "На превеликий жаль, такої людини серед нас немає :(";
+                return View("error");
+            }
             
             var result = newState == "manager"
                 ? await _userManager.AddToRoleAsync(user, RoleNames.MANAGER)
                 : await _userManager.RemoveFromRoleAsync(user, RoleNames.MANAGER);
-
+            
+            ViewData["ErrorTitle"] = 403;
+            ViewData["ErrorMessage"] = "Щось пішло не так...";
+            
             return result.Succeeded
                 ? RedirectToAction("index", "account", new {x = x})
                 : (IActionResult) ViewBag("error");
@@ -124,7 +134,7 @@ namespace Apit.Controllers
             _logger.LogDebug($"User {user.ProfileAddress} has changed his data");
 
             ViewData["ResultMessage"] = "дані успішно змінено";
-            return LocalRedirect("account#popup");
+            return LocalRedirect("/account#edit");
         }
     }
 }

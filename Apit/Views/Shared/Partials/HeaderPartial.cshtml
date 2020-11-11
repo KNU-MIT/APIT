@@ -1,30 +1,26 @@
 ﻿@{
-    string year = DateTime.Now.ToString("yyyy");
+    string currentYear = DateTime.Now.ToString("yyyy");
 }
 
 <header class="header _anim-items">
     <div class="container">
 
         <div class="header__inner">
-            <!-- reg -->
             @await Html.PartialAsync("Partials/LoginPartial")
-            <!-- /reg -->
 
             <div class="header__burger">
                 <span></span>
             </div>
 
-            <!-- nav -->
             <nav class="header__nav nav">
                 <ul class="nav__inner">
-                    <!-- 1 -->
+                    
                     <li class="nav__link">
-                        <a asp-controller="conference" asp-action="index">Apit @year</a>
-                    </li> <!-- 3 ready -->
-                    <!-- 2 -->
+                        <a asp-controller="conference" asp-action="index">Apit @currentYear</a>
+                    </li>
+
                     <li class="nav__link">
                         <span class="nav__link--span">Інформація <span></span></span>
-                        <!-- 2.1 -->
                         <ul class="nav__subnav subnav">
                             <li class="subnav__link">
                                 <a asp-action="dates" asp-controller="info">Дати та адреса</a>
@@ -33,33 +29,33 @@
                                 <a asp-action="secretariat" asp-controller="info">Секретаріат</a>
                             </li>
                             <li class="subnav__link">
-                                <a asp-action="archive" asp-controller="conference">Архів минулих конференцій</a>
+                                <a asp-action="feedback" asp-controller="home">Feedback</a>
                             </li>
                         </ul>
                     </li>
-                    <!-- 3 -->
+
                     <li class="nav__link">
                         <span class="nav__link--span">Учасникам <span></span></span>
-                        <!-- 3.1 -->
                         <ul class="nav__subnav subnav">
                             <li class="subnav__link">
                                 <a asp-action="requirements" asp-controller="info">Вимоги до тез доповідей</a>
                             </li>
                             <li class="subnav__link">
-                                <a asp-action="list" asp-controller="articles">Завантажені статті авторів</a>
+                                <a asp-action="list" asp-controller="articles">Завантажені статті</a>
+                            </li>
+                            <li class="subnav__link">
+                                <a asp-action="archive" asp-controller="conference">Архів</a>
                             </li>
                         </ul>
                     </li>
-                    <!-- 4 -->
+
                     <li class="nav__link">
                         <a href="~/static/APIT2019.pdf" target="blank">Матеріали конференції</a>
                     </li>
 
                 </ul>
-            </nav> <!-- /nav -->
+            </nav>
 
-        </div> <!-- /inner -->
-
-
-    </div> <!-- /container -->
-</header> <!-- /header -->
+        </div>
+    </div>
+</header>

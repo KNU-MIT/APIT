@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using DatabaseLayer.Entities;
 using DatabaseLayer.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace BusinessLayer.Models
 {
@@ -17,7 +18,12 @@ namespace BusinessLayer.Models
         public string HTMLContent { get; set; }
 
         public Topic Topic { get; set; }
+        
+        
+        public string NewTopicId { get; set; }
+        public IFormFile NewDocFile { get; set; }
 
+        
         public string ShortDescription { get; set; }
 
 

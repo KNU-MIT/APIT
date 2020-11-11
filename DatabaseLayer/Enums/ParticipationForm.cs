@@ -7,5 +7,7 @@ namespace DatabaseLayer.Enums
         [Display(Name = "Глядач")] Listener = 0,
         [Display(Name = "Подання тез")] ThesesPreparer = 1,
         [Display(Name = "Доповідач")] Speaker = 2,
+        [Display(Name = "Інше")] Other = 5,
+
     }
 }
