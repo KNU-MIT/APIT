@@ -24,7 +24,8 @@ namespace DatabaseLayer
 
         public DbSet<ConferenceParticipant> ConfParticipants { get; set; }
         public DbSet<ConferenceImage> ConfImages { get; set; }
-
+        
+        public DbSet<UserOwnArticlesLinking> UserArticles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

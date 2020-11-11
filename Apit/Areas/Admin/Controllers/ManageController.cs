@@ -1,4 +1,5 @@
-﻿using BusinessLayer;
+﻿using System.Linq;
+using BusinessLayer;
 using DatabaseLayer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +18,29 @@ namespace Apit.Areas.Admin.Controllers
             _dataManager = dataManager;
         }
 
+        [Route("/manage/conference/statistics")]
         public IActionResult ConferenceStatistics(string x)
         {
             return View(x == null
-            ? _dataManager.Conferences.Current
-            : _dataManager.Conferences.GetByUniqueAddress(x));
+                ? _dataManager.Conferences.Current
+                : _dataManager.Conferences.GetByUniqueAddress(x));
+        }
+
+
+        public JsonResult GetParticipantsData(string conf, string field)
+        {
+            var conference = _dataManager.Conferences.GetByUniqueAddress(conf);
+            if (conference == null) return new JsonResult(null);
+            var users = conference.Participants
+                .Where(u => u.Subscribed).Select(u => _dataManager.Users.GetById(u.UserId));
+
+            return field.ToLower() switch
+            {
+                "email" => new JsonResult(users.Select(u => u.Email)),
+                "name" => new JsonResult(users.Select(u => u.FullName)),
+                "address" => new JsonResult(users.Select(u => u.ProfileAddress)),
+                _ => new JsonResult(null)
+            };
         }
     }
 }

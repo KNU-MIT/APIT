@@ -19,16 +19,25 @@ namespace Apit.Controllers
         public async Task<IActionResult> Edit(string x)
         {
             var model = _dataManager.Articles.GetByUniqueAddress(x);
-            
+            if (model == null)
+            {
+                ViewData["ErrorTitle"] = 404;
+                ViewData["ErrorMessage"] = "Нічого не знайдено :(";
+                return View("error");
+            }
+
             var user = await _userManager.GetUserAsync(User);
             bool isAdmin = await _userManager.IsInRoleAsync(user, RoleNames.ADMIN);
+            var current = _dataManager.Conferences.Current;
+            var conference = model.Topic.Conference;
 
-            if (model.Creator == user || isAdmin) return View(model);
-            
+            if (isAdmin || (conference.Id == current.Id && model.Creator == user))
+                return View(model);
+
+
             ViewData["ErrorTitle"] = 403;
-            ViewData["ErrorMessage"] = "Доступ заблоковано";
+            ViewData["ErrorMessage"] = "Доступ до даної опції заблоковано";
             return View("error");
-
         }
 
         /// <summary>

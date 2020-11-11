@@ -10,21 +10,21 @@
 @* TODO: remove this styles *@
 <style>
     a {
-    color: red !important;
+        color: red !important;
     }
     a:hover {
-    color: orangered !important;
+        color: orange !important;
     }
 </style>
 
 
 @if (Model == null)
 {
-    <h2>Is empty yet.</h2>
+    <h3 class="title__alert">Поки тут нічого немає...</h3>
 }
 else
 {
-    if (!await userManager.IsInRoleAsync(user, RoleNames.MANAGER))
+    if (Model.IsActual && !await userManager.IsInRoleAsync(user, RoleNames.MANAGER))
     {
         @if (Model.Participants.Any(a => a.UserId == user.Id))
         {

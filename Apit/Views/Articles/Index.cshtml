@@ -21,8 +21,8 @@
 @if (conference != null && (isMine || await userManager.IsInRoleAsync(user, RoleNames.ADMIN)))
 {
     <div class="profile__admin">
-        <a class="profile__button" asp-controller="articles" asp-action="edit" asp-route-id="@article.UniqueAddress">Редагувати</a>
-        <form method="post" asp-controller="articles" asp-action="delete" asp-route-id="@article.UniqueAddress">
+        <a class="profile__button" asp-controller="articles" asp-action="edit" asp-route-x="@article.UniqueAddress">Редагувати</a>
+        <form method="post" asp-controller="articles" asp-action="delete" asp-route-x="@article.UniqueAddress">
             <button type="submit" class="profile__button" asp-action="archive" asp-controller="conference">Видалити</button>
         </form>
     </div>

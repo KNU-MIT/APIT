@@ -19,20 +19,21 @@
 
     IHtmlContent AddOptionsFrom<TEnum>(TEnum selected) where TEnum : struct, Enum
     {
-        var enumOptionsArray = EnumParser<TEnum>.GetDisplayValues().ToList();
+        var enumKeys = EnumParser<TEnum>.GetValues().ToList();
+        var enumValues = EnumParser<TEnum>.GetDisplayValues().ToList();
+        
         var options = new StringBuilder();
 
-        int lastIndex = enumOptionsArray.Count - 1;
-        int iter = 0;
-        foreach (string item in enumOptionsArray)
+        for(int i = 0; i < enumKeys.Count; i++)        
         {
-            string propValue = item.Replace('_', ' ');
-            string selectedOption = item == selected.ToString() ? "selected=\"selected\"" : "";
-            if (lastIndex == iter++)
+            string selectedOption = Equals(enumKeys[i], selected) ? "selected=\"selected\"" : "";
+            
+            if (enumKeys.Count - 1 == i)
             {
                 selectedOption += "class=\"signup__difference\"";
             }
-            options.Append($"<option value=\"{item}\" {selectedOption}>{propValue}</option>");
+            
+            options.Append($"<option value=\"{enumKeys[i]}\" {selectedOption}>{enumValues[i]}</option>");
         }
         return Html.Raw(options.ToString());
     }
@@ -41,7 +42,7 @@
 
 <section class="profile">
     <div class="container">
-
+    
         @if (user != null && conference != null && !conference.Participants.Any(a => a.UserId == user.Id))
         {
             <div class="profile__propose">
@@ -49,6 +50,9 @@
                 <a class="profile__button profile__button--redIn" asp-action="index" asp-controller="conference">Дивитися</a>
             </div>
         }
+        
+        <div asp-validation-summary="All"></div>
+
 
         <div class="profile__inner">
 
@@ -151,6 +155,7 @@
                         if (isAdmin)
                         {
                             <a class="profile__button" asp-action="moveToArchive" asp-controller="conference">Завершити</a>
+                            <a class="profile__button" href="/manage/conference/statistics">Статистика</a>
                         }
 
                         @if (conference.Participants.All(item => item == null))
@@ -187,13 +192,14 @@
             }
             else
             {
-                <h3 class="title__alert">Поки тут порожньо...</h3>
+                <h3 class="title__alert" style="text-align: left;">Поки тут порожньо...</h3>
             }
         </div>
 
         @if (isOwnPage)
         {
             <div id="edit" class="popup">
+                
                 <div class="popup__body">
                     <div class="popup__inner">
 

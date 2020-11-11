@@ -99,7 +99,9 @@ namespace BusinessLayer.DataServices
         private static void RegexFixHtml(ref string htmlText, string fileName)
         {
             htmlText = Regex.Replace(htmlText, "0pt", "0");
-            htmlText = Regex.Replace(htmlText, fileName + "_images", "/img/articles/");
+            string from = fileName + "_images";
+            string to = "/img/articles/" + fileName;
+            htmlText = Regex.Replace(htmlText, from, to);
         }
 
         private static void RemoveTags(ref string htmlText, string tagName)

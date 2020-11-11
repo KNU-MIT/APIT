@@ -75,19 +75,22 @@ namespace BusinessLayer.Repositories
         {
             if (article == null) return null;
 
+            var authors = _ctx.UserArticles.Where(a => a.ArticleId == article.Id).ToList();
+
             return new ArticleViewModel
             {
                 Id = article.Id,
+                UniqueAddress = article.UniqueAddress,
                 Topic = article.Topic,
 
-                Creator = article.Authors.FirstOrDefault(a => a.IsCreator)?.User,
-                Authors = article.Authors.Select(a => a.User),
+                Creator = authors.FirstOrDefault(a => a.IsCreator)?.User,
+                Authors = authors.Select(a => a.User),
 
-                UniqueAddress = article.UniqueAddress,
                 DocFileAddress = article.DocxFilePath,
                 HTMLContent = await DataUtil.LoadHtmlFile(article.HtmlFilePath),
 
                 Title = article.Title,
+                ShortDescription = article.ShortDescription,
                 Status = article.Status,
                 KeyWords = article.KeyWords.Split(';'),
 

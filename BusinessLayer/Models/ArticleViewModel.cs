@@ -14,12 +14,13 @@ namespace BusinessLayer.Models
 
         public string UniqueAddress { get; set; }
         public string DocFileAddress { get; set; }
-
+        
         public string HTMLContent { get; set; }
 
         public Topic Topic { get; set; }
         
         
+        // TODO: please, me do something with it...
         public string NewTopicId { get; set; }
         public IFormFile NewDocFile { get; set; }
 

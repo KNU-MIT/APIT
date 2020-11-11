@@ -7,8 +7,33 @@
     const string emailSubject = "Зворотній зв'язок з адміністрацією сервісу";
 }
 
-<div class="container">
-    <h1>Зворотній зв'язок з адміністрациєю</h1>
-    <a href="tel:@Config.Feedback.ShortPhone">Телефон: @Config.Feedback.PhoneNumber</a>
-    <a href="mailto:@Config.Feedback.Email?subject=@emailSubject">Email: @Config.Feedback.Email</a>
-</div>
+<style>
+    .contacts__link {
+        font-size: 24px;
+        color: #202020;
+    }
+</style>
+
+<section class="ways date">
+    <div class="container">
+        <div class="ways__inner">
+
+            <h2 class="ways__title title">Зворотній зв'язок з адміністрациєю</h2>
+
+            <div></div>
+            
+            <a class="contacts__link" href="tel:@Config.Feedback.ShortPhone">
+                <span class="requirements__attention">Телефон:</span>
+                <strong>@Config.Feedback.PhoneNumber</strong>
+            </a>
+
+            <div></div>
+
+            <a class="contacts__link" href="mailto:@Config.Feedback.Email?subject=@emailSubject">
+                <span class="requirements__attention">E-mail:</span>
+                <strong>@Config.Feedback.Email</strong>
+            </a>
+            
+        </div>
+    </div>
+</section>

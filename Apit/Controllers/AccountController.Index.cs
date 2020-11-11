@@ -37,7 +37,7 @@ namespace Apit.Controllers
             var user = x == null
                 ? await _userManager.GetUserAsync(User)
                 : _dataManager.Users.GetByUniqueAddress(x);
-            
+
             ViewData["ErrorTitle"] = 404;
             ViewData["ErrorMessage"] = "На превеликий жаль, такої людини серед нас немає :(";
             return user == null ? View("error") : View(user);
@@ -59,14 +59,14 @@ namespace Apit.Controllers
                 ViewData["ErrorMessage"] = "На превеликий жаль, такої людини серед нас немає :(";
                 return View("error");
             }
-            
+
             var result = newState == "manager"
                 ? await _userManager.AddToRoleAsync(user, RoleNames.MANAGER)
                 : await _userManager.RemoveFromRoleAsync(user, RoleNames.MANAGER);
-            
+
             ViewData["ErrorTitle"] = 403;
             ViewData["ErrorMessage"] = "Щось пішло не так...";
-            
+
             return result.Succeeded
                 ? RedirectToAction("index", "account", new {x = x})
                 : (IActionResult) ViewBag("error");
@@ -75,12 +75,13 @@ namespace Apit.Controllers
         [Authorize, HttpPost]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                ViewData["ResultMessage"] = "не вдалось дані змінити";
-                return LocalRedirect("account#popup");
-            }
-
+            // TODO: check why this commented code block not works
+            // if (!ModelState.IsValid)
+            // {
+                // ModelState.AddModelError(string.Empty,
+                    // "Не вдалось дані змінити");
+                // return RedirectToAction("index", "account");
+            // }
 
             var user = await _userManager.GetUserAsync(User);
 
@@ -100,7 +101,7 @@ namespace Apit.Controllers
             if (!string.IsNullOrWhiteSpace(model.WorkingFor))
                 user.WorkingFor = model.WorkingFor;
 
-            
+
             // if (!string.IsNullOrWhiteSpace(model.AltScienceDegree))
             // {
             //     var str = model.ScienceDegree.ToString();
@@ -111,7 +112,7 @@ namespace Apit.Controllers
 
             if (user.ScienceDegree != model.ScienceDegree)
                 user.ScienceDegree = model.ScienceDegree;
-            
+
             // if (!string.IsNullOrWhiteSpace(model.AltAcademicTitle))
             // {
             //     var strAcad = model.AcademicTitle.ToString();
@@ -119,10 +120,10 @@ namespace Apit.Controllers
             // }
             // else if (user.AcademicTitle != model.AltAcademicTitle)
             //     user.AcademicTitle = model.AltAcademicTitle;
-            
+
             if (user.AcademicTitle != model.AcademicTitle)
                 user.AcademicTitle = model.AcademicTitle;
-            
+
 
             if (user.ParticipationForm != model.ParticipationForm)
                 user.ParticipationForm = model.ParticipationForm;
@@ -131,10 +132,12 @@ namespace Apit.Controllers
 
             _dataManager.Users.SaveChanges();
 
-            _logger.LogDebug($"User {user.ProfileAddress} has changed his data");
+            _logger.LogInformation($"User {user.ProfileAddress} has changed his data");
 
-            ViewData["ResultMessage"] = "дані успішно змінено";
-            return LocalRedirect("/account#edit");
+
+            ModelState.AddModelError(string.Empty,
+                "Дані змінено успішно");
+            return RedirectToAction("index", "account");
         }
     }
 }
