@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer;
 using BusinessLayer.Models;
@@ -39,7 +40,7 @@ namespace Apit.Controllers
             if (current == null) return RedirectToAction("index", "home");
             
             var user = await _userManager.GetUserAsync(User);
-            current.User = user;
+            current.ParticipantChan = current.Participants.FirstOrDefault(a => a.User == user);
 
             return View(current);
         }

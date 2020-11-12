@@ -1,5 +1,5 @@
 ﻿# APIT - 2020
-> version 1.3.6 beta
+> version 1.4.0 beta
 
 | Role       | Developer           | GitHub    | 
 |------------|---------------------|-----------| 

@@ -9,22 +9,24 @@ namespace DatabaseLayer.Entities
     public class User : IdentityUser
     {
         [Required] public string FirstName { get; set; }
-
         [Required] public string LastName { get; set; }
-
         [Required] public string MiddleName { get; set; }
 
 
         [Required] public string WorkingFor { get; set; }
         public ScienceDegree ScienceDegree { get; set; }
         public AcademicTitle AcademicTitle { get; set; }
-        public ParticipationForm ParticipationForm { get; set; }
 
+        [Required] public int MailboxIndex { get; set; }
+        public string InfoSourceName { get; set; }
+        public override string PhoneNumber { get; set; }
 
-        public string ProfilePhoto { get; set; }
+        // public string ProfilePhoto { get; set; }
         [Required] public string ProfileAddress { get; set; }
 
+
         public ICollection<UserOwnArticlesLinking> OwnArticles { get; set; }
+        public ICollection<ConferenceParticipant> OwnParticipation { get; set; }
 
 
         public User()

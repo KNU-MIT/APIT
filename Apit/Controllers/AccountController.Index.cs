@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Apit.Controllers
 {
-    // Maybe it is better to use the integrated Account ASP.NET functionality (Areas/Identity/Pages/Account(/Manage))
+    // TODO: Maybe it is better to use the integrated Account ASP.NET functionality (Areas/Identity/Pages/Account(/Manage))
     public partial class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
@@ -39,7 +39,7 @@ namespace Apit.Controllers
                 : _dataManager.Users.GetByUniqueAddress(x);
 
             ViewData["ErrorTitle"] = 404;
-            ViewData["ErrorMessage"] = "На превеликий жаль, такої людини серед нас немає :(";
+            ViewData["ErrorMessage"] = "На превеликий жаль, такого користувача серед нас немає :(";
             return user == null ? View("error") : View(user);
         }
 
@@ -78,9 +78,9 @@ namespace Apit.Controllers
             // TODO: check why this commented code block not works
             // if (!ModelState.IsValid)
             // {
-                // ModelState.AddModelError(string.Empty,
-                    // "Не вдалось дані змінити");
-                // return RedirectToAction("index", "account");
+            // ModelState.AddModelError(string.Empty,
+            // "Не вдалось дані змінити");
+            // return RedirectToAction("index", "account");
             // }
 
             var user = await _userManager.GetUserAsync(User);
@@ -124,16 +124,9 @@ namespace Apit.Controllers
             if (user.AcademicTitle != model.AcademicTitle)
                 user.AcademicTitle = model.AcademicTitle;
 
-
-            if (user.ParticipationForm != model.ParticipationForm)
-                user.ParticipationForm = model.ParticipationForm;
-
-            //TODO: (or not to do) two-factor auth with phone number
-
             _dataManager.Users.SaveChanges();
 
             _logger.LogInformation($"User {user.ProfileAddress} has changed his data");
-
 
             ModelState.AddModelError(string.Empty,
                 "Дані змінено успішно");

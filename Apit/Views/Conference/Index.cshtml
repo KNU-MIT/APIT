@@ -1,63 +1,104 @@
 ﻿@model ConferenceViewModel
 
 @{
-    ViewData["Title"] = Model?.Title ?? "Щось йде не так, як заплановано...";
+    ViewData["Title"] = Model.Title ?? "Щось йде не так, як заплановано...";
 
     var user = await userManager.GetUserAsync(User);
+
+    bool isConfParticipant = Model.ParticipantChan?.UserId != null;
 }
 
 
-@if (Model == null)
-{
-    <h3 class="title__alert">Поки тут нічого немає...</h3>
-}
-else
-{
-    <section class="conference">
-        <div class="container">
+<section class="conference">
+    <div class="container">
 
-            <div class="conference__inner">
-                <h2 class="conference__title title">@Html.Raw(Model.Title)</h2>
+        <div class="conference__inner">
+            <h2 class="conference__title title">@Html.Raw(Model.Title)</h2>
 
-                <div class="conference__description">
-                    @Html.Raw(Model.Description)
-                </div>
+            <div class="conference__description">
+                @Html.Raw(Model.Description)
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section class="new">
+    <div class="container">
+        <div class="new__inner">
+
+            <div class="new__text">
+                <h2 class="new__title title">@Model.Title</h2>
+                <h3 class="new__subtitle">@Model.ShortDescription</h3>
             </div>
 
-        </div>
-    </section>
-    
-    <section class="new">
-        <div class="container">
-            <div class="new__inner">
-
-                <div class="new__text">
-                    <h2 class="new__title title">@Model.Title</h2>
-                    <h3 class="new__subtitle">@Model.ShortDescription</h3>
-                </div>
-
-                @if (Model.IsActual && !await userManager.IsInRoleAsync(user, RoleNames.MANAGER))
+            @if (Model.IsActual && !await userManager.IsInRoleAsync(user, RoleNames.MANAGER))
+            {
+                @if (isConfParticipant)
                 {
-                    @if (Model.Participants.Any(a => a.UserId == user.Id))
-                    {
-                        <a class="new__button--leave button" asp-action="Unsubscribe" asp-controller="conference">
-                            Покинути нас
-                        </a>
-                    }
-                    else
-                    {
-                        <a class="new__button button" asp-action="JoinNow" asp-controller="conference">
-                            Приєднатися!
-                            <picture>
-                                <source srcset="img/icons/atom.webp" type="image/webp"><img src="img/icons/atom.png" alt="">
-                            </picture>
-                        </a>
-                    }
-
-                    @* <!-- @ViewData["ResultMessage"] До лучших времён...--> *@
+                    <a class="new__button--leave button" asp-action="Unsubscribe" asp-controller="conference">
+                        Покинути нас
+                    </a>
+                }
+                else
+                {
+                    <a class="new__button button" href="#subscribe">
+                        Приєднатися!
+                        <picture>
+                            <source srcset="img/icons/atom.webp" type="image/webp"><img src="img/icons/atom.png" alt="">
+                        </picture>
+                    </a>
                 }
 
-            </div>
+                    @* <!-- @ViewData["ResultMessage"] До лучших времён...--> *@
+            }
+
         </div>
-    </section>
-}
+
+
+        @if (!isConfParticipant)
+        {
+            <div id="subscribe" class="popup">
+
+                <div class="popup__body">
+                    <div class="popup__inner">
+
+                        <a href="#" class="popup__close close__popup"></a>
+
+                        <h2 class="profile__title title">Заявка учасника</h2>
+
+                        <form class="register__form" method="post" asp-action="JoinNow" asp-controller="conference">
+
+                            <div class="form__blck form__blck--select">
+                                <div class="signup__select" style="width: 100%;">
+                                    <select style="max-width: none;" asp-for="ParticipantChan.ParticipationForm" asp-items="@Html.GetEnumSelectList<ParticipationForm>()">
+                                        <option value="" disabled>Форма участі</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form__blck form__blck--select form__blck--dbl">
+                                <input asp-for="ParticipantChan.AdditionalConditions" type="text" placeholder="Додаткові умови та побажання">
+
+                                <div class="signup__select">
+                                    <select asp-for="ParticipantChan.ParticipationForm" asp-items="@Html.GetEnumSelectList<ParticipationForm>()">
+                                        <option value="" disabled>Форма участі</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="form__buttons">
+                                <button class="button signin__button" type="submit">
+                                    Зберегти змини
+                                </button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>

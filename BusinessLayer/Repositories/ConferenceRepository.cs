@@ -79,9 +79,7 @@ namespace BusinessLayer.Repositories
                 Topics = topics,
 
                 DateCreated = dateNow,
-                DateLastModified = dateNow,
-                DateStart = entity.DateStart,
-                DateFinish = entity.DateFinish
+                DateLastModified = dateNow
             };
 
             foreach (var topic in newConference.Topics)
@@ -129,11 +127,10 @@ namespace BusinessLayer.Repositories
                 Participants = GetConfParticipants(conf),
                 Articles = GetConfArticles(conf),
                 Images = GetConfImages(conf),
+                Dates = GetConfDates(conf),
 
                 DateCreated = conf.DateCreated,
                 DateLastModified = conf.DateLastModified,
-                DateStart = conf.DateStart,
-                DateFinish = conf.DateFinish
             };
         }
 

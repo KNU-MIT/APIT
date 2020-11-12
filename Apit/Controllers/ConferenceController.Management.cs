@@ -17,7 +17,6 @@ namespace Apit.Controllers
             var dateNow = DateTime.Now;
             var model = new NewConferenceViewModel
             {
-                UniqueAddress = _dataManager.Conferences.GenerateUniqueAddress(),
                 DateStart = dateNow,
                 DateFinish = dateNow
             };
@@ -36,24 +35,29 @@ namespace Apit.Controllers
             #region ================ Long form review ================
 
             // Check unique address field value
-            model.UniqueAddress.NormalizeAddress();
-            if (model.UniqueAddress.Length < 5)
+            model.UniqueAddress?.NormalizeAddress();
+            if (string.IsNullOrWhiteSpace(model.UniqueAddress))
+                model.UniqueAddress = _dataManager.Conferences.GenerateUniqueAddress();
+            else
             {
-                ModelState.AddModelError(nameof(NewConferenceViewModel.UniqueAddress),
-                    "адреса закоротка (потрібна довжина 5-25 символів)");
-                hasIncorrectData = true;
-            }
-            else if (model.UniqueAddress.Length > 25)
-            {
-                ModelState.AddModelError(nameof(NewConferenceViewModel.UniqueAddress),
-                    "адреса задовга (потрібна довжина 5-20 символів)");
-                hasIncorrectData = true;
-            }
-            else if (_dataManager.Articles.GetByUniqueAddress(model.UniqueAddress) != null)
-            {
-                ModelState.AddModelError(nameof(NewConferenceViewModel.UniqueAddress),
-                    "ця адреса вже використовується, оберіть іншу");
-                hasIncorrectData = true;
+                if (model.UniqueAddress.Length < 5)
+                {
+                    ModelState.AddModelError(nameof(NewConferenceViewModel.UniqueAddress),
+                        "адреса закоротка (потрібна довжина 5-25 символів)");
+                    hasIncorrectData = true;
+                }
+                else if (model.UniqueAddress.Length > 25)
+                {
+                    ModelState.AddModelError(nameof(NewConferenceViewModel.UniqueAddress),
+                        "адреса задовга (потрібна довжина 5-20 символів)");
+                    hasIncorrectData = true;
+                }
+                else if (_dataManager.Articles.GetByUniqueAddress(model.UniqueAddress) != null)
+                {
+                    ModelState.AddModelError(nameof(NewConferenceViewModel.UniqueAddress),
+                        "ця адреса вже використовується, оберіть іншу");
+                    hasIncorrectData = true;
+                }
             }
 
             // apply topics
@@ -101,9 +105,6 @@ namespace Apit.Controllers
         [Authorize(Roles = RoleNames.SEMPAI)]
         public IActionResult Edit()
         {
-            
-            
-            
             // TODO: to do it... 
             // TODO: to do it... 
             // TODO: to do it... 
@@ -112,8 +113,8 @@ namespace Apit.Controllers
             // TODO: to do it...
             // TODO: to do it... 
             // TODO: to do it... 
-            
-            
+
+
             return View("error");
         }
 

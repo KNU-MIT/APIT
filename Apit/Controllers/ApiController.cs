@@ -10,13 +10,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Apit.Controllers
 {
+    // TODO: use it wherever you need it
     public class ApiController : Controller
     {
         private readonly ILogger<ConferenceController> _logger;
         private readonly UserManager<User> _userManager;
         private readonly DataManager _dataManager;
 
-        public ApiController(ILogger<ConferenceController> logger, 
+        public ApiController(ILogger<ConferenceController> logger,
             UserManager<User> userManager, DataManager dataManager)
         {
             _logger = logger;
@@ -54,7 +55,7 @@ namespace Apit.Controllers
                     Status = 404, // not found
                     User = null
                 });
-            
+
             return Json(new SetPermissionsResponse
             {
                 Status = 200, // ok

@@ -19,35 +19,33 @@
                   asp-controller="account" asp-action="register"
                   asp-route-returnUrl="@Model.ReturnUrl">
 
-				<div class="form__blck">
+                <div class="form__blck">
                     <input asp-for="LastName" type="text" placeholder="Прізвище" maxlength="100">
                     <input asp-for="FirstName" type="text" placeholder="Ім'я" maxlength="100">
                     <input asp-for="MiddleName" type="text" placeholder="По-батькові" maxlength="100">
-                </div>
-
-                <div class="form__blck form__blck--select form__blck--dbl">
+                    <div style="height: 12px;"></div>
                     <input asp-for="WorkingFor" type="text" placeholder="Працевлаштування">
-
+                </div>
+                <div class="form__blck form__blck--select form__blck--dbl">
                     <div class="signup__select">
                         <select type="select" asp-for="ScienceDegree" asp-items="Html.GetEnumSelectList<ScienceDegree>()">
                             <option disabled selected="selected">Науковий ступінь</option>
                         </select>
                     </div>
-                </div>
 
-                <div class="form__blck form__blck--select form__blck--dbl">
                     <div class="signup__select">
                         <select type="select" asp-for="AcademicTitle" asp-items="Html.GetEnumSelectList<AcademicTitle>()">
                             <option value="" disabled selected>Вчене звання</option>
                         </select>
                     </div>
-
-                    <div class="signup__select">
-                        <select type="select" asp-for="ParticipationForm" asp-items="Html.GetEnumSelectList<ParticipationForm>()">
-                            <option value="" disabled selected>Форма участі</option>
-                        </select>
-                    </div>
                 </div>
+
+                <div class="form__blck form__blck--dbl">
+                    <input asp-for="MailboxIndex" type="number" placeholder="Поштовий індект">
+                    <input asp-for="PhoneNumber" type="tel" placeholder="Номер телефону">
+                </div>
+
+                <div style="height: 12px;"></div>
 
                 <div class="form__blck">
                     <input asp-for="Email" type="email" placeholder="Email">
@@ -58,11 +56,26 @@
                     <input asp-for="PasswordConfirm" type="password" placeholder="Підтвердіть пароль">
                 </div>
 
+                <div style="height: 12px;"></div>
+
+                <div class="form__blck">
+                    <input asp-for="InfoSourceName" type="text" placeholder="Звідки Ви дізналися про конференцию?">
+                </div>
+
+                <div class="form__blck">
+                    Реєструючись Ви авторматично погоджуєтеся з нашими 
+                    <a asp-action="privacy" asp-controller="home">подітиками конфеденційності інформації</a> 
+                    та вважається, що Ви ознайомлені з 
+                    <a asp-action="requirements" asp-controller="info">правилами подання та оформлення тез</a>
+                </div>
+                                
+                <div style="height: 12px;"></div>
+
                 <div class="form__buttons">
                     <a class="signin__button" href="@(Model.ReturnUrl ?? "/")">
                         Назад
                     </a>
-                    
+
                     <button class="button signin__button" type="submit">
                         Реєстрація
                         <picture>

@@ -32,8 +32,7 @@ namespace Apit.Areas.Admin.Controllers
             _logger.LogInformation("Attempt to get participants data detected");
             var conference = _dataManager.Conferences.GetByUniqueAddress(conf);
             if (conference == null) return new JsonResult(null);
-            var users = conference.Participants
-                .Where(u => u.Subscribed).Select(u => _dataManager.Users.GetById(u.UserId));
+            var users = conference.Participants.Select(u => _dataManager.Users.GetById(u.UserId));
 
             return field.ToLower() switch
             {

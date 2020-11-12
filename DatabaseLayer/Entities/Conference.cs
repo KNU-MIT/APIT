@@ -12,6 +12,7 @@ namespace DatabaseLayer.Entities
         [Required] public string UniqueAddress { get; set; }
 
         public bool IsActual { get; set; }
+        // public bool IsRemote { get; set; }
 
         [Required] public string Title { get; set; }
 
@@ -22,6 +23,7 @@ namespace DatabaseLayer.Entities
         public ICollection<ConferenceImage> Images { get; set; }
         public ICollection<Article> Articles { get; set; }
         public ICollection<Topic> Topics { get; set; }
+        public ICollection<ConferenceDate> Dates { get; set; }
 
         [DataType(DataType.Date)] public DateTime DateCreated { get; set; }
         [DataType(DataType.Date)] public DateTime DateLastModified { get; set; }
@@ -35,6 +37,7 @@ namespace DatabaseLayer.Entities
             Articles = new HashSet<Article>();
             Images = new HashSet<ConferenceImage>();
             Topics = new HashSet<Topic>();
+            Dates = new HashSet<ConferenceDate>();
         }
 
 

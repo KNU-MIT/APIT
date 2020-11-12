@@ -20,10 +20,13 @@ namespace BusinessLayer.Repositories
         public IEnumerable<ConferenceImage> GetConfImages(Conference conference) =>
             _ctx.ConfImages.Where(a => a.Conference == conference);
 
-
         public IEnumerable<Topic> GetConfTopics(Conference conference) =>
             _ctx.Topics.Where(a => a.Conference == conference);
-        
+
+        private IEnumerable<ConferenceDate> GetConfDates(Conference conference) =>
+            _ctx.ConfDates.Where(a => a.Conference == conference);
+
+
         public void AddParticipant(Conference conference, User user)
         {
             if (conference.Participants.Any(a => a.UserId == user.Id))
@@ -47,12 +50,8 @@ namespace BusinessLayer.Repositories
         public void AddArticle(Conference conference, Article article)
         {
             if (conference.Articles.Contains(article))
-            {
                 Console.WriteLine($"Conference {conference.Id} already contains article {article.Id}");
-                return;
-            }
-
-            conference.Articles.Add(article);
+            else conference.Articles.Add(article);
         }
 
         public void AddImage(Conference conference, IFormFile imageFile)
@@ -70,6 +69,20 @@ namespace BusinessLayer.Repositories
 
             conference.Images.Add(image);
             _ctx.ConfImages.Add(image);
+        }
+
+        public void AddDate(Conference conference, DateTime date, string name)
+        {
+            var newConfDate = new ConferenceDate
+            {
+                Id = Guid.NewGuid(),
+                Date = date,
+                Name = name,
+                Conference = conference
+            };
+
+            conference.Dates.Add(newConfDate);
+            _ctx.ConfDates.Add(newConfDate);
         }
 
 
@@ -95,6 +108,11 @@ namespace BusinessLayer.Repositories
 
             conference.Images.Add(image);
             _ctx.ConfImages.Add(image);
+        }
+
+        private void RemoveDate(Conference conf)
+        {
+            // TODO: Remove Conference Date Method in Repo
         }
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DatabaseLayer.Migrations
 {
-    public partial class Development_7g : Migration
+    public partial class Development_9A : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -34,7 +34,6 @@ namespace DatabaseLayer.Migrations
                     PasswordHash = table.Column<string>(nullable: true),
                     SecurityStamp = table.Column<string>(nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(nullable: false),
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
@@ -46,8 +45,9 @@ namespace DatabaseLayer.Migrations
                     WorkingFor = table.Column<string>(nullable: false),
                     ScienceDegree = table.Column<short>(nullable: false),
                     AcademicTitle = table.Column<short>(nullable: false),
-                    ParticipationForm = table.Column<short>(nullable: false),
-                    ProfilePhoto = table.Column<string>(nullable: true),
+                    MailboxIndex = table.Column<int>(nullable: false),
+                    InfoSourceName = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
                     ProfileAddress = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -182,6 +182,26 @@ namespace DatabaseLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ConfDates",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    ConferenceId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConfDates", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConfDates_Conferences_ConferenceId",
+                        column: x => x.ConferenceId,
+                        principalTable: "Conferences",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ConfImages",
                 columns: table => new
                 {
@@ -206,8 +226,9 @@ namespace DatabaseLayer.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<string>(nullable: false),
-                    Subscribed = table.Column<bool>(nullable: false),
+                    ParticipationForm = table.Column<short>(nullable: false),
+                    AdditionalConditions = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
                     ConferenceId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -219,6 +240,12 @@ namespace DatabaseLayer.Migrations
                         principalTable: "Conferences",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ConfParticipants_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -275,7 +302,7 @@ namespace DatabaseLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserOwnArticlesLinking",
+                name: "UserArticles",
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
@@ -285,15 +312,15 @@ namespace DatabaseLayer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserOwnArticlesLinking", x => new { x.UserId, x.ArticleId });
+                    table.PrimaryKey("PK_UserArticles", x => new { x.UserId, x.ArticleId });
                     table.ForeignKey(
-                        name: "FK_UserOwnArticlesLinking_Articles_ArticleId",
+                        name: "FK_UserArticles_Articles_ArticleId",
                         column: x => x.ArticleId,
                         principalTable: "Articles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserOwnArticlesLinking_AspNetUsers_UserId",
+                        name: "FK_UserArticles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -303,12 +330,12 @@ namespace DatabaseLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "04ca4593-a2c9-4d7c-a7b7-d42bb04a47b8", "532dbcab-581d-4929-91c9-e9742996518a", "root_admin", "ROOT_ADMIN" });
+                values: new object[] { "16b37f8b-d9c1-47e7-a9d1-77f27ac9f102", "fe35dcb7-6548-4a17-a9d7-6a92cbcfe51b", "root_admin", "ROOT_ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "fd724de2-7465-49eb-bbd4-8599d388711f", "cf80d98e-1de0-4d96-849f-e853de2527a4", "manager", "MANAGER" });
+                values: new object[] { "b7d9d79c-3401-4124-a1ad-f097223ced8c", "4ba1be88-49a3-4e81-ac33-7cbe6b49bf2d", "manager", "MANAGER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Articles_ConferenceId",
@@ -360,6 +387,11 @@ namespace DatabaseLayer.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ConfDates_ConferenceId",
+                table: "ConfDates",
+                column: "ConferenceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ConfImages_ConferenceId",
                 table: "ConfImages",
                 column: "ConferenceId");
@@ -370,13 +402,18 @@ namespace DatabaseLayer.Migrations
                 column: "ConferenceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ConfParticipants_UserId",
+                table: "ConfParticipants",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Topics_ConferenceId",
                 table: "Topics",
                 column: "ConferenceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserOwnArticlesLinking_ArticleId",
-                table: "UserOwnArticlesLinking",
+                name: "IX_UserArticles_ArticleId",
+                table: "UserArticles",
                 column: "ArticleId");
         }
 
@@ -398,13 +435,16 @@ namespace DatabaseLayer.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "ConfDates");
+
+            migrationBuilder.DropTable(
                 name: "ConfImages");
 
             migrationBuilder.DropTable(
                 name: "ConfParticipants");
 
             migrationBuilder.DropTable(
-                name: "UserOwnArticlesLinking");
+                name: "UserArticles");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

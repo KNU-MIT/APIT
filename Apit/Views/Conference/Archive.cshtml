@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.Html
 @model IEnumerable<ConferenceViewModel>
 
 @{
@@ -12,6 +13,14 @@
     // ViewData["meta_socials_url"] = "";
     ViewData["meta_socials_description"] = "";
     // ViewData["meta_socials_image"] = null;
+
+
+    IHtmlContent GetDateDisplayString(ConferenceViewModel conference)
+    {
+        string dateStart = conference.DateStart.ToString("dd/MM/yyyy");
+        string dateFinish = conference.DateFinish.ToString("dd/MM/yyyy");
+        return Html.Raw(dateStart == dateFinish ? dateStart : $"з {dateStart} по {dateFinish}");
+    }
 }
 
 
@@ -38,7 +47,7 @@
                                 <img src="~/img/meeting-1.jpg" alt="" class="archive__pht">
                             </picture>
                             <div class="archive__date">
-                                з @conference.DateStart.ToString("dd.MM.yyyy") по @conference.DateFinish.ToString("dd.MM.yyyy")
+                                @GetDateDisplayString(conference);
                             </div>
                         </div>
 
@@ -56,7 +65,7 @@
 
                             </div>
                         </div>
-                        
+
                     </div>
                 }
 

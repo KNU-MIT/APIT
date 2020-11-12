@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using DatabaseLayer;
 using DatabaseLayer.Enums;
 
 namespace BusinessLayer.Models
 {
     public class RegisterViewModel : LoginViewModel
     {
-        [Required(ErrorMessage = "Введіть ім'я")] public string FirstName { get; set; }
+        [Required(ErrorMessage = "Введіть ім'я")]
+        public string FirstName { get; set; }
 
         [Required(ErrorMessage = "Введіть прізвище")]
         public string LastName { get; set; }
@@ -19,14 +19,26 @@ namespace BusinessLayer.Models
         [Display(Name = "Місце навчання/роботи")]
         public string WorkingFor { get; set; }
 
-        [Display(Name = "Научна ступінь")] public ScienceDegree ScienceDegree { get; set; }
-        public string AltScienceDegree { get; set; }
-
+        [Display(Name = "Научный ступінь")] public ScienceDegree ScienceDegree { get; set; }
+        // public string AltScienceDegree { get; set; }
 
         [Display(Name = "Академічна посада")] public AcademicTitle AcademicTitle { get; set; }
-        public string AltAcademicTitle { get; set; }
+        // public string AltAcademicTitle { get; set; }
 
         [Display(Name = "Форма участі")] public ParticipationForm ParticipationForm { get; set; }
+
+
+        [Required(ErrorMessage = "Введіть Ваш поштовий індекс")]
+        [Display(Name = "Поштовий індекс")]
+        public int MailboxIndex { get; set; }
+
+
+        [Display(Name = "Номер контактного телефону")]
+        public string PhoneNumber { get; set; }
+
+        
+        [Display(Name = "Звідки Ви дізналися про конференцію?")]
+        public string InfoSourceName { get; set; }
 
 
         [Required(ErrorMessage = "Введіть пароль та пидтвердіть його")]

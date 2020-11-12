@@ -36,7 +36,10 @@ namespace Apit.Controllers
                 WorkingFor = model.WorkingFor,
                 ScienceDegree = model.ScienceDegree,
                 AcademicTitle = model.AcademicTitle,
-                ParticipationForm = model.ParticipationForm,
+
+                MailboxIndex = model.MailboxIndex,
+                PhoneNumber = model.PhoneNumber,
+                InfoSourceName = model.InfoSourceName,
 
                 Email = model.Email,
                 UserName = model.Email
@@ -102,10 +105,11 @@ namespace Apit.Controllers
                         ViewData["Message"] = "Ви успішно підтвердили Вашу пошту!";
                         return View("success");
                     }
+
                     _logger.LogWarning($"User {user.FullName} NOT confirmed mail");
                 }
             }
-            
+
             ViewData["ErrorTitle"] = 403;
             ViewData["ErrorMessage"] = "Упс, виникла помилка...";
             return View("error");

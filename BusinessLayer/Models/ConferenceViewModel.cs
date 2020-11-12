@@ -7,7 +7,8 @@ namespace BusinessLayer.Models
 {
     public class ConferenceViewModel
     {
-        public User User { get; set; }
+        public ConferenceParticipant ParticipantChan { get; set; }
+
         public bool IsActual { get; set; }
 
         public Guid Id { get; set; }
@@ -23,6 +24,7 @@ namespace BusinessLayer.Models
         public IEnumerable<ArticleViewModel> Articles { get; set; }
         public IEnumerable<ConferenceImage> Images { get; set; }
         public IEnumerable<Topic> Topics { get; set; }
+        public IEnumerable<ConferenceDate> Dates { get; set; }
 
 
         [DataType(DataType.Date)] public DateTime DateCreated { get; set; }
