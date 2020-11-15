@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using Apit.Service;
+using Apit.Utils;
 using BusinessLayer.Models;
 using DatabaseLayer;
+using DatabaseLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,14 +16,7 @@ namespace Apit.Controllers
         [Authorize(Roles = RoleNames.SEMPAI)]
         public IActionResult Create()
         {
-            var dateNow = DateTime.Now;
-            var model = new NewConferenceViewModel
-            {
-                DateStart = dateNow,
-                DateFinish = dateNow
-            };
-
-            return View(model);
+            return View();
         }
 
         [HttpPost, Authorize(Roles = RoleNames.SEMPAI)]
@@ -40,16 +35,17 @@ namespace Apit.Controllers
                 model.UniqueAddress = _dataManager.Conferences.GenerateUniqueAddress();
             else
             {
-                if (model.UniqueAddress.Length < 5)
+                string rangeMessage = $"{_config.UniqueAddress.MinSize}-{_config.UniqueAddress.MaxSize}";
+                if (model.UniqueAddress.Length < _config.UniqueAddress.MinSize)
                 {
                     ModelState.AddModelError(nameof(NewConferenceViewModel.UniqueAddress),
-                        "адреса закоротка (потрібна довжина 5-25 символів)");
+                        $"адреса закоротка (потрібно {rangeMessage} символів)");
                     hasIncorrectData = true;
                 }
-                else if (model.UniqueAddress.Length > 25)
+                else if (model.UniqueAddress.Length > _config.UniqueAddress.MaxSize)
                 {
                     ModelState.AddModelError(nameof(NewConferenceViewModel.UniqueAddress),
-                        "адреса задовга (потрібна довжина 5-20 символів)");
+                        $"адреса задовга (потрібно {rangeMessage} символів)");
                     hasIncorrectData = true;
                 }
                 else if (_dataManager.Articles.GetByUniqueAddress(model.UniqueAddress) != null)
@@ -60,7 +56,7 @@ namespace Apit.Controllers
                 }
             }
 
-            // apply topics
+            // Check topics
             if (model.Topics.All(item => item == null))
             {
                 ModelState.AddModelError(nameof(NewConferenceViewModel.Topics),
@@ -68,33 +64,45 @@ namespace Apit.Controllers
                 hasIncorrectData = true;
             }
 
-            // disable past dates for DateStart
-            if (model.DateStart < DateTime.Today)
+            // Check event dates and description content
+            if (model.Topics.All(item => item == null))
             {
-                ModelState.AddModelError(nameof(NewConferenceViewModel.DateStart),
-                    "невірно задано дату");
+                ModelState.AddModelError(nameof(NewConferenceViewModel.Topics),
+                    "задайте як мінімум одну тему");
                 hasIncorrectData = true;
             }
 
-            // disable past dates for DateFinish
-            if (model.DateFinish < DateTime.Today)
+            var dateNow = DateTime.Now;
+            // ^ => XOR (when a and b have difference values)
+            if (model.EventDates.PairAny(model.EventDescriptions, 
+                (date, desc) => (date != null) ^ string.IsNullOrWhiteSpace(desc)))
             {
-                ModelState.AddModelError(nameof(NewConferenceViewModel.DateFinish),
-                    "невірно задано дату");
+                ModelState.AddModelError(nameof(NewConferenceViewModel.Topics),
+                    "задайте як мінімум одну дату");
                 hasIncorrectData = true;
             }
 
-            // end date is always later than start date
-            if (model.DateStart > model.DateFinish)
+            if (model.EventDates.Any(date => date < dateNow))
             {
-                ModelState.AddModelError(nameof(NewConferenceViewModel.DateFinish),
-                    "невірно задано дати");
+                ModelState.AddModelError(nameof(NewConferenceViewModel.Topics),
+                    "дату задано у невірному форматі");
                 hasIncorrectData = true;
             }
 
             #endregion
 
             if (hasIncorrectData) return View(model);
+
+
+            model.Events = model.EventDates
+                .Where(t => t != null)
+                .Select((t, i) => new ConferenceDate
+                {
+                    Id = Guid.NewGuid(),
+                    Date = t.Value,
+                    Description = model.EventDescriptions[i]
+                }).ToList();
+
 
             _dataManager.Conferences.Create(model);
             _logger.LogInformation($"New conference {model.UniqueAddress} created");
@@ -105,13 +113,6 @@ namespace Apit.Controllers
         [Authorize(Roles = RoleNames.SEMPAI)]
         public IActionResult Edit()
         {
-            // TODO: to do it... 
-            // TODO: to do it... 
-            // TODO: to do it... 
-            // TODO: to do it... 
-            // TODO: to do it... 
-            // TODO: to do it...
-            // TODO: to do it... 
             // TODO: to do it... 
 
 

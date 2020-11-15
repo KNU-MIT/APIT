@@ -1,10 +1,9 @@
 ﻿@model NewConferenceViewModel
-@inject ProjectConfig ProjectConfig
 
 @{
     ViewData["Title"] = "Створення нової конференції";
     ViewData["DisableFooter"] = true;
-    var config = ProjectConfig.Content.Conference;
+    var config = projectConfig.Content.Conference;
 
     var user = await userManager.GetUserAsync(User);
 }
@@ -12,10 +11,12 @@
 
 <section class="conferencecreate">
     <div class="container">
+
+        <div asp-validation-summary="All"></div>
+
         <div class="conferencecreate__inner">
 
             <h3 class="conferencecreate__title title">Запланувати нову конференцію</h3>
-            <div asp-validation-summary="All"></div>
 
             <form class="conferencecreate__form" id="conferenceCreating"
                   method="post" asp-controller="conference" asp-action="create"
@@ -30,7 +31,7 @@
                     <textarea asp-for="ShortDescription" maxlength="@config.ShortDescriptionMaxLength" placeholder="Короткий опис"></textarea>
                     <textarea asp-for="Description" placeholder="Повний опис"></textarea>
                 </div>
-                
+
 
                 @* <div class="form__blck form__blck--todo"> *@
                 @*     <input asp-for="AdminKeys" type="text" id="adminInput" placeholder="Адміністрація конференції"> *@
@@ -48,22 +49,24 @@
 
                 <ul id="conferenceList" class="conferencecreate__list"></ul>
 
-                <div class="form__blck form__blck--dbl">
-                    <input asp-for="DateStart" type="date" value="@Model.DateStart" placeholder="Почнеться">
-                    <input asp-for="DateFinish" type="date" value="@Model.DateFinish" placeholder="Закинчіться">
+                <div>
+                    @* TODO: modify this section with MiTo`s front-end *@
+                    <div>
+                        <input asp-for="EventDates" type="date" placeholder="Дата події">
+                        <input asp-for="EventDescriptions" type="text" placeholder="Опис події">
+                    </div>
+                    <div>
+                        <input asp-for="EventDates" type="date" placeholder="Дата події">
+                        <input asp-for="EventDescriptions" type="text" placeholder="Опис події">
+                    </div>
                 </div>
 
                 <div class="form__buttons">
-                    <a class="signin__button" asp-controller="home" asp-action="index">
-                        На головну
-                    </a>
-                                    
+                    <a class="signin__button" asp-controller="home" asp-action="index">На головну</a>
+
                     <button class="button signin__button" type="submit" style="padding-right: 20px;">
                         Створити
-                        <picture>
-                            <source srcset="~/img/icons/atom.webp" type="image/webp">
-                            <img src="~/img/icons/atom.png" alt="">
-                        </picture>
+                        <partial name="Components/AtomIcon"/>
                     </button>
                 </div>
 

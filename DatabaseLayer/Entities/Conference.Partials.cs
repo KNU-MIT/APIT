@@ -30,10 +30,10 @@ namespace DatabaseLayer.Entities
     {
         public Guid Id { get; set; }
 
-        [Required] public string Name { get; set; }
+        [Required] public string Description { get; set; }
 
         [Required, DataType(DataType.DateTime)]
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
 
         [Required] public Conference Conference { get; set; }
     }

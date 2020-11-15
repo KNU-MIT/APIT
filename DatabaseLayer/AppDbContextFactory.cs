@@ -11,7 +11,7 @@ namespace DatabaseLayer
             optionsBuilder.UseSqlServer(
                 // aspnet-Apit-C2FA6515-42E2-4E38-BBCB-5CEB88F889AD
                 // "Server=(localdb)\\mssqllocaldb;Database=testdb_6.27;Trusted_Connection=True;MultipleActiveResultSets=true");
-            "Server=localhost,1433;Database=testdb_12;User=sa;Password=reallyStrongPwd123;MultipleActiveResultSets=true");
+            "Server=localhost,1433;Database=testdb_13;User=sa;Password=reallyStrongPwd123;MultipleActiveResultSets=true");
 
             return new AppDbContext(optionsBuilder.Options);
         }

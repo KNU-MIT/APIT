@@ -1,5 +1,5 @@
 ﻿# APIT - 2020
-> version 1.4.0 beta
+> version 1.4.1 beta
 
 | Role       | Developer           | GitHub    | 
 |------------|---------------------|-----------| 
@@ -10,10 +10,17 @@ and other...
 
 -----------------------------------------------------------------------------------
 
-## Get started in back-end
+## Get started in project
 
+### How to init on server
 
-#### Init env variables and other support data
+1. Open terminal and go to project directory
+2. Change directory `cd ./Tools/`
+3. Edit file `setenv.sh` with your data
+4. Run bash script `. setenv.sh` 
+5. 
+
+### Init env variables and other support data
 
 1. `cd [Apit]`
 
@@ -23,7 +30,7 @@ and other...
 
 -----------------------------------------------------------------------------------
 
-#### Add new DB migration
+### Add new DB migration
 
 |   | Command                                      | Description                          | 
 |---|----------------------------------------------|--------------------------------------| 

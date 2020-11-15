@@ -30,19 +30,18 @@ namespace BusinessLayer.Models
 
         [Required(ErrorMessage = "Введіть Ваш поштовий індекс")]
         [Display(Name = "Поштовий індекс")]
-        public int MailboxIndex { get; set; }
+        public string MailboxIndex { get; set; }
 
 
         [Display(Name = "Номер контактного телефону")]
         public string PhoneNumber { get; set; }
 
-        
+
         [Display(Name = "Звідки Ви дізналися про конференцію?")]
         public string InfoSourceName { get; set; }
 
 
-        [Required(ErrorMessage = "Введіть пароль та пидтвердіть його")]
-        [Compare("Password", ErrorMessage = "Пароли не совпадают")]
+        [Compare("Password", ErrorMessage = "Введіть пароль та пидтвердіть його")]
         public string PasswordConfirm { get; set; }
     }
 }

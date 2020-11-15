@@ -27,26 +27,6 @@ namespace BusinessLayer.Repositories
             _ctx.ConfDates.Where(a => a.Conference == conference);
 
 
-        public void AddParticipant(Conference conference, User user)
-        {
-            if (conference.Participants.Any(a => a.UserId == user.Id))
-            {
-                Console.WriteLine($"Conference {conference.Id} already contains participant {user.Id}");
-                return;
-            }
-
-            var participant = new ConferenceParticipant
-            {
-                Id = Guid.NewGuid(),
-                UserId = user.Id,
-                Conference = conference
-            };
-
-            conference.Participants.Add(participant);
-            _ctx.ConfParticipants.Add(participant);
-        }
-
-
         public void AddArticle(Conference conference, Article article)
         {
             if (conference.Articles.Contains(article))
@@ -71,18 +51,33 @@ namespace BusinessLayer.Repositories
             _ctx.ConfImages.Add(image);
         }
 
-        public void AddDate(Conference conference, DateTime date, string name)
+        public void AddDate(Conference conference, DateTime date, string description)
         {
             var newConfDate = new ConferenceDate
             {
                 Id = Guid.NewGuid(),
                 Date = date,
-                Name = name,
+                Description = description,
                 Conference = conference
             };
 
             conference.Dates.Add(newConfDate);
             _ctx.ConfDates.Add(newConfDate);
+        }
+
+        public void AddParticipant(Conference conference, ConferenceParticipant participant)
+        {
+            if (conference.Participants.Any(a => a.UserId == participant.UserId))
+            {
+                Console.WriteLine($"ERROR: Conference {conference.Id} already " +
+                                  $"contains participant {participant.User.FullName}");
+                return;
+            }
+
+            participant.Conference = conference;
+            conference.Participants.Add(participant);
+            participant.User.OwnParticipation.Add(participant);
+            _ctx.ConfParticipants.Add(participant);
         }
 
 

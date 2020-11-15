@@ -70,7 +70,7 @@ namespace Apit.Controllers
             }, protocol: HttpContext.Request.Scheme);
 
             _mailService.SendActionEmail(user.Email,
-                "APIT | Зміна пароля на сайті конференції",
+                _config.MailboxDefaults.MailSubjects.ResetPasswordSubject,
                 MailService.Presets.ResetPassword, confirmationLink);
             _logger.LogInformation("Password reset email was sent to: " + user.Email);
 
@@ -90,11 +90,10 @@ namespace Apit.Controllers
                     User = userFromEmail,
                     Token = token
                 });
-            
+
             ViewData["ErrorTitle"] = 404;
             ViewData["ErrorMessage"] = "Щось пішло не так...";
             return View("error");
-
         }
 
         [Route("/account/change-password"), HttpPost]
@@ -119,8 +118,8 @@ namespace Apit.Controllers
             }
 
             _logger.LogError($"User {user.ProfileAddress} NOT changed password");
-            
-            
+
+
             ViewData["ErrorTitle"] = 403;
             ViewData["ErrorMessage"] = "Щось пішло не так...";
             return View("error");

@@ -65,7 +65,7 @@ namespace BusinessLayer.Repositories
                     Id = Guid.NewGuid(),
                     Name = topic,
                 }).ToList();
-            
+
             var newConference = new Conference()
             {
                 Id = Guid.NewGuid(),
@@ -77,6 +77,7 @@ namespace BusinessLayer.Repositories
                 Description = entity.Description,
 
                 Topics = topics,
+                Dates = entity.Events,
 
                 DateCreated = dateNow,
                 DateLastModified = dateNow

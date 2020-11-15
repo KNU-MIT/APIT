@@ -3,7 +3,7 @@
     public class ProjectConfig
     {
         public FeedbackConfig Feedback { get; set; }
-        public MailboxConfig Mailbox { get; set; }
+        public MailboxConfig MailboxDefaults { get; set; }
         public ContentConfig Content { get; set; }
 
 
@@ -24,6 +24,15 @@
 
             public string ServiceHost { get; set; }
             public int ServicePort { get; set; }
+
+            public MailSubjectsConfig MailSubjects { get; set; }
+
+
+            public class MailSubjectsConfig
+            {
+                public string ConfirmEmailSubject { get; set; }
+                public string ResetPasswordSubject { get; set; }
+            }
         }
 
 
@@ -31,6 +40,15 @@
         {
             public ContentDataConfig Article { get; set; }
             public ContentDataConfig Conference { get; set; }
+
+            public UniqueAddressConfig UniqueAddress { get; set; }
+
+
+            public class UniqueAddressConfig
+            {
+                public int MaxSize { get; set; }
+                public int MinSize { get; set; }
+            }
         }
 
 

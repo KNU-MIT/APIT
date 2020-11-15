@@ -1,10 +1,13 @@
 ﻿@model ConferenceViewModel
 
 @{
-    ViewData["Title"] = Model.Title ?? "Щось йде не так, як заплановано...";
+    ViewData["Title"] = Model.Title;
 
     var user = await userManager.GetUserAsync(User);
 
+    bool isManager = await userManager.IsInRoleAsync(user, RoleNames.MANAGER);
+    bool isAdmin = await userManager.IsInRoleAsync(user, RoleNames.ADMIN);
+    
     bool isConfParticipant = Model.ParticipantChan?.UserId != null;
 }
 
@@ -23,82 +26,75 @@
     </div>
 </section>
 
-<section class="new">
-    <div class="container">
-        <div class="new__inner">
+@if (user.EmailConfirmed)
+{
+    <section class="new">
+        <div class="container">
+            <div class="new__inner">
 
-            <div class="new__text">
-                <h2 class="new__title title">@Model.Title</h2>
-                <h3 class="new__subtitle">@Model.ShortDescription</h3>
-            </div>
+                <div class="new__text">
+                    <h2 class="new__title title">@Model.Title</h2>
+                    <h3 class="new__subtitle">@Model.ShortDescription</h3>
+                </div>
 
-            @if (Model.IsActual && !await userManager.IsInRoleAsync(user, RoleNames.MANAGER))
-            {
-                @if (isConfParticipant)
+                @if (Model.IsActual)
                 {
-                    <a class="new__button--leave button" asp-action="Unsubscribe" asp-controller="conference">
-                        Покинути нас
-                    </a>
-                }
-                else
-                {
-                    <a class="new__button button" href="#subscribe">
-                        Приєднатися!
-                        <picture>
-                            <source srcset="img/icons/atom.webp" type="image/webp"><img src="img/icons/atom.png" alt="">
-                        </picture>
-                    </a>
-                }
+                    @if (isConfParticipant)
+                    {
+                        <a class="new__button--leave button" asp-action="Unsubscribe" asp-controller="conference">
+                            Покинути нас
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="new__button button popup__link" href="#subscribe">
+                            Приєднатися!
+                            <partial name="Components/AtomIcon"/>
+                        </a>
+                    }
 
                     @* <!-- @ViewData["ResultMessage"] До лучших времён...--> *@
-            }
+                }
 
-        </div>
+            </div>
 
 
-        @if (!isConfParticipant)
-        {
-            <div id="subscribe" class="popup">
+            @if (!isConfParticipant)
+            {
+                <div id="subscribe" class="popup">
 
-                <div class="popup__body">
-                    <div class="popup__inner">
+                    <div class="popup__body">
+                        <div class="popup__inner">
 
-                        <a href="#" class="popup__close close__popup"></a>
+                            <a href="#" class="popup__close close__popup"></a>
 
-                        <h2 class="profile__title title">Заявка учасника</h2>
+                            <h2 class="profile__title title">Заявка учасника</h2>
 
-                        <form class="register__form" method="post" asp-action="JoinNow" asp-controller="conference">
+                            <form class="register__form" method="post" asp-action="JoinNow" asp-controller="conference">
 
-                            <div class="form__blck form__blck--select">
-                                <div class="signup__select" style="width: 100%;">
-                                    <select style="max-width: none;" asp-for="ParticipantChan.ParticipationForm" asp-items="@Html.GetEnumSelectList<ParticipationForm>()">
-                                        <option value="" disabled>Форма участі</option>
-                                    </select>
+                                <div class="form__blck form__blck--select">
+                                    <div class="signup__select" style="width: 100%;">
+                                        <select style="max-width: none;" asp-for="ParticipantChan.ParticipationForm" asp-items="@Html.GetEnumSelectList<ParticipationForm>()">
+                                            <option value="" disabled>Форма участі</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="form__blck form__blck--select form__blck--dbl">
-                                <input asp-for="ParticipantChan.AdditionalConditions" type="text" placeholder="Додаткові умови та побажання">
-
-                                <div class="signup__select">
-                                    <select asp-for="ParticipantChan.ParticipationForm" asp-items="@Html.GetEnumSelectList<ParticipationForm>()">
-                                        <option value="" disabled>Форма участі</option>
-                                    </select>
+                                <div class="form__blck form__blck--select">
+                                    <input asp-for="ParticipantChan.AdditionalConditions" type="text" placeholder="Додаткові умови та побажання">
                                 </div>
-                            </div>
 
+                                <div class="form__buttons">
+                                    <button class="button signin__button" type="submit">Приєднатися</button>
+                                </div>
 
-                            <div class="form__buttons">
-                                <button class="button signin__button" type="submit">
-                                    Зберегти змини
-                                </button>
-                            </div>
+                            </form>
 
-                        </form>
-
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
-</section>
+            }
+        </div>
+    </section>
+}
+ц

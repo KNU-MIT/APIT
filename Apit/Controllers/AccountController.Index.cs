@@ -19,15 +19,17 @@ namespace Apit.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly DataManager _dataManager;
         private readonly MailService _mailService;
+        private readonly ProjectConfig _config;
 
         public AccountController(ILogger<AccountController> logger, SignInManager<User> signInManager,
-            UserManager<User> userManager, DataManager dataManager, MailService mailService)
+            UserManager<User> userManager, DataManager dataManager, MailService mailService, ProjectConfig config)
         {
             _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
             _dataManager = dataManager;
             _mailService = mailService;
+            _config = config;
         }
 
 

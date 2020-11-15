@@ -17,7 +17,7 @@ namespace DatabaseLayer.Entities
         public ScienceDegree ScienceDegree { get; set; }
         public AcademicTitle AcademicTitle { get; set; }
 
-        [Required] public int MailboxIndex { get; set; }
+        [Required] public string MailboxIndex { get; set; }
         public string InfoSourceName { get; set; }
         public override string PhoneNumber { get; set; }
 
@@ -32,6 +32,7 @@ namespace DatabaseLayer.Entities
         public User()
         {
             OwnArticles = new HashSet<UserOwnArticlesLinking>();
+            OwnParticipation = new HashSet<ConferenceParticipant>();
         }
 
 

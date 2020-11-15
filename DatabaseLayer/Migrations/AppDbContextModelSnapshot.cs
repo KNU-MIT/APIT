@@ -81,13 +81,7 @@ namespace DatabaseLayer.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateFinish")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("DateLastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateStart")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -121,10 +115,11 @@ namespace DatabaseLayer.Migrations
                     b.Property<Guid>("ConferenceId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime?>("Date")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -243,8 +238,9 @@ namespace DatabaseLayer.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int>("MailboxIndex")
-                        .HasColumnType("int");
+                    b.Property<string>("MailboxIndex")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MiddleName")
                         .IsRequired()
@@ -351,15 +347,15 @@ namespace DatabaseLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "16b37f8b-d9c1-47e7-a9d1-77f27ac9f102",
-                            ConcurrencyStamp = "fe35dcb7-6548-4a17-a9d7-6a92cbcfe51b",
+                            Id = "fbf39027-4f54-4efc-96c0-fc39f11914be",
+                            ConcurrencyStamp = "86d11b8c-d8da-4fa0-bdce-84a905488097",
                             Name = "root_admin",
                             NormalizedName = "ROOT_ADMIN"
                         },
                         new
                         {
-                            Id = "b7d9d79c-3401-4124-a1ad-f097223ced8c",
-                            ConcurrencyStamp = "4ba1be88-49a3-4e81-ac33-7cbe6b49bf2d",
+                            Id = "931457aa-cd90-49c1-88e3-75989f71899b",
+                            ConcurrencyStamp = "1fb1ec26-744c-40df-adcb-b76f44509d0d",
                             Name = "manager",
                             NormalizedName = "MANAGER"
                         });

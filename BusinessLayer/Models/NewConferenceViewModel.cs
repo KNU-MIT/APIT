@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using DatabaseLayer;
+using DatabaseLayer.Entities;
 
 namespace BusinessLayer.Models
 {
@@ -32,11 +34,13 @@ namespace BusinessLayer.Models
 
 
         [Required(ErrorMessage = MSG.OnRequired)]
-        [DataType(DataType.DateTime)]
-        public DateTime DateStart { get; set; }
+        public DateTime?[] EventDates { get; set; }
+
 
         [Required(ErrorMessage = MSG.OnRequired)]
-        [DataType(DataType.DateTime)]
-        public DateTime DateFinish { get; set; }
+        public string[] EventDescriptions { get; set; }
+
+
+        public ICollection<ConferenceDate> Events { get; set; }
     }
 }

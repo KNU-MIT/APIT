@@ -19,7 +19,7 @@ namespace BusinessLayer.Interfaces
         IEnumerable<ArticleViewModel> GetConfArticles(Conference conference);
         IEnumerable<ConferenceImage> GetConfImages(Conference conference);
 
-        void AddParticipant(Conference conference, User user);
+        void AddParticipant(Conference conference, ConferenceParticipant participant);
         void AddArticle(Conference conference, Article article);
         void AddImage(Conference conference, IFormFile image);
 

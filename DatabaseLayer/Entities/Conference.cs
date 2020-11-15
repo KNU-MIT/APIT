@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace DatabaseLayer.Entities
 {
@@ -27,8 +26,6 @@ namespace DatabaseLayer.Entities
 
         [DataType(DataType.Date)] public DateTime DateCreated { get; set; }
         [DataType(DataType.Date)] public DateTime DateLastModified { get; set; }
-        [DataType(DataType.DateTime)] public DateTime DateStart { get; set; }
-        [DataType(DataType.DateTime)] public DateTime DateFinish { get; set; }
 
 
         public Conference()

@@ -41,7 +41,7 @@
                 </div>
 
                 <div class="form__blck form__blck--dbl">
-                    <input asp-for="MailboxIndex" type="number" placeholder="Поштовий індект">
+                    <input asp-for="MailboxIndex" type="text" placeholder="Поштовий індект">
                     <input asp-for="PhoneNumber" type="tel" placeholder="Номер телефону">
                 </div>
 
@@ -78,10 +78,7 @@
 
                     <button class="button signin__button" type="submit">
                         Реєстрація
-                        <picture>
-                            <source srcset="~/img/icons/atom.webp" type="image/webp">
-                            <img src="~/img/icons/atom.png" alt="">
-                        </picture>
+                        <partial name="Components/AtomIcon"/>
                     </button>
                 </div>
 

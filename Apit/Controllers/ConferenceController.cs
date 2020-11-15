@@ -1,6 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Apit.Service;
 using BusinessLayer;
 using BusinessLayer.Models;
 using DatabaseLayer;
@@ -18,15 +20,15 @@ namespace Apit.Controllers
         private readonly DataManager _dataManager;
 
         private readonly UserManager<User> _userManager;
-        // private readonly ProjectConfig.ContentDataConfig _config;
+        private readonly ProjectConfig.ContentConfig _config;
 
         public ConferenceController(ILogger<ConferenceController> logger,
-            DataManager dataManager, UserManager<User> userManager)
+            DataManager dataManager, UserManager<User> userManager, ProjectConfig config)
         {
             _logger = logger;
             _dataManager = dataManager;
             _userManager = userManager;
-            // _config = config.Content.Conference;
+            _config = config.Content;
         }
 
 
@@ -38,7 +40,7 @@ namespace Apit.Controllers
                 : _dataManager.Conferences.GetByUniqueAddress(id);
 
             if (current == null) return RedirectToAction("index", "home");
-            
+
             var user = await _userManager.GetUserAsync(User);
             current.ParticipantChan = current.Participants.FirstOrDefault(a => a.User == user);
 
@@ -46,16 +48,22 @@ namespace Apit.Controllers
         }
 
 
-        [Route("/conference/join-now"), AllowAnonymous]
-        public async Task<IActionResult> JoinNow()
+        [Route("/conference/join-now"), Authorize, HttpPost]
+        public async Task<IActionResult> JoinNow(ConferenceViewModel model)
         {
-            if (!User.Identity.IsAuthenticated)
-                return RedirectToAction("register", "account");
+            var newParticipant = model.ParticipantChan;
 
             var user = await _userManager.GetUserAsync(User);
             var conference = _dataManager.Conferences.GetCurrentAsDbModel();
 
-            _dataManager.Conferences.AddParticipant(conference, user);
+            _dataManager.Conferences.AddParticipant(conference, new ConferenceParticipant
+            {
+                Id = Guid.NewGuid(),
+                ParticipationForm = newParticipant.ParticipationForm,
+                AdditionalConditions = newParticipant.AdditionalConditions,
+                User = user,
+                UserId = user.Id
+            });
             _dataManager.Conferences.SaveChanges();
 
             return RedirectToAction("index", "conference");
@@ -66,7 +74,7 @@ namespace Apit.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var conference = _dataManager.Conferences.GetCurrentAsDbModel();
-            
+
             _dataManager.Conferences.RemoveParticipant(conference, user);
             _dataManager.Conferences.SaveChanges();
 

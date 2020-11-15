@@ -14,7 +14,21 @@ namespace Apit.Service
         public MailService(ILogger<MailService> logger, ProjectConfig config)
         {
             _logger = logger;
-            _config = config.Mailbox;
+
+            bool useEnvPort = int.TryParse(Environment.GetEnvironmentVariable("SERVICE_EMAIL_PORT"), out int port);
+
+            _config = new ProjectConfig.MailboxConfig
+            {
+                RealEmail = Environment.GetEnvironmentVariable("SERVICE_EMAIL_ADDRESS")
+                            ?? config.MailboxDefaults.RealEmail,
+                RealEmailPassword = Environment.GetEnvironmentVariable("SERVICE_EMAIL_PASSWORD")
+                                    ?? config.MailboxDefaults.RealEmailPassword,
+                AddressEmail = Environment.GetEnvironmentVariable("SERVICE_EMAIL_ADDRESS")
+                               ?? config.MailboxDefaults.AddressEmail,
+                ServiceHost = Environment.GetEnvironmentVariable("SERVICE_EMAIL_HOST")
+                              ?? config.MailboxDefaults.ServiceHost,
+                ServicePort = useEnvPort ? port : config.MailboxDefaults.ServicePort
+            };
         }
 
 
@@ -74,6 +88,7 @@ namespace Apit.Service
 
                 // use port 465 or 587
                 client.Connect(_config.ServiceHost, _config.ServicePort, true);
+
                 client.Authenticate(_config.RealEmail, _config.RealEmailPassword);
                 client.Send(message);
 

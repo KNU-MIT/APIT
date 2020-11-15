@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DatabaseLayer.Migrations
 {
-    public partial class Development_9A : Migration
+    public partial class Development_9E : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -45,7 +45,7 @@ namespace DatabaseLayer.Migrations
                     WorkingFor = table.Column<string>(nullable: false),
                     ScienceDegree = table.Column<short>(nullable: false),
                     AcademicTitle = table.Column<short>(nullable: false),
-                    MailboxIndex = table.Column<int>(nullable: false),
+                    MailboxIndex = table.Column<string>(nullable: false),
                     InfoSourceName = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(nullable: true),
                     ProfileAddress = table.Column<string>(nullable: false)
@@ -66,9 +66,7 @@ namespace DatabaseLayer.Migrations
                     ShortDescription = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     DateCreated = table.Column<DateTime>(nullable: false),
-                    DateLastModified = table.Column<DateTime>(nullable: false),
-                    DateStart = table.Column<DateTime>(nullable: false),
-                    DateFinish = table.Column<DateTime>(nullable: false)
+                    DateLastModified = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -186,7 +184,7 @@ namespace DatabaseLayer.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
                     ConferenceId = table.Column<Guid>(nullable: false)
                 },
@@ -330,12 +328,12 @@ namespace DatabaseLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "16b37f8b-d9c1-47e7-a9d1-77f27ac9f102", "fe35dcb7-6548-4a17-a9d7-6a92cbcfe51b", "root_admin", "ROOT_ADMIN" });
+                values: new object[] { "fbf39027-4f54-4efc-96c0-fc39f11914be", "86d11b8c-d8da-4fa0-bdce-84a905488097", "root_admin", "ROOT_ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "b7d9d79c-3401-4124-a1ad-f097223ced8c", "4ba1be88-49a3-4e81-ac33-7cbe6b49bf2d", "manager", "MANAGER" });
+                values: new object[] { "931457aa-cd90-49c1-88e3-75989f71899b", "1fb1ec26-744c-40df-adcb-b76f44509d0d", "manager", "MANAGER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Articles_ConferenceId",

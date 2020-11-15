@@ -24,6 +24,13 @@ namespace Apit.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
+            if (!int.TryParse(model.MailboxIndex, out int mailboxIndex))
+            {
+                ModelState.AddModelError(nameof(RegisterViewModel.MailboxIndex),
+                    "Невірно введено поштовий індекс");
+                return View(model);
+            }
+            
             var user = new User
             {
                 Id = Guid.NewGuid().ToString(),
@@ -37,8 +44,8 @@ namespace Apit.Controllers
                 ScienceDegree = model.ScienceDegree,
                 AcademicTitle = model.AcademicTitle,
 
-                MailboxIndex = model.MailboxIndex,
                 PhoneNumber = model.PhoneNumber,
+                MailboxIndex = model.MailboxIndex,
                 InfoSourceName = model.InfoSourceName,
 
                 Email = model.Email,
@@ -72,7 +79,7 @@ namespace Apit.Controllers
                 }, protocol: HttpContext.Request.Scheme);
 
                 _mailService.SendActionEmail(user.Email,
-                    "Confirm your email | Підтвердіть Вашу пошту",
+                    _config.MailboxDefaults.MailSubjects.ConfirmEmailSubject,
                     MailService.Presets.ConfirmEmail, confirmationLink);
                 _logger.LogInformation("Confirmation email was sent to: " + user.Email);
 

@@ -90,50 +90,6 @@ h6 {
   font-weight: 400;
 }
 
-input:focus::-webkit-input-placeholder {
-  color: transparent;
-}
-
-input:focus:-moz-placeholder {
-  color: transparent;
-}
-
-/* FF 4-18 */
-
-input:focus::-moz-placeholder {
-  color: transparent;
-}
-
-/* FF 19+ */
-
-input:focus:-ms-input-placeholder {
-  color: transparent;
-}
-
-/* IE 10+ */
-
-textarea:focus::-webkit-input-placeholder {
-  color: transparent;
-}
-
-textarea:focus:-moz-placeholder {
-  color: transparent;
-}
-
-/* FF 4-18 */
-
-textarea:focus::-moz-placeholder {
-  color: transparent;
-}
-
-/* FF 19+ */
-
-textarea:focus:-ms-input-placeholder {
-  color: transparent;
-}
-
-/* IE 10+ */
-
 @font-face {
   font-family: "Ubuntu";
   src: url("../fonts/Ubuntu.woff");
@@ -310,7 +266,7 @@ h3.title__alert {
   left: 0;
   opacity: 0;
   width: 100%;
-  height: 85px;
+  max-height: 80px;
   z-index: 1000;
   -webkit-transition: all .7s ease;
   -o-transition: all .7s ease;
@@ -2501,6 +2457,7 @@ li.slick-active {
 }
 
 .new__text {
+  margin: 0 auto;
   max-width: 800px;
   color: #fff;
 }
@@ -2538,8 +2495,8 @@ li.slick-active {
 }
 
 .new__button--leave {
-  background: transparent;
-  border: 1px solid #be0000;
+  position: relative;
+  margin: 0 auto;
   width: 280px;
   height: 50px;
   display: -webkit-box;
@@ -2553,6 +2510,8 @@ li.slick-active {
           justify-content: center;
   border-radius: 26px;
   color: #be0000;
+  background: transparent;
+  border: 1px solid #be0000;
   font-size: 18px;
   font-weight: 700;
 }
@@ -3889,6 +3848,7 @@ input:-ms-input-placeholder {
 }
 
 .popup {
+  padding: 190px 20px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3903,6 +3863,7 @@ input:-ms-input-placeholder {
   left: 0;
   width: 100%;
   height: 100%;
+  max-height: none;
   z-index: 10000;
   opacity: 0;
   visibility: hidden;
@@ -3983,7 +3944,13 @@ input:-ms-input-placeholder {
 }
 
 .popup .signup__select {
-  max-width: 320px;
+  max-width: none;
+  width: 100%;
+}
+
+.popup .signup__select select {
+  max-width: none;
+  width: 100%;
 }
 
 .conferencecreate {
@@ -4799,7 +4766,8 @@ input:-ms-input-placeholder {
     margin-bottom: 30px;
   }
 
-  .new__button {
+  .new__button,
+  .new__button--leave {
     top: 30px;
     margin: 0 auto;
   }
@@ -5492,10 +5460,6 @@ input:-ms-input-placeholder {
 
   .articles__buttons a:last-child {
     margin-bottom: 0;
-  }
-
-  .popup {
-    padding: 190px 20px 0;
   }
 
   .conferencecreate .form__blck--dbl {
