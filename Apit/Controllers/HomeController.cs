@@ -21,6 +21,12 @@ namespace Apit.Controllers
             return View();
         }
 
+        [Route("/manage/developers")]
+        public IActionResult DevelopersHiddenPage()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

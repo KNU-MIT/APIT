@@ -307,10 +307,17 @@ if (document.querySelector('#articleFile')) {
 	      fileName = e.target.value.split( "\\" ).pop()
 	    }
 	    if( fileName ) {
-	      labelForInput.innerHTML = fileName;
-	    }
-	    else {
-	      labelForInput.innerHTML = labelVal;
+      		let newName = fileName.slice(0, 17),
+      			tripleDots = '...'
+
+      		console.log(newName.length)
+
+			if (fileName.length <= 17) {
+				labelForInput.innerHTML = newName
+			}
+			else {
+				labelForInput.innerHTML = newName + tripleDots
+			}
 	    }
 	})
 }
@@ -323,15 +330,6 @@ if(document.querySelector('.validation-summary-errors')) {
 	window.addEventListener('click', () => {
 		validationBlock.style = "opacity: 0;visibility: hidden;top: -100%;"
 	})
-}
-
-// Get Offset
-
-function offset(el) {
-	const rect = el.getBoundingClientRect(),
-		  scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
-		  scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-	return { top: rect.top + scrollTop, left: rect.left + scrollLeft}
 }
 
 // Popup
@@ -438,4 +436,13 @@ if (document.querySelectorAll('.popup__link')) {
 			popupClose(popupActive)
 		}
 	})
+}
+
+// Get Offset
+
+function offset(el) {
+	const rect = el.getBoundingClientRect(),
+		  scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
+		  scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+	return { top: rect.top + scrollTop, left: rect.left + scrollLeft}
 }

@@ -10,8 +10,8 @@ namespace BusinessLayer.Models
 
     public class NewArticleViewModel
     {
-        [Required(ErrorMessage =  "Прикрепіть файл з матеріалом"), Display(Name = "Файл із матеріалами")]
-        public IFormFile DocFile { get; set; }
+        [Required(ErrorMessage =  "Прикрепіть файл з матеріалом")] // Display(Name = "Файл із матеріалами")
+        public IFormFile ArticleFile { get; set; }
 
         [Required(ErrorMessage = "Оберіть тему Вашої роботи"), Display(Name = "Тематика")]
         public string TopicId { get; set; }
@@ -24,7 +24,7 @@ namespace BusinessLayer.Models
 
         [Required(ErrorMessage = "Введіть короткий опис"), Display(Name = "Короткий опис")]
         public string ShortDescription { get; set; }
-        
+
         public string[] Authors { get; set; }
     }
 }

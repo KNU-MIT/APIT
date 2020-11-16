@@ -64,8 +64,8 @@
             <div class="footer__rights">
                 @if (user != null)
                 {
-                    @user.FullName
-                    <a asp-action="logout" asp-controller="account" style="display: inline-block; line-height: 6px; padding-bottom: 4px;">  –  (вихід)</a>
+                    @user.FullName<span>  –  </span>
+                    <a asp-action="logout" asp-controller="account" style="display: inline-block; padding-bottom: 4px;">(вихід)</a>
                     <div style="height: 12px;"></div>
                 }
                 © Apit @currentYear  –  <a asp-action="privacy" asp-controller="home">Privacy</a>

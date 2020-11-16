@@ -8,7 +8,7 @@
 
     <h3 class="title__alert">@ViewData["Message"]</h3>
 
-    <form>
+    <form style="margin: 0 auto; font-size: 28px;">
         @if (user != null)
         {
             <a class="signin__button" asp-controller="account" asp-action="index" asp-route-x="@user.ProfileAddress">

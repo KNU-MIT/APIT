@@ -54,25 +54,25 @@ namespace Apit.Controllers
 
             // Check uploaded file
             string extension = default, uniqueAddress = default;
-            if (model.DocFile != null)
+            if (model.ArticleFile != null && model.ArticleFile.Length > 0)
             {
-                extension = Path.GetExtension(model.DocFile.FileName);
+                extension = Path.GetExtension(model.ArticleFile.FileName);
                 uniqueAddress = _dataManager.Articles.GenerateUniqueAddress();
                 _logger.LogInformation("Upload file with extension: " + extension);
 
                 if (!Regex.IsMatch(extension ?? "", @"\.docx?$"))
                 {
-                    ModelState.AddModelError(nameof(model.DocFile),
+                    ModelState.AddModelError(nameof(model.ArticleFile),
                         "невірний формат файлу (доступно лише .doc і .docx)");
                     hasIncorrectData = true;
                 }
                 else if (!hasIncorrectData)
                 {
-                    string err = await DataUtil.TrySaveDocFile(model.DocFile, uniqueAddress, extension);
+                    string err = await DataUtil.TrySaveDocFile(model.ArticleFile, uniqueAddress, extension);
                     if (err != null)
                     {
                         _logger.LogError("Document converter error\n" + err);
-                        ModelState.AddModelError(nameof(model.DocFile),
+                        ModelState.AddModelError(nameof(model.ArticleFile),
                             "даний файл не може бути збереженим, оскільки може нести у собі загрозу для сервісу. " +
                             "Якщо це не так, будь ласка, зверніться до адміністрації сайту");
                         hasIncorrectData = true;
@@ -81,7 +81,7 @@ namespace Apit.Controllers
             }
             else
             {
-                ModelState.AddModelError(nameof(model.DocFile),
+                ModelState.AddModelError(nameof(model.ArticleFile),
                     "будь ласка, прикрепіть файл з матеріалом");
                 hasIncorrectData = true;
             }
