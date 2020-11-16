@@ -1,4 +1,6 @@
-﻿@functions
+﻿
+
+@functions
 {
     private class SecretariatModel
     {
@@ -13,14 +15,16 @@
 
 @{
     ViewData["Title"] = "";
-    
+
     ViewData["meta_description"] = "";
     ViewData["meta_google"] = "";
     ViewData["meta_keywords"] = "";
-    
+
     ViewData["meta_socials_title"] = "";
     ViewData["meta_socials_description"] = "";
     // ViewData["meta_socials_image"] = null;
+
+    const string emailSubject = "Зворотній зв'язок з адміністрацією сервісу";
 
     var collection = new List<SecretariatModel>
     {
@@ -88,5 +92,37 @@
 
         </div>
 
+    </div>
+</section>
+
+<section class="ways date">
+    <div class="container">
+        <div class="ways__inner">
+
+            <style>
+                .contacts__link {
+                    font-size: 24px;
+                    color: #202020;
+                }
+            </style>
+
+
+            <h2 class="ways__title title">Зворотній зв'язок з адміністрациєю</h2>
+
+            <div></div>
+
+            <a class="contacts__link" href="tel:@projectConfig.Feedback.ShortPhone">
+                <span class="requirements__attention">Телефон:</span>
+                <strong>@projectConfig.Feedback.PhoneNumber</strong>
+            </a>
+
+            <div></div>
+
+            <a class="contacts__link" href="mailto:@projectConfig.Feedback.Email?subject=@emailSubject">
+                <span class="requirements__attention">E-mail:</span>
+                <strong>@projectConfig.Feedback.Email</strong>
+            </a>
+
+        </div>
     </div>
 </section>

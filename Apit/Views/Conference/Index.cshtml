@@ -4,11 +4,13 @@
     ViewData["Title"] = Model.Title;
 
     var user = await userManager.GetUserAsync(User);
+    var articles = dataManager.Articles.GetLatest(9);
 
     bool isManager = await userManager.IsInRoleAsync(user, RoleNames.MANAGER);
     bool isAdmin = await userManager.IsInRoleAsync(user, RoleNames.ADMIN);
-    
+
     bool isConfParticipant = Model.ParticipantChan?.UserId != null;
+    var eventDates = Utils.SplitIntoSubArrays(Model.Dates, 3);
 }
 
 
@@ -26,6 +28,64 @@
     </div>
 </section>
 
+
+<section class="ways date">
+    <div class="container">
+        <div class="ways__inner">
+
+            <h2 class="ways__title title">Важливі дати</h2>
+
+            @foreach (var datesLine in eventDates)
+            {
+                <div class="ways__cards">
+
+                    @foreach (var eventDate in datesLine)
+                    {
+                        <div class="ways__item">
+                            <div class="ways__hexa date__hexa">
+                                <div class="ways__num">@eventDate.Date.Value.ToString("dd.MM")</div>
+                            </div>
+                            <div class="ways__text">@eventDate.Description</div>
+                        </div>
+                    }
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+</section>
+
+<section class="about address">
+    <div class="container">
+
+        <div class="about__inner">
+
+            <h2 class="about__title title">Адреса</h2>
+
+            <div class="about__item">
+                <div class="about__img">
+                    <iframe class="address__map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2540.2215062704377!2d30.47172711561603!3d50.455599779475975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4ce80bb14c36b%3A0x5c4eb5067e6b48c6!2z0YPQuy4g0JHQvtCz0LTQsNC90LAg0JPQsNCy0YDQuNC70LjRiNC40L3QsCwgMjQsINCa0LjQtdCyLCAwMjAwMA!5e0!3m2!1sru!2sua!4v1603346961822!5m2!1sru!2sua" height="450"frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                </div>
+
+                <div class="about__text address__text">
+                    <h3 class="about__header address__header">біля ст. Метро "Політехнічний інститут"</h3>
+
+                    <div class="about__article address__article">
+                        вулиця Богдана Гаврилишина, 24, м. Київ, 02000
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+@await Html.PartialAsync("Components/ArticlesSlider", articles)
+
+
+@* Join now to conference popup *@
 @if (user.EmailConfirmed)
 {
     <section class="new">
@@ -97,4 +157,3 @@
         </div>
     </section>
 }
-ц

@@ -10,7 +10,7 @@
     ViewData["meta_socials_description"] = "";
     // ViewData["meta_socials_image"] = null;
 
-    var articles = dataManager.Articles.GetLatest(9).ToList();
+    var articles = dataManager.Articles.GetLatest(9);
     var conference = dataManager.Conferences.Current;
 
     var user = await userManager.GetUserAsync(User);

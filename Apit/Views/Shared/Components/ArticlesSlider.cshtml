@@ -1,11 +1,11 @@
-@model IList<ArticleViewModel>
+@model IEnumerable<ArticleViewModel>
 
 @{
-    var articles = Model;
+    var articles = Model as ArticleViewModel[] ?? Model.ToArray();
 }
 
 
-@if (articles.Count > 2)
+@if (articles.Length > 2)
 {
     <section class="actual">
         <div class="container">

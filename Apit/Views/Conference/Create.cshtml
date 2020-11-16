@@ -42,7 +42,7 @@
                 @* </ul> *@
 
                 <div class="form__blck form__blck--todo">
-                    <input maxlength="@config.TopicMaxLength" type="text"
+                    <input asp-for="Topics" maxlength="@config.TopicMaxLength" type="text"
                            id="conferenceInput" placeholder="Вкажіть теми для конференції">
                     <button id="conferenceButton" class="button conferencecreate__button">Додати</button>
                 </div>

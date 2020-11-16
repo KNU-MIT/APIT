@@ -45,7 +45,7 @@ namespace Apit.Controllers
             return user == null ? View("error") : View(user);
         }
 
-        [Route("access-denied")]
+        [Route("/account/access-denied")]
         public IActionResult AccessDenied()
         {
             return View();
@@ -70,7 +70,7 @@ namespace Apit.Controllers
             ViewData["ErrorMessage"] = "Щось пішло не так...";
 
             return result.Succeeded
-                ? RedirectToAction("index", "account", new {x = x})
+                ? RedirectToAction("index", "account", new {x})
                 : (IActionResult) ViewBag("error");
         }
 

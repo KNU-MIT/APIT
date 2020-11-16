@@ -16,7 +16,7 @@ namespace Apit.Controllers
             return View();
         }
 
-        public IActionResult Feedback()
+        public IActionResult Administration()
         {
             return View();
         }

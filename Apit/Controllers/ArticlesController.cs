@@ -20,7 +20,7 @@ namespace Apit.Controllers
             new Regex(@"^[а-яА-Яa-zA-Z0-9- ,;'іїєґ!]+$", RegexOptions.Compiled);
 
         private static readonly Regex keyWordsSeparatorRegex =
-            new Regex(@"[ ,;]+", RegexOptions.Compiled);
+            new Regex(@"[,;]+", RegexOptions.Compiled);
 
         public ArticlesController(ILogger<ArticlesController> logger,
             UserManager<User> userManager, DataManager dataManager)
@@ -68,6 +68,10 @@ namespace Apit.Controllers
             return View(model);
         }
 
+        public IActionResult Requirements()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

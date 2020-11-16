@@ -54,7 +54,7 @@ namespace Apit.Controllers
 
             // Check uploaded file
             string extension = default, uniqueAddress = default;
-            if (model.DocFile != null && model.DocFile.Length > 0)
+            if (model.DocFile != null)
             {
                 extension = Path.GetExtension(model.DocFile.FileName);
                 uniqueAddress = _dataManager.Articles.GenerateUniqueAddress();

@@ -16,7 +16,7 @@ namespace BusinessLayer.Models
         [Required(ErrorMessage = "Оберіть тему Вашої роботи"), Display(Name = "Тематика")]
         public string TopicId { get; set; }
 
-        [Required(ErrorMessage = "Вкажіть через кому (,) ключові слова"), Display(Name = "Ключові слова")]
+        [Required(ErrorMessage = "Вкажіть (через «;» або «;») ключові слова"), Display(Name = "Ключові слова")]
         public string KeyWords { get; set; }
 
         [Required(ErrorMessage = "Матеріал повинен мати заголовок"), Display(Name = "Заголовок")]
@@ -24,5 +24,7 @@ namespace BusinessLayer.Models
 
         [Required(ErrorMessage = "Введіть короткий опис"), Display(Name = "Короткий опис")]
         public string ShortDescription { get; set; }
+        
+        public string[] Authors { get; set; }
     }
 }

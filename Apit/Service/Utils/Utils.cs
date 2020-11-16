@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Apit.Utils
 {
@@ -11,6 +13,12 @@ namespace Apit.Utils
                 if (predicate(collection1[i], collection2[i]))
                     doIt = false;
             return doIt;
+        }
+
+        public static IEnumerable<IEnumerable<T>> SplitIntoSubArrays<T>(IEnumerable<T> array, uint subLength)
+        {
+            uint counter = subLength;
+            return array.GroupBy(_ => counter++ / subLength);
         }
     }
 }

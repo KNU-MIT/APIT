@@ -85,7 +85,7 @@ namespace Apit.Controllers
             if (model.EventDates.Any(date => date < dateNow))
             {
                 ModelState.AddModelError(nameof(NewConferenceViewModel.Topics),
-                    "дату задано у невірному форматі");
+                    "одна або декілька дат поза доступним діапазоном");
                 hasIncorrectData = true;
             }
 
@@ -95,11 +95,11 @@ namespace Apit.Controllers
 
 
             model.Events = model.EventDates
-                .Where(t => t != null)
-                .Select((t, i) => new ConferenceDate
+                .Where(date => date != null)
+                .Select((date, i) => new ConferenceDate
                 {
                     Id = Guid.NewGuid(),
-                    Date = t.Value,
+                    Date = date.Value,
                     Description = model.EventDescriptions[i]
                 }).ToList();
 
