@@ -31,13 +31,13 @@ namespace Apit.Controllers
         }
 
 
-        public IActionResult Index(string id)
+        public IActionResult Index(string x)
         {
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("login", "account");
 
-            if (string.IsNullOrWhiteSpace(id)) Error();
-            var article = _dataManager.Articles.GetByUniqueAddress(id);
+            if (string.IsNullOrWhiteSpace(x)) Error();
+            var article = _dataManager.Articles.GetByUniqueAddress(x);
             return article == null ? Error() : View(article);
         }
 

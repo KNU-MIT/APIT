@@ -77,7 +77,7 @@ namespace Apit.Controllers
         /// </summary>
         /// <param name="x">Unique article route address</param>
         /// <param name="returnUrl">Route to redirect after processing request</param>
-        [HttpPost, Authorize]
+        [Authorize]
         public async Task<IActionResult> Delete(string x, string returnUrl = null)
         {
             try
@@ -92,7 +92,7 @@ namespace Apit.Controllers
                 }
 
                 ViewData["ErrorTitle"] = 403;
-                ViewData["ErrorMessage"] = "Доступ заблоковано";
+                ViewData["ErrorMessage"] = "Доступ заблоковано. Якщо Ви – автор статті ";
                 return View("error");
             }
             catch (Exception e)
