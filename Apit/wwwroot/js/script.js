@@ -204,6 +204,16 @@ if (document.querySelector('.preview__button')) {
 	})
 }
 
+if (document.querySelector('#articleDelete')) {
+	const button = document.querySelector('#articleDelete')
+
+	button.addEventListener('click', e => {
+		e.preventDefault()
+		
+		confirm('Ви дійсно хочете видалити статтю?')
+	})
+}
+
 // Admin create List до лучших времен
 
 // if (document.querySelector('#adminInput')) {
