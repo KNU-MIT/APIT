@@ -1,0 +1,109 @@
+<html lang="uk">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, 
+          inital-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Підтвердження Пошти</title>
+</head>
+<body>
+<style>
+    body {
+        margin: 0;
+        border: 0;
+        padding: 0;
+        height: 100%;
+        background-size: cover;
+        font-family: sans-serif;
+    }
+    .title {
+        color: #db2525;
+        text-align: center;
+        width: 60%;
+        margin: auto;
+        padding: 3% 3% 0 3%;
+    }
+
+    .verification,
+    .update {
+        width: 60%;
+        padding-top: 10%;
+        margin: auto;
+    }
+    .container {
+        border-radius: 26px;
+        background-color: whitesmoke;
+        text-align: center
+    }
+    .verification__button,
+    .update__button {
+        width: 29%;
+        margin: auto;
+        background-color: #BE0000;
+        border: 1px solid #5d1515;
+        border-radius: 20px;
+        text-align: center;
+        padding: 1%;
+    }
+    .text, title__next {
+        padding: 6%;
+    }
+
+    a {
+        text-decoration: none;
+        color: whitesmoke;
+    }
+    .verification__button:hover,
+    .update__button:hover,
+    a:hover {
+        color: whitesmoke;
+        background-color: darkred;
+        border: 1px solid darkred;
+    }
+    @media (max-width: 500px) {
+        .title {
+            width: 85%;
+        }
+        .verification__button,
+        .update__button {
+            width: 55%;
+        }
+        .verification,
+        .update {
+            width: 73%;
+        }
+
+    }
+    @media (min-width: 1020px) {
+        .title {
+            width: 90%;
+        }
+
+        .verification__button,
+        .update__button {
+            width: 20%;
+        }
+        .verification,
+        .update {
+            width: 45%;
+        }
+    }
+</style>
+
+<div class="verification">
+    <div class="container">
+        <h2 class="title">Підтвердження пошти</h2>
+        <div class="verification__inner">
+            <h3 class="title__next">Ви зареєстровані.</h3>
+            <p class="text">
+                Підтвердіть вашу адресу ел. пошти, щоб
+                отримати повний доступ до вашого кабінету
+            </p>
+        </div>
+    </div>
+    <div class="verification__button">
+        <a href="{{HYPERLINK}}">Підтвердити</a>
+    </div>
+</div>
+
+</body>
+</html>

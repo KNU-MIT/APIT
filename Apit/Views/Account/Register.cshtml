@@ -1,0 +1,89 @@
+﻿@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Зареєструватися у системі";
+    ViewData["DisableFooter"] = true;
+}
+
+
+<div class="signin signup">
+    <div class="container">
+
+        <div asp-validation-summary="All"></div>
+
+        <div class="signin__inner">
+
+            <h2 class="signin__title title">Зареєструватися</h2>
+
+            <form class="register__form" id="signup" method="post"
+                  asp-controller="account" asp-action="register"
+                  asp-route-returnUrl="@Model.ReturnUrl">
+
+                <div class="form__blck">
+                    <input asp-for="LastName" type="text" placeholder="Прізвище" maxlength="100">
+                    <input asp-for="FirstName" type="text" placeholder="Ім'я" maxlength="100">
+                    <input asp-for="MiddleName" type="text" placeholder="По-батькові" maxlength="100">
+                    <div style="height: 12px;"></div>
+                    <input asp-for="WorkingFor" type="text" placeholder="Працевлаштування">
+                </div>
+                <div class="form__blck form__blck--select form__blck--dbl">
+                    <div class="signup__select">
+                        <select type="select" asp-for="ScienceDegree" asp-items="Html.GetEnumSelectList<ScienceDegree>()">
+                            <option disabled selected="selected">Науковий ступінь</option>
+                        </select>
+                    </div>
+
+                    <div class="signup__select">
+                        <select type="select" asp-for="AcademicTitle" asp-items="Html.GetEnumSelectList<AcademicTitle>()">
+                            <option value="" disabled selected>Вчене звання</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form__blck form__blck--dbl form__blck--mb">
+                    <input asp-for="MailboxIndex" type="text" placeholder="Поштовий індект">
+                    <input asp-for="PhoneNumber" type="tel" placeholder="Номер телефону">
+                </div>
+
+                @* --------------- *@
+
+                <div class="form__blck">
+                    <input asp-for="Email" type="email" placeholder="Email">
+                </div>
+
+                <div class="form__blck form__blck--dbl form__blck--mb">
+                    <input asp-for="Password" type="password" placeholder="Пароль">
+                    <input asp-for="PasswordConfirm" type="password" placeholder="Підтвердіть пароль">
+                </div>
+
+                @* --------------- *@
+
+                <div class="form__blck form__blck--mb">
+                    <input asp-for="InfoSourceName" type="text" placeholder="Звідки Ви дізналися про конференцию?">
+                </div>
+
+                <div class="form__blck form__blck--mb" style="padding-left: 20px; padding-right: 20px;">
+                    <span class="form__span">Реєструючись Ви авторматично погоджуєтеся з нашими</span>
+                    <a class="form__link" target="_blank" asp-action="privacy" asp-controller="home">політиками конфіденційності інформації</a>
+                    <span class="form__span">та вважається, що Ви ознайомлені з</span>
+                    <a class="form__link" target="_blank" asp-action="requirements" asp-controller="articles">правилами подання та оформлення тез</a>
+                </div>
+
+                @* --------------- *@
+
+                <div class="form__buttons">
+                    <a class="signin__button" href="@(Model.ReturnUrl ?? "/")">
+                        Назад
+                    </a>
+
+                    <button class="button signin__button" type="submit">
+                        Реєстрація
+                        <partial name="Components/AtomIcon"/>
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>

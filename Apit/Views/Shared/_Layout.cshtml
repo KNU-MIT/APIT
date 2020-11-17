@@ -1,49 +1,54 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Apit</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Apit</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <partial name="_LoginPartial" />
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+﻿@{
+    string title = ViewData["Title"] == null
+        ? "APIT 2020 - Науково-технічна конференція"
+        : "APIT | " + (string) ViewData["Title"];
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - Apit - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
+    const string desc = "Інновації можуть змінити до невпізнання і світ, і нас самих. Та багато із них — ще довго не потраплять до наших рук. Звісно, за всіма дослідженнями та змінами постійно слідкувати важко. Саме для того, щоб підтримувати течію нескінченного, щоденного розвитку технологій — ми створили цю конференцію...";
+
+    ViewData["meta_description"] = ViewData["meta_description"] ?? desc;
+    ViewData["meta_google"] = ViewData["meta_google"] ?? desc;
+
+    ViewData["meta_socials_title"] = title;
+    ViewData["meta_socials_description"] = ViewData["meta_socials_description"] ?? desc;
+    ViewData["meta_socials_image"] = "/img/fit.png";
+    // ViewData["meta_socials_url"] = "";
+
+    string language = (string) ViewData["Lang"] ?? "uk";
+}
+
+<!DOCTYPE html>
+<html lang="@language">
+<head>
+    @await Html.PartialAsync("Partials/MetaPartial")
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="~/img/favicon/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="~/img/favicon/favicon-32x32.png" type="image/x-icon">
+
+    <!-- Title -->
+    <title>@title</title>
+
+    <!-- Script -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    @* <link rel="stylesheet" href="~/css/style.css"/> *@
+    <link rel="stylesheet" href="~/css/style.min.css"/>
+</head>
+
+<body>
+
+@await Html.PartialAsync("Partials/HeaderPartial")
+
+@RenderBody()
+
+@if (ViewData["DisableFooter"] == null)
+{
+    @await Html.PartialAsync("Partials/FooterPartial")
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.9.7/jquery.fullpage.min.js" crossorigin="anonymous"></script>
+@* <script src="~/js/script.min.js" asp-append-version="true"></script> *@
+<script src="~/js/script.min.js" asp-append-version="true"></script>
+
 </body>
 </html>

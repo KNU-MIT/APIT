@@ -1,0 +1,66 @@
+@model IEnumerable<ArticleViewModel>
+
+@{
+    var articles = Model as ArticleViewModel[] ?? Model.ToArray();
+}
+
+
+@if (articles.Length > 2)
+{
+    <section class="actual">
+        <div class="container">
+            <div class="actual__inner">
+
+                <h2 class="actual__title title">Актуальні статті</h2>
+
+                <div class="actual__slider">
+
+                    @foreach (var article in articles)
+                    {
+                        <div>
+                            <div class="actual__item">
+
+                                <div class="actual__img">
+
+                                    <picture>
+                                        <source srcset="~/img/comp-sc.webp" type="image/webp">
+                                        <img class="actual__pht" src="~/img/comp-sc.jpg" alt="">
+                                    </picture>
+
+                                    <div class="actual__date">
+                                        <picture>
+                                            <source srcset="~/img/icons/calendar.svg" type="image/webp">
+                                            <img src="~/img/icons/calendar.svg" alt="">
+                                        </picture>
+                                        <p>
+                                            @article.GetFormatCreatingDate()
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                                <div class="actual__text">
+
+                                    <h3 class="actual__heading">
+                                        @article.Title
+                                    </h3>
+
+                                    <div class="actual__article">
+                                        @article.ShortDescription
+                                    </div>
+
+                                    <a class="actual__more" asp-action="index"
+                                       asp-controller="articles" asp-route-x="@article.UniqueAddress">
+                                        Детальніше
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div> <!-- /slider -->
+            </div>
+        </div>
+    </section>
+}

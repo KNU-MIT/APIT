@@ -1,0 +1,57 @@
+﻿@model LoginViewModel
+
+@{
+    ViewData["Title"] = "Увійти в акаунт";
+    ViewData["DisableFooter"] = true;
+}
+
+<div class="signin">
+    <div class="container">
+
+        <div asp-validation-summary="All"></div>
+
+        <div class="signin__inner">
+
+            <h2 class="signin__title title">Увійти у свій аккаунт</h2>
+
+            <form class="register__form" id="signin" method="post"
+                  asp-controller="account" asp-action="login"
+                  asp-route-returnUrl="@(Model?.ReturnUrl ?? "/")">
+
+                <div class="form__blck">
+                    <picture>
+                        <source srcset="~/img/icons/mail-r.webp" type="image/webp">
+                        <img src="~/img/icons/mail-r.png" alt="">
+                    </picture>
+                    <input asp-for="Email" class="signin__input" type="email" placeholder="Email">
+                </div>
+
+                <div class="form__blck">
+                    <picture>
+                        <source srcset="~/img/icons/lock.svg" type="image/webp">
+                        <img src="~/img/icons/lock.svg" alt="">
+                    </picture>
+                    <input class="signin__input" asp-for="Password" type="password" placeholder="Пароль">
+                </div>
+
+                <div class="form__buttons">
+                    <a class="signin__button" href="@(Model?.ReturnUrl ?? "/")">
+                        Назад
+                    </a>
+                    <button class="button signin__button" type="submit" style="padding-right: 20px;">
+                        Увійти у кабінет
+                        <partial name="Components/AtomIcon"/>
+                    </button>
+                </div>
+
+            </form>
+
+            <p class="signin__password" style="margin-top: 40px; text-align: center;">
+                <a asp-action="register" asp-controller="account" class="signin__password--link">Зареєструватися</a>
+                <br><br>
+                <a asp-action="SendReset" asp-controller="account" class="signin__password--link">Відновити пароль</a>
+            </p>
+
+        </div>
+    </div>
+</div>

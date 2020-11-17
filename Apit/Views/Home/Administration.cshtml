@@ -1,0 +1,294 @@
+﻿@functions
+{
+    private class SecretariatModel
+    {
+        public string WebpImageSource { get; set; }
+        public string ImageSource { get; set; }
+        public string Heading { get; set; }
+        public string FullName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string ShortPhone { get; set; }
+    }
+}
+
+@{
+    ViewData["Title"] = "Контакти конференції апіт";
+
+    ViewData["meta_description"] = "Контакти Секретаріат конференції апіт";
+    ViewData["meta_google"] = "Махович Дуднік Іващук контакти апіт" +
+                " Науково-технічна конференція молодих учених" +
+                "Організаційний комітет" +
+                "Програмний комітет ";
+    ViewData["meta_keywords"] = "Програмний комітет конференції" +
+                "Науково-технічна конференція молодих учених ";
+
+    ViewData["meta_socials_title"] = "Секретаріат апіт" +
+                "Науково-технічна конференція молодих учених ";
+    ViewData["meta_socials_description"] = "Контакти конференції апіт";
+    // ViewData["meta_socials_image"] = null;
+
+    const string emailSubject = "Зворотній зв'язок з адміністрацією сервісу";
+
+    var contacts = new List<SecretariatModel>
+    {
+        new SecretariatModel
+        {
+            WebpImageSource = "Makhovych.webp",
+            ImageSource = "Makhovych.jpg",
+            Heading = "Менеджер конференції",
+            FullName = "Махович Олександр Іванович",
+            PhoneNumber = "т. (097) 672-72-36",
+            ShortPhone = "+380976727236",
+        },
+        new SecretariatModel
+        {
+            WebpImageSource = "Dudnyk.webp",
+            ImageSource = "Dudnyk.jpg",
+            Heading = "Секретар конференції",
+            FullName = "Дуднік Андрій Сергійович",
+            PhoneNumber = "т. (096) 811-16-79",
+            ShortPhone = "+380968111679",
+        },
+        new SecretariatModel
+        {
+            WebpImageSource = "user.webp",
+            ImageSource = "user.png",
+            Heading = "Секретар конференції",
+            FullName = "Іващук Галина Борисівна ",
+            PhoneNumber = "т. (044) 481-45-82",
+            ShortPhone = "+380444814582",
+        }
+    };
+
+    var organizationSammit = new List<SecretariatModel>
+    {
+        new SecretariatModel
+        {
+            Heading = "голова організаційного комітету конференції, доктор технічних наук, професор," +
+            " завідувач кафедри мережевих та інтернет технологій КНУ імені Тараса Шевченка.",
+            FullName = "Кравченко Ю.В. "
+        },
+        new SecretariatModel
+        {
+            Heading = "доктор технічних наук, доцент," +
+            " доцент кафедри мережевих та інтернет технологій КНУ імені Тараса Шевченка.",
+            FullName = "Миколайчук Р.А."
+        },
+        new SecretariatModel
+        {
+            Heading = "кандидат технічних наук, доцент," +
+            " доцент кафедри мережевих та інтернет технологій КНУ імені Тараса Шевченка.",
+            FullName = "Лещенко О.О."
+        },
+        new SecretariatModel
+        {
+            Heading = "кандидат технічних наук, доцент," +
+            " доцент кафедри мережевих та інтернет технологій КНУ імені Тараса Шевченка.",
+            FullName = "Труш О.В."
+        },
+        new SecretariatModel
+        {
+            Heading = "доктор технічних наук, доцент," +
+            " доцент кафедри мережевих та інтернет технологій КНУ імені Тараса Шевченка.",
+            FullName = "Дуднік А.С. "
+        },
+        new SecretariatModel
+        {
+            Heading = "кандидат технічних наук, доцент кафедри мережевих" +
+            " та інтернет технологій КНУ імені Тараса Шевченка.",
+            FullName = "Герасименко О.Ю."
+        },
+        new SecretariatModel
+        {
+            Heading = "кандидат технічних наук, доцент кафедри мережевих" +
+            " та інтернет технологій КНУ імені Тараса Шевченка.",
+            FullName = "Махович О.І. "
+        },
+        new SecretariatModel
+        {
+            Heading = "кандидат технічних наук," +
+            " асистент кафедри мережевих та інтернет технологій КНУ імені Тараса Шевченка.",
+            FullName = "Герасименко К.В. "
+        },
+        new SecretariatModel
+        {
+            Heading = "кандидат технічних наук, " +
+            "асистент кафедри мережевих та інтернет технологій КНУ імені Тараса Шевченка.",
+            FullName = "Старкова О.В. "
+        }
+    };
+
+    var programmingSammit = new List<SecretariatModel>
+    {
+        new SecretariatModel
+        {
+            Heading = "доктор технічних наук, професор, заслужений діяч науки і техніки України," +
+            " проректор з наукової роботи Державної екологічної академії післядипломної освіти та управління",
+            FullName = "Машков О.А."
+        },
+        new SecretariatModel
+        {
+            Heading = "доктор технічних наук," +
+            " професор Університету Jan Evangelista Purkyně University in Ústí nad Labem (Чехія).",
+            FullName = "Машков В.А."
+        },
+        new SecretariatModel
+        {
+            Heading = "доктор технічних наук, професор, " +
+            "професор кафедри Національного технічного університету «Харківський політехнічний інститут».",
+            FullName = "Кучук Г.А."
+        },
+        new SecretariatModel
+        {
+            Heading = "доктор технічних наук, доцент, завідувач кафедри кібербезпеки та застосування інформаційних автоматизованих систем та технологій " +
+            "Національного технічного університету України «Київський політехнічний інститут імені Ігоря Сікорського». ",
+            FullName = "Субач І.Ю. "
+        },
+        new SecretariatModel
+        {
+            Heading = "доктор технічних наук, професор директор " +
+            "інституту захисту інформації Державного університету телекомунікацій.",
+            FullName = "Савченко В.А."
+        },
+        new SecretariatModel
+        {
+            Heading = "кандидат технічних наук, доцент, заступник начальника" +
+            " Управління інформаційних технологій Міністерства оборони України.",
+            FullName = "Крижанівський О.А."
+        },
+        new SecretariatModel
+        {
+            Heading = "доктор технічних наук, професор, професор кафедри" +
+            " інформаційних систем і технологій Національного транспортного університету. ",
+            FullName = "Баранов Г.Л. "
+        },
+        new SecretariatModel
+        {
+            Heading = "кандидат фізико-математичних наук, професор, декан факультету Інформаційних систем, " +
+            "фізики та математики Східноєвропейського національного університету.",
+            FullName = "Харкевич Ю.І. "
+        },
+        new SecretariatModel
+        {
+            Heading = "доктор технічних наук, доцент, начальник кафедри математичного та програмного " +
+            "забезпечення АСУ Харківського університету Повітряних Сил імені Івана Кожедуба",
+            FullName = "Павленко М.А. "
+        },
+        new SecretariatModel
+        {
+            Heading = "доктор технічних наук, професор, професор кафедри системного аналізу Національного технічного " +
+            "університету України «Київський політехнічний інститут імені Ігоря Сікорського»",
+            FullName = "Мухін В.Є. "
+        },
+        new SecretariatModel
+        {
+            Heading = "доктор технічних наук, професор, завідувач кафедри" +
+            " телекомунікаційних систем та мереж Державного університету телекомунікацій",
+            FullName = "Заїка В.Ф."
+        }
+    };
+}
+
+
+<section class="secretariat">
+    <div class="container">
+
+        <div class="secretariat__inner">
+            <h1 class="secretariat__title title">Контакти</h1>
+            <div class="secretariat__items">
+
+                @foreach (var person in contacts)
+                {
+                    <div class="secretariat__card">
+
+                        <div class="secretariat__img">
+                            <picture>
+                                <source srcset="~/img/@person.WebpImageSource" type="image/webp">
+                                <img class="secretariat__pht" src="~/img/@person.ImageSource" alt="@person.FullName">
+                            </picture>
+                        </div>
+
+                        <div class="secretariat__description">
+                            <h3 class="secretariat__heading">@person.FullName</h3>
+                            <h4 class="secretariat__name">@person.Heading</h4>
+                            <a class="secretariat__phone" href="tel:@person.ShortPhone">@person.PhoneNumber</a>
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<section class="ways date">
+    <div class="container">
+        <div class="ways__inner">
+
+            <style>
+                .contacts__link {
+                    font-size: 24px;
+                    color: #202020;
+                }
+            </style>
+
+            <div></div>
+
+            <a class="contacts__link" href="mailto:@projectConfig.Feedback.Email?subject=@emailSubject">
+                <span class="requirements__attention">Наша поштова адреса:</span>
+                <strong>@projectConfig.Feedback.Email</strong>
+            </a>
+
+        </div>
+    </div>
+</section>
+
+
+<section class="secretariat">
+    <div class="container">
+
+        <div class="secretariat__inner">
+            <h1 class="secretariat__title title">Організаційний комітет конференції</h1>
+            <div class="secretariat__items">
+
+                @foreach (var person in organizationSammit)
+                {
+                    <div class="secretariat__card">
+                        <div class="secretariat__description">
+                            <h3 class="secretariat__heading">@person.FullName</h3>
+                            <h4 class="secretariat__name">@person.Heading</h4>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section class="secretariat">
+    <div class="container">
+
+        <div class="secretariat__inner">
+            <h1 class="secretariat__title title">Програмний комітет конференції</h1>
+            <div class="secretariat__items">
+
+                @foreach (var person in programmingSammit)
+                {
+                    <div class="secretariat__card">
+                        <div class="secretariat__description">
+                            <h3 class="secretariat__heading">@person.FullName</h3>
+                            <h4 class="secretariat__name">@person.Heading</h4>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+
+    </div>
+</section>

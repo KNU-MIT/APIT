@@ -1,0 +1,30 @@
+﻿@{
+    var user = signInManager.IsSignedIn(User)
+        ? await userManager.GetUserAsync(User)
+        : null;
+}
+
+<div class="header__register">
+    <a class="header__user" asp-controller="account" asp-action="index">
+        <picture>
+            <source srcset="~/img/icons/user.webp" type="image/webp">
+            <img class="header__profile" src="~/img/icons/user.png" alt="">
+        </picture>
+    </a>
+
+    <div class="header__links">
+        @if (user != null)
+        {
+            <a class="header__sign" asp-controller="account"
+               asp-action="index" asp-route-x="@user.ProfileAddress" title="Особистий кабінет">
+                @user.FullName
+            </a>
+        }
+        else
+        {
+            <a class="header__sign" asp-controller="account" asp-action="login">Вхід</a>
+
+            <a class="header__sign" asp-controller="account" asp-action="register">Реєстрація</a>
+        }
+    </div>
+</div>

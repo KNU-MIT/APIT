@@ -1,0 +1,126 @@
+﻿@model NewConferenceViewModel
+
+@{
+    ViewData["Title"] = "Створення нової конференції";
+    ViewData["DisableFooter"] = true;
+    var config = projectConfig.Content.Conference;
+
+    var user = await userManager.GetUserAsync(User);
+}
+
+
+<section class="conferencecreate">
+    <div class="container">
+
+        <div asp-validation-summary="All"></div>
+
+        <div class="conferencecreate__inner">
+
+            <h3 class="conferencecreate__title title">Запланувати нову конференцію</h3>
+
+            <form class="conferencecreate__form" id="conferenceCreating"
+                  method="post" asp-controller="conference" asp-action="create"
+                  asp-route-returnUrl="@Url.Action("index", "conference")">
+
+                <div class="form__blck form__blck--dbl">
+                    <input class="form__input" asp-for="UniqueAddress" type="text" placeholder="Унікальна адреса">
+                    <input asp-for="Title" type="text" maxlength="@config.TitleMaxLength" placeholder="Заголовок конференції">
+                </div>
+
+                <div class="form__blck form__blck--txt">
+                    <textarea asp-for="ShortDescription" maxlength="@config.ShortDescriptionMaxLength" placeholder="Короткий опис"></textarea>
+                    <textarea asp-for="Description" placeholder="Повний опис (можна використовувати HTML теги)"></textarea>
+                </div>
+
+
+                @* <div class="form__blck form__blck--todo"> *@
+                @*     <input asp-for="AdminKeys" type="text" id="adminInput" placeholder="Адміністрація конференції"> *@
+                @*     <button id="adminButton" class="button conferencecreate__button">Додати</button> *@
+                @* </div> *@
+                @* <ul id="adminList" class="conferencecreate__list"> *@
+                @*     <li asp-for="AdminKeys" class="conferencecreate__topic">@user.FullName [@user.ProfileAddress]</li> *@
+                @* </ul> *@
+
+                <div class="form__blck form__blck--todo">
+                    <input asp-for="Topics" maxlength="@config.TopicMaxLength" type="text"
+                           id="conferenceInput" placeholder="Вкажіть теми для конференції">
+                    <button id="conferenceButton" class="button conferencecreate__button">Додати</button>
+                </div>
+
+                <ul id="conferenceList" class="conferencecreate__list"></ul>
+
+                <div class="form__blck form__blck--todo">
+                    <input asp-for="EventDates" type="date" id="eventsDateInput">
+                    <input asp-for="EventDescriptions" maxlength="@config.ShortDescriptionMaxLength" type="text"
+                           id="eventsDescInput" placeholder="Вкажіть теми для конференції">
+                    <button id="eventsButton" class="button conferencecreate__button">Додати</button>
+                </div>
+
+                <ul id="eventsList" class="conferencecreate__list"></ul>
+
+                <script>                                        
+                    // Event dates and descriptions input list
+                    if (document.querySelector('#eventsDateInput')) {
+                        const dateInput = document.querySelector('#eventsDateInput'),
+                              descInput = document.querySelector('#eventsDescInput'),
+                              button = document.querySelector('#eventsButton'),
+                              list = document.querySelector('#eventsList')
+                    
+                        button.addEventListener('click', e => {
+                            e.preventDefault()
+                    
+                            const value = descInput.value.trim()
+                            if (value === '') return
+                            createDeleteElem(value)
+                            input.value = ''
+                        })
+                    
+                        function createDeleteElem(value) {
+                            const li = document.createElement('li'),
+                                  del = document.createElement('button'),
+                                  dateImp = document.createElement('input'),
+                                  descImp = document.createElement('input')
+                    
+                            li.classList.add('conferencecreate__topic')
+                    
+                            list.appendChild(li)
+                    
+                            del.classList.add('conferencecreate__delete')
+                            del.textContent = '-'
+                    
+                            dateImp.value = dateInput.value
+                            dateImp.setAttribute('name', 'EventDates')
+                            dateImp.setAttribute('type', 'date')
+
+                            descImp.value = descInput.value.trim()
+                            descImp.setAttribute('name', 'EventDescriptions')
+                            descImp.setAttribute('placeholder', 'Опис події')
+
+                            li.appendChild(dateImp)
+                            li.appendChild(descImp)
+                            li.appendChild(del)
+                    
+                            del.addEventListener('click', e => {
+                                e.preventDefault()
+                                list.removeChild(li)
+                            })
+                        }
+                    }
+                    
+                </script>
+
+
+                <div class="form__buttons">
+                    <a class="signin__button" asp-controller="home" asp-action="index">На головну</a>
+
+                    <button class="button signin__button" type="submit" style="padding-right: 20px;">
+                        Створити
+                        <partial name="Components/AtomIcon"/>
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</section>

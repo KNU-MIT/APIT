@@ -1,0 +1,82 @@
+﻿@model NewArticleViewModel
+
+@{
+    ViewData["Title"] = "Створення нового матеріалу";
+    ViewData["DisableFooter"] = true;
+
+    var config = projectConfig.Content.Conference;
+
+    var conference = dataManager.Conferences.Current;
+    var allTopics = conference.Topics?.ToList() ?? new List<Topic>();
+}
+
+
+<section class="articlecreate conferencecreate conferencecreate--fullpage">
+
+    <div asp-validation-summary="All"></div>
+
+    <div class="container">
+        <div class="conferencecreate__inner">
+
+            <div class="conferencecreate__title title">Додати новий матеріал</div>
+
+            <form method="post" enctype="multipart/form-data" asp-controller="articles" asp-action="create"
+                  asp-route-returnUrl="@Url.Action("index", "articles")"
+                  class="conferencecreate__form" id="conferenceCreating">
+
+                @*<div class="form__blck form__blck--todo">
+                    <input asp-for="Authors" type="text" id="adminInput" placeholder="Інші автори">
+                    <button id="adminButton" class="button conferencecreate__button">Додати</button>
+                </div>*@
+
+                <div class="form__blck form__blck--todo">
+                    <input asp-for="Authors" type="text" id="conferenceInput" placeholder="Інші співавтори">
+                    <button id="conferenceButton" class="button conferencecreate__button">Додати</button>
+                </div>
+
+                <ul id="conferenceList" class="conferencecreate__list"></ul>
+
+
+                <div class="form__blck form__blck--select">
+                    <div class="signup__select" style="width: 100%;">
+                        <select asp-for="TopicId" style="max-width: none;">
+                            <option value="" disabled selected>Тема статті</option>
+                            @foreach (var topic in allTopics)
+                            {
+                                <option value="@topic.Id">@topic.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form__blck form__blck--dbl">
+                    <input class="form__input" asp-for="KeyWords" type="text" maxlength="@config.TitleMaxLength"
+                           placeholder="Ключові слова (через , або ;)">
+                    <input asp-for="Title" type="text" placeholder="Заголовок" maxlength="@config.TitleMaxLength">
+                </div>
+
+                <div class="form__blck form__blck--dbl form__blck--txt">
+                    <textarea asp-for="ShortDescription" maxlength="@config.ShortDescriptionMaxLength" placeholder="Короткий опис"></textarea>
+
+                    <div class="form__blck--file">
+                        <label for="articleFile" data-multiple-caption="{count} обрано файлів">Оберіть файл</label>
+                        <input asp-for="ArticleFile" type="file" accept=".docx, .doc" id="articleFile">
+                    </div>
+                </div>
+
+                <div class="form__buttons">
+                    <a class="signin__button" asp-controller="home" asp-action="index">
+                        На головну
+                    </a>
+                    <button class="button signin__button" type="submit">
+                        Створити
+                        <partial name="Components/AtomIcon"/>
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</section>

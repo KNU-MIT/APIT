@@ -1,0 +1,53 @@
+﻿@{
+    string currentYear = DateTime.Now.ToString("yyyy");
+}
+
+<header class="header _anim-items">
+    <div class="container">
+
+        <div class="header__inner">
+            @await Html.PartialAsync("Partials/LoginPartial")
+
+            <div class="header__burger">
+                <span></span>
+            </div>
+
+            <nav class="header__nav nav">
+                <ul class="nav__inner">
+
+                    <li class="nav__link">
+                        <a asp-controller="home" asp-action="index">Apit @currentYear</a>
+                    </li>
+
+                    <li class="nav__link">
+                        <a asp-controller="conference" asp-action="index">Конференція</a>
+                    </li>
+
+                    <li class="nav__link">
+                        <span class="nav__link--span">Учасникам <span></span></span>
+                        <ul class="nav__subnav subnav">
+                            <li class="subnav__link">
+                                <a asp-action="list" asp-controller="articles">Завантажені статті</a>
+                            </li>
+                            <li class="subnav__link">
+                                <a asp-action="archive" asp-controller="conference">Архів конференцій</a>
+                            </li>
+                            <li class="subnav__link">
+                                <a asp-action="requirements" asp-controller="articles">Вимоги до тез доповідей</a>
+                            </li>
+                            <li class="subnav__link">
+                                <a href="~/static/APIT2019.pdf" target="blank">Матеріали конференції</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav__link">
+                        <a asp-action="administration" asp-controller="home">Адміністрація</a>
+                    </li>
+
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+</header>

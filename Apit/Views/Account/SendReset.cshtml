@@ -1,0 +1,32 @@
+﻿@model LoginViewModel
+
+@{
+    ViewData["Title"] = "Забули пароль? Замініть його на новий!";
+}
+
+<div class="passrecovery">
+    <div class="container">
+        <div class="passrecovery__inner">
+
+            <h2 class="title passrecovery__title">Введіть Вашу пошту<br>для відновлення пароля</h2>
+            <div class="passrecovery__description">Якщо Ви справді забули пароль і хочете встановити новий, то введіть Вашу пошту і Вам на скриньку прийде лист з посиланням для його зміни.</div>
+
+            <div asp-validation-summary="All"></div>
+
+            <form method="post" class="passrecovery__form form" asp-action="SendReset" asp-controller="account">
+
+                <div class="form__blck">
+                    <picture>
+                        <source srcset="~/img/icons/mail-r.webp" type="image/webp">
+                        <img src="~/img/icons/mail-r.png" alt="">
+                    </picture>
+                    <input class="passrecovery__input" type="email" asp-for="Email" placeholder="Ваш Email">
+                </div>
+
+                <button style="margin-top: 40px;" class="passrecovery__button" type="submit">Підтвердити</button>
+
+            </form>
+
+        </div>
+    </div>
+</div>

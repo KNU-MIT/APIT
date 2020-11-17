@@ -1,0 +1,137 @@
+﻿@model ConferenceViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+
+    var user = await userManager.GetUserAsync(User);
+    var articles = dataManager.Articles.GetLatest(9);
+
+    bool isManager = await userManager.IsInRoleAsync(user, RoleNames.MANAGER);
+    bool isAdmin = await userManager.IsInRoleAsync(user, RoleNames.ADMIN);
+
+    bool isConfParticipant = Model.ParticipantChan?.UserId != null;
+    var eventDates = Utils.SplitIntoSubArrays(Model.Dates, 3).ToArray();
+}
+
+
+<section class="conference">
+    <div class="container">
+
+        <div class="conference__inner">
+            <h2 class="conference__title title">@Html.Raw(Model.Title)</h2>
+
+            <div class="conference__description">
+                @Html.Raw(Model.Description)
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+@if (eventDates.Length > 0)
+{
+    <section class="ways date">
+        <div class="container">
+            <div class="ways__inner">
+
+                <h2 class="ways__title title">Важливі дати</h2>
+
+                @foreach (var datesLine in eventDates)
+                {
+                    <div class="ways__cards">
+
+                        @foreach (var eventDate in datesLine)
+                        {
+                            <div class="ways__item">
+                                <div class="ways__hexa date__hexa">
+                                    <div class="ways__num">@eventDate.Date.Value.ToString("dd.MM")</div>
+                                </div>
+                                <div class="ways__text">@eventDate.Description</div>
+                            </div>
+                        }
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+    </section>
+}
+
+@await Html.PartialAsync("Components/ArticlesSlider", articles)
+
+
+@* Join now to conference popup *@
+@if (user.EmailConfirmed)
+{
+    <section class="new">
+        <div class="container">
+            <div class="new__inner">
+
+                <div class="new__text">
+                    <h2 class="new__title title">@Model.Title</h2>
+                    <h3 class="new__subtitle">@Model.ShortDescription</h3>
+                </div>
+
+                @if (Model.IsActual)
+                {
+                    @if (isConfParticipant)
+                    {
+                        <a class="new__button--leave button" asp-action="Unsubscribe" asp-controller="conference">
+                            Покинути нас
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="new__button button popup__link" href="#subscribe">
+                            Приєднатися!
+                            <partial name="Components/AtomIcon"/>
+                        </a>
+                    }
+
+                    @* <!-- @ViewData["ResultMessage"] До лучших времён...--> *@
+                }
+
+            </div>
+
+
+            @if (!isConfParticipant)
+            {
+                <div id="subscribe" class="popup">
+
+                    <div class="popup__body">
+                        <div class="popup__inner">
+
+                            <a href="#" class="popup__close close__popup"></a>
+
+                            <h2 class="profile__title title">Заявка учасника</h2>
+
+                            <form class="register__form" method="post" asp-action="JoinNow" asp-controller="conference">
+
+                                <div class="form__blck form__blck--select">
+                                    <div class="signup__select" style="width: 100%;">
+                                        <select style="max-width: none;" asp-for="ParticipantChan.ParticipationForm" asp-items="@Html.GetEnumSelectList<ParticipationForm>()">
+                                            <option value="" disabled>Форма участі</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form__blck form__blck--select">
+                                    <input asp-for="ParticipantChan.AdditionalConditions" type="text" placeholder="Додаткові умови та побажання">
+                                </div>
+
+                                <div class="form__buttons">
+                                    <button class="button signin__button" type="submit">Приєднатися</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+}

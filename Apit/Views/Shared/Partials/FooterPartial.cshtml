@@ -1,0 +1,76 @@
+﻿@{
+    var user = await userManager.GetUserAsync(User);
+    // bool disableLoginForm = ViewData["DisableFooterLoginForm"] != nul
+    
+    string currentYear = DateTime.Now.ToString("yyyy");
+}
+
+@*
+@if (user == null && !disableLoginForm)
+{
+    @model LoginViewModel
+
+
+    <section class="register">
+        <div class="container">
+            <div class="register__inner">
+
+                <div class="register__text">
+                    <h2 class="register__title title">Приєднуйтеся до нас</h2>
+                    <h3 class="register__subtitle">Будьте у центрі подій</h3>
+                    <h4 class="register__heading">Реєструйтеся прямо зараз!</h4>
+                </div>
+
+                <form class="register__form" id="signin" asp-action="login" asp-controller="account" method="post">
+
+                    <div class="form__blck">
+                        <img src="~/img/icons/mail-r.png" alt="">
+                        <input asp-for="Email" type="email" placeholder="Email">
+                    </div>
+
+                    <div class="form__blck">
+                        <img src="~/img/icons/lock.svg" alt="">
+                        <input asp-for="Password" type="password" placeholder="Пароль">
+                    </div>
+
+                    <div class="form__buttons">
+                        <a class="button" asp-action="register" asp-controller="account">
+                            Реєстрація
+                            <img src="~/img/icons/atom.png" alt="">
+                        </a>
+                        <button type="submit">Увійти у кабінет</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div> <!-- /container -->
+    </section>
+    <!-- /register -->
+}
+*@
+
+<footer class="footer" id="footer">
+    <div class="container">
+
+        <div class="footer__inner">
+            <div class="footer__conference">
+                <img class="footer__logo" src="~/img/fit.png" alt="">
+                <div class="footer__text">
+                    Міжнародна науково-практична конференція
+                </div>
+            </div>
+
+            <div class="footer__rights">
+                @if (user != null)
+                {
+                    @user.FullName<span>  –  </span>
+                    <a asp-action="logout" asp-controller="account" style="display: inline-block; padding-bottom: 4px;">(вихід)</a>
+                    <div style="height: 12px;"></div>
+                }
+                © Apit @currentYear  –  <a asp-action="privacy" asp-controller="home">Privacy</a>
+            </div>
+        </div>
+
+    </div>
+</footer>
