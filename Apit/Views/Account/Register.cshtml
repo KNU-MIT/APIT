@@ -46,7 +46,7 @@
                 </div>
 
                 @* --------------- *@
-                
+
                 <div class="form__blck">
                     <input asp-for="Email" type="email" placeholder="Email">
                 </div>
@@ -58,15 +58,15 @@
 
                 @* --------------- *@
 
-                <div class="form__blck">
+                <div class="form__blck form__blck--mb">
                     <input asp-for="InfoSourceName" type="text" placeholder="Звідки Ви дізналися про конференцию?">
                 </div>
 
-                <div class="form__blck form__blck--mb">
+                <div class="form__blck form__blck--mb" style="padding-left: 20px; padding-right: 20px;">
                     <span class="form__span">Реєструючись Ви авторматично погоджуєтеся з нашими</span>
-                    <a class="form__link" asp-action="privacy" asp-controller="home">політиками конфіденційності інформації</a>
+                    <a class="form__link" target="_blank" asp-action="privacy" asp-controller="home">політиками конфіденційності інформації</a>
                     <span class="form__span">та вважається, що Ви ознайомлені з</span>
-                    <a class="form__link" asp-action="requirements" asp-controller="articles">правилами подання та оформлення тез</a>
+                    <a class="form__link" target="_blank" asp-action="requirements" asp-controller="articles">правилами подання та оформлення тез</a>
                 </div>
 
                 @* --------------- *@

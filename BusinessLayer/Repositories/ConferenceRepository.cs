@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BusinessLayer.DataServices;
+using BusinessLayer.DataServices.ConfigModels;
 using BusinessLayer.Interfaces;
 using BusinessLayer.Models;
 using DatabaseLayer;
@@ -15,16 +16,19 @@ namespace BusinessLayer.Repositories
         private readonly AppDbContext _ctx;
         private readonly IUsersRepository _users;
         private readonly IArticlesRepository _articles;
+        private readonly ProjectConfig.UniqueAddressConfig _addressConfig;
 
         public ConferenceRepository(AppDbContext context,
-            IUsersRepository usersRepo, IArticlesRepository articlesRepo)
+            IUsersRepository usersRepo, IArticlesRepository articlesRepo, ProjectConfig config)
         {
             _ctx = context;
             _users = usersRepo;
             _articles = articlesRepo;
+            _addressConfig = config.Content.UniqueAddress;
         }
 
-        public string GenerateUniqueAddress() => DataUtil.GenerateUniqueAddress(this, 8);
+        public string GenerateUniqueAddress() =>
+            DataUtil.GenerateUniqueAddress(this, _addressConfig.ArticleAddressSize);
 
 
         public ConferenceViewModel Current => ConvertToViewModel(GetCurrentAsDbModel());
@@ -77,7 +81,7 @@ namespace BusinessLayer.Repositories
                 Description = entity.Description,
 
                 Topics = topics,
-                Dates = entity.Events,
+                Dates = entity.Events.OrderBy(a => a.Date).ToArray(),
 
                 DateCreated = dateNow,
                 DateLastModified = dateNow

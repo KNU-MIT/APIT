@@ -63,16 +63,11 @@ namespace Apit.Controllers
                     "задайте як мінімум одну тему");
                 hasIncorrectData = true;
             }
-
-            // Check event dates and description content
-            if (model.Topics.All(item => item == null))
-            {
-                ModelState.AddModelError(nameof(NewConferenceViewModel.Topics),
-                    "задайте як мінімум одну тему");
-                hasIncorrectData = true;
-            }
-
+            
             var dateNow = DateTime.Now;
+            
+            
+            // Check event dates and description content
             // ^ => XOR (when a and b have difference values)
             if (model.EventDates.PairAny(model.EventDescriptions, 
                 (date, desc) => (date != null) ^ string.IsNullOrWhiteSpace(desc)))
@@ -101,7 +96,7 @@ namespace Apit.Controllers
                     Id = Guid.NewGuid(),
                     Date = date.Value,
                     Description = model.EventDescriptions[i]
-                }).ToList();
+                }).OrderBy(date => date.Date).ToList();
 
 
             _dataManager.Conferences.Create(model);

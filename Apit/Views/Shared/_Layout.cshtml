@@ -3,7 +3,17 @@
         ? "APIT 2020 - Науково-технічна конференція"
         : "APIT | " + (string) ViewData["Title"];
 
-    string language = (string) ViewData["Lang"] ?? "ua";
+    const string desc = "Інновації можуть змінити до невпізнання і світ, і нас самих. Та багато із них — ще довго не потраплять до наших рук. Звісно, за всіма дослідженнями та змінами постійно слідкувати важко. Саме для того, щоб підтримувати течію нескінченного, щоденного розвитку технологій — ми створили цю конференцію...";
+
+    ViewData["meta_description"] = ViewData["meta_description"] ?? desc;
+    ViewData["meta_google"] = ViewData["meta_google"] ?? desc;
+
+    ViewData["meta_socials_title"] = title;
+    ViewData["meta_socials_description"] = ViewData["meta_socials_description"] ?? desc;
+    ViewData["meta_socials_image"] = "/img/fit.png";
+    // ViewData["meta_socials_url"] = "";
+
+    string language = (string) ViewData["Lang"] ?? "uk";
 }
 
 <!DOCTYPE html>

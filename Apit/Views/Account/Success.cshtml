@@ -8,17 +8,34 @@
 
     <h3 class="title__alert">@ViewData["Message"]</h3>
 
-    <form style="margin: 0 auto; font-size: 28px;">
-        @if (user != null)
-        {
-            <a class="signin__button" asp-controller="account" asp-action="index" asp-route-x="@user.ProfileAddress">
-                Назад
-            </a>
-        }
-        else
-        {
-            <a class="signin__button" asp-action="login" asp-controller="account">Вхід</a>
-        }
+    <form class="passrecovery__form form">
+        <style>
+            .signin__button {
+                margin-top: 40px;
+                font-size: 24px;
+                border-radius: 40px;
+                padding: 12px 60px;
+                color: #BE0000;
+                text-transform: uppercase;
+                text-decoration: underline;
+            }
+            .signin__button:hover {
+                text-decoration: none;
+                color: black;
+            }
+        </style>
+        <div class="form__buttons">
+            @if (user != null)
+            {
+                <a class="signin__button" asp-controller="account"
+                   asp-action="index" asp-route-x="@user.ProfileAddress">Назад</a>
+            }
+            else
+            {
+                <a  class="signin__button"
+                   asp-action="login" asp-controller="account">Вхід</a>
+            }
+        </div>
     </form>
 
 </div>

@@ -1,4 +1,4 @@
-﻿namespace Apit.Service
+﻿namespace BusinessLayer.DataServices.ConfigModels
 {
     public class SecurityConfig
     {
@@ -24,10 +24,9 @@
             public bool RequireLowercase { get; set; }
             public bool RequireUppercase { get; set; }
             public bool RequireDigit { get; set; }
-            
+
             public string HasherCompatibilityMode { get; set; }
             public int HasherIterationCount { get; set; }
-
         }
 
         public class UserConfig

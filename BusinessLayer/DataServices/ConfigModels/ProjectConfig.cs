@@ -1,4 +1,4 @@
-﻿namespace Apit.Service
+﻿namespace BusinessLayer.DataServices.ConfigModels
 {
     public class ProjectConfig
     {
@@ -42,15 +42,17 @@
             public ContentDataConfig Conference { get; set; }
 
             public UniqueAddressConfig UniqueAddress { get; set; }
-
-
-            public class UniqueAddressConfig
-            {
-                public int MaxSize { get; set; }
-                public int MinSize { get; set; }
-            }
         }
 
+
+        public class UniqueAddressConfig
+        {
+            public int MaxSize { get; set; }
+            public int MinSize { get; set; }
+
+            public int ArticleAddressSize { get; set; }
+            public int UserAddressSize { get; set; }
+        }
 
         public class ContentDataConfig
         {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BusinessLayer.DataServices;
+using BusinessLayer.DataServices.ConfigModels;
 using BusinessLayer.Interfaces;
 using DatabaseLayer;
 using DatabaseLayer.Entities;
@@ -11,10 +12,12 @@ namespace BusinessLayer.Repositories
     public class UsersRepository : IUsersRepository
     {
         private readonly AppDbContext _ctx;
+        private readonly ProjectConfig.UniqueAddressConfig _addressConfig;
 
-        public UsersRepository(AppDbContext context)
+        public UsersRepository(AppDbContext context, ProjectConfig config)
         {
             _ctx = context;
+            _addressConfig = config.Content.UniqueAddress;
         }
 
         public IEnumerable<User> GetAll() => _ctx.Users;
@@ -40,10 +43,10 @@ namespace BusinessLayer.Repositories
             SaveChanges();
         }
 
-        public string GenerateUniqueAddress() => 
-            DataUtil.GenerateUniqueAddress(this, UniqueAddressSizes.USERS);
+        public string GenerateUniqueAddress() =>
+            DataUtil.GenerateUniqueAddress(this, _addressConfig.UserAddressSize);
 
-        public User GetByUniqueAddress(string address) => 
+        public User GetByUniqueAddress(string address) =>
             _ctx.Users.FirstOrDefault(a => a.ProfileAddress == address);
 
         public IEnumerable<User> GetLatest(ushort count) => throw new NotImplementedException();

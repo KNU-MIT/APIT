@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using BusinessLayer.DataServices.ConfigModels;
 using MimeKit;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;

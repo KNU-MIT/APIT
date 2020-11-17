@@ -2,8 +2,8 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Apit.Service;
 using BusinessLayer;
+using BusinessLayer.DataServices.ConfigModels;
 using BusinessLayer.Models;
 using DatabaseLayer;
 using DatabaseLayer.Entities;

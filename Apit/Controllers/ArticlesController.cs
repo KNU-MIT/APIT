@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.Models;
 using BusinessLayer;
+using BusinessLayer.DataServices.ConfigModels;
 using DatabaseLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -15,6 +16,7 @@ namespace Apit.Controllers
         private readonly ILogger<ArticlesController> _logger;
         private readonly UserManager<User> _userManager;
         private readonly DataManager _dataManager;
+        private readonly ProjectConfig _config;
 
         private static readonly Regex keyWordsAvailableRegex =
             new Regex(@"^[а-яА-Яa-zA-Z0-9- ,;'іїєґ!]+$", RegexOptions.Compiled);
@@ -23,11 +25,12 @@ namespace Apit.Controllers
             new Regex(@"[,;]+", RegexOptions.Compiled);
 
         public ArticlesController(ILogger<ArticlesController> logger,
-            UserManager<User> userManager, DataManager dataManager)
+            UserManager<User> userManager, DataManager dataManager, ProjectConfig config)
         {
             _logger = logger;
             _userManager = userManager;
             _dataManager = dataManager;
+            _config = config;
         }
 
 

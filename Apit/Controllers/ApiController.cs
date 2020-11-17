@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Apit.Areas.Admin.Models;
 using BusinessLayer;
-using BusinessLayer.DataServices;
+using BusinessLayer.DataServices.ConfigModels;
 using DatabaseLayer;
 using DatabaseLayer.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -16,13 +16,15 @@ namespace Apit.Controllers
         private readonly ILogger<ConferenceController> _logger;
         private readonly UserManager<User> _userManager;
         private readonly DataManager _dataManager;
+        private readonly ProjectConfig _config;
 
         public ApiController(ILogger<ConferenceController> logger,
-            UserManager<User> userManager, DataManager dataManager)
+            UserManager<User> userManager, DataManager dataManager, ProjectConfig config)
         {
             _logger = logger;
             _userManager = userManager;
             _dataManager = dataManager;
+            _config = config;
         }
 
         [HttpGet, Route("try-get-user")]
@@ -46,7 +48,7 @@ namespace Apit.Controllers
 
             User resultUser = null;
             // value could be an unique profile address
-            if (value.Length == UniqueAddressSizes.USERS)
+            if (value.Length == _config.Content.UniqueAddress.UserAddressSize)
                 resultUser = _dataManager.Users.GetByUniqueAddress(value);
 
             if (resultUser == null)

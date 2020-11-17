@@ -10,6 +10,7 @@ using DatabaseLayer.Entities;
 using DatabaseLayer.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace Apit.Controllers
@@ -48,7 +49,8 @@ namespace Apit.Controllers
             if (keyWordsAvailableRegex.Replace(model.KeyWords, "") != "")
             {
                 ModelState.AddModelError(nameof(model.KeyWords),
-                    "Unsupported character detected");
+                    "У ключових словах Ви можете використовувати лише " +
+                    "цифри, літери українського та англійського алфавітів");
                 hasIncorrectData = true;
             }
 
@@ -91,6 +93,9 @@ namespace Apit.Controllers
             if (hasIncorrectData) return View(model);
 
 
+            model.KeyWords = string.Join(";", keyWordsSeparatorRegex
+                .Replace(model.KeyWords, ";").Split(';').Distinct().ToArray());
+
             var dateNow = DateTime.Now;
             var user = await _userManager.GetUserAsync(User);
 
@@ -104,6 +109,32 @@ namespace Apit.Controllers
                 }
             };
 
+            foreach (string author in model.Authors)
+            {
+                if (authors.Any(a => a.NameString == author || a.User.ProfileAddress == author)) continue;
+
+                if (author.Length == _config.Content.UniqueAddress.UserAddressSize)
+                {
+                    var addressUser = _dataManager.Users.GetByUniqueAddress(author);
+                    if (addressUser != null)
+                    {
+                        authors.Add(new UserOwnArticlesLinking
+                        {
+                            Id = Guid.NewGuid(),
+                            User = addressUser,
+                            UserId = addressUser.Id
+                        });
+                        continue;
+                    }
+                }
+
+                authors.Add(new UserOwnArticlesLinking
+                {
+                    Id = Guid.NewGuid(),
+                    NameString = author
+                });
+            }
+
             var article = new Article
             {
                 Id = Guid.NewGuid(),
@@ -114,7 +145,7 @@ namespace Apit.Controllers
                 Title = model.Title,
                 ShortDescription = model.ShortDescription,
                 Status = ArticleStatus.Uploaded,
-                KeyWords = keyWordsSeparatorRegex.Replace(model.KeyWords, ";"),
+                KeyWords = model.KeyWords,
 
                 HtmlFilePath = uniqueAddress + ".htm",
                 DocxFilePath = uniqueAddress + extension,

@@ -10,7 +10,7 @@
     bool isAdmin = await userManager.IsInRoleAsync(user, RoleNames.ADMIN);
 
     bool isConfParticipant = Model.ParticipantChan?.UserId != null;
-    var eventDates = Utils.SplitIntoSubArrays(Model.Dates, 3);
+    var eventDates = Utils.SplitIntoSubArrays(Model.Dates, 3).ToArray();
 }
 
 
@@ -29,34 +29,36 @@
 </section>
 
 
-<section class="ways date">
-    <div class="container">
-        <div class="ways__inner">
+@if (eventDates.Length > 0)
+{
+    <section class="ways date">
+        <div class="container">
+            <div class="ways__inner">
 
-            <h2 class="ways__title title">Важливі дати</h2>
+                <h2 class="ways__title title">Важливі дати</h2>
 
-            @foreach (var datesLine in eventDates)
-            {
-                <div class="ways__cards">
+                @foreach (var datesLine in eventDates)
+                {
+                    <div class="ways__cards">
 
-                    @foreach (var eventDate in datesLine)
-                    {
-                        <div class="ways__item">
-                            <div class="ways__hexa date__hexa">
-                                <div class="ways__num">@eventDate.Date.Value.ToString("dd.MM")</div>
+                        @foreach (var eventDate in datesLine)
+                        {
+                            <div class="ways__item">
+                                <div class="ways__hexa date__hexa">
+                                    <div class="ways__num">@eventDate.Date.Value.ToString("dd.MM")</div>
+                                </div>
+                                <div class="ways__text">@eventDate.Description</div>
                             </div>
-                            <div class="ways__text">@eventDate.Description</div>
-                        </div>
-                    }
+                        }
 
-                </div>
-            }
+                    </div>
+                }
+
+            </div>
 
         </div>
-
-    </div>
-</section>
-
+    </section>
+}
 
 @await Html.PartialAsync("Components/ArticlesSlider", articles)
 
