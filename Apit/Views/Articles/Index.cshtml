@@ -1,0 +1,51 @@
+﻿@model ArticleViewModel
+
+@{
+    var article = Model;
+    ViewData["Title"] = article.Title;
+
+    ViewData["meta_description"] = article.ShortDescription;
+    ViewData["meta_google"] = article.ShortDescription;
+    ViewData["meta_keywords"] = string.Join(", ", article.KeyWords);
+    // ViewData["meta_robots"] = "";
+
+    ViewData["meta_socials_title"] = article.Title;
+    ViewData["meta_socials_description"] = article.ShortDescription;
+    // ViewData["meta_socials_image"] = null;
+
+    var user = await userManager.GetUserAsync(User);
+    var isMine = user != null && user == article.Creator;
+    var conference = dataManager.Conferences.Current;
+}
+
+@if (conference != null && (isMine || await userManager.IsInRoleAsync(user, RoleNames.ADMIN)))
+{
+    <div class="profile__admin">
+        <a class="profile__button" asp-controller="articles" asp-action="edit" asp-route-id="@article.UniqueAddress">Редагувати</a>
+        <form method="post" asp-controller="articles" asp-action="delete" asp-route-id="@article.UniqueAddress">
+            <button type="submit" class="profile__button" asp-action="archive" asp-controller="conference">Видалити</button>
+        </form>
+    </div>
+}
+
+
+<section class="profile">
+    <div class="container">
+
+        <h2>@article.Title</h2>
+        <h3>@article.Topic</h3>
+
+        <div class="articles__date">@article.GetFormatCreatingDate()</div>
+
+        @Html.Raw(article.HTMLContent)
+
+        <hr>
+        @if (!string.IsNullOrWhiteSpace(article.DocFileAddress))
+        {
+            <a asp-controller="resources" asp-action="document" asp-route-id="@article.DocFileAddress">
+                Завантажити документ
+            </a>
+        }
+
+    </div>
+</section>

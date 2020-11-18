@@ -1,0 +1,92 @@
+﻿@using System.Text
+@using Microsoft.AspNetCore.Html
+@model ArticleViewModel
+
+@{
+    ViewData["Title"] = "Редагування матеріалу";
+    ViewData["DisableFooter"] = true;
+
+    var conference = dataManager.Conferences.Current;
+    var allTopics = conference?.Topics?.ToList() ?? new List<Topic>();
+
+
+    IHtmlContent AddTopicOptions()
+    {
+        var options = new StringBuilder();
+
+        foreach (var topic in allTopics)
+        {
+            string para = Model.Topic.Id == topic.Id ? "selected" : "";
+            options.Append($"<option value=\"{topic.Id}\" {para}>{topic.Name}</option>");
+        }
+
+        return Html.Raw(options.ToString());
+    }
+}
+
+
+<section class="conferencecreate conferencecreate--fullpage">
+    <div class="container">
+
+        <div asp-validation-summary="All"></div>
+
+        <div class="conferencecreate__inner">
+
+            <div class="conferencecreate__title title">
+                Редагувати статтю
+            </div>
+
+            <form class="conferencecreate__form" enctype="multipart/form-data" asp-controller="articles"
+                  asp-action="edit" method="post" asp>
+
+                @* <div class="form__blck form__blck--todo"> *@
+                @*     <input type="text" placeholder="Співавтор статті"> *@
+                @*     <button type="cancel" id="adminButton" class="button conferencecreate__button">Додати</button> *@
+                @* </div> *@
+                @* *@
+                @* <ul id="adminList" class="conferencecreate__list"></ul> *@
+
+                <div class="form__blck form__blck--select form__blck--dbl">
+                    <div class="signup__select">
+                        <select asp-for="NewTopicId">
+                            <option value="" disabled>Тема статті</option>
+                            @AddTopicOptions()
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form__blck form__blck--dbl">
+                    <input class="form__input" asp-for="KeyWords" type="text" 
+                           value="@string.Join("; ", Model.KeyWords)" placeholder="Ключові слова">
+                    <input asp-for="Title" type="text" value="@Model.Title" placeholder="Заголовок">
+                </div>
+
+                <div class="form__blck form__blck--dbl form__blck--txt">
+                    <textarea asp-for="ShortDescription" cols="50" rows="30" maxlength="150" placeholder="Короткий опис">
+                    @Model.ShortDescription
+                </textarea>
+
+                    <div class="form__blck--file">
+                        <input asp-for="NewDocFile" type="file" accept=".docx, .doc" id="articleFile">
+                        <label data-multiple-caption="обрано {count} файл" for="articleFile">Новий файл</label>
+                    </div>
+                </div>
+
+                <div class="form__buttons">
+                    <a class="signin__button" asp-controller="home" asp-action="index">
+                        На головну
+                    </a>
+                    <button class="button signin__button" type="submit">
+                        Створити
+                        <picture>
+                            <source srcset="~/img/icons/atom.webp" type="image/webp">
+                            <img src="~/img/icons/atom.png" alt="">
+                        </picture>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</section>

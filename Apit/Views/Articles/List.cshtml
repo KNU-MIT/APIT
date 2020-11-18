@@ -1,0 +1,35 @@
+﻿@model ArticlesListViewModel
+
+@{
+    ViewData["Title"] = "Матеріали конференції";
+    
+    ViewData["meta_description"] = "";
+    ViewData["meta_google"] = "";
+    ViewData["meta_keywords"] = "";
+    ViewData["meta_robots"] = "";
+    
+    ViewData["meta_socials_title"] = "";
+    ViewData["meta_socials_url"] = "";
+    ViewData["meta_socials_description"] = "";
+    ViewData["meta_socials_image"] = null;
+}
+
+
+@if (!Model.Collection.Any())
+{
+    <h3 class="title__alert">Поки тут порожньо...</h3>
+}
+else
+{
+    <section class="articles">
+        <div class="container">
+            <div class="articles__inner">
+                @* @await Html.PartialAsync("Components/SearchPanel") *@
+                <h2 class="articles__title title">Статті</h2>
+                @await Html.PartialAsync("Components/ArticlesList", Model.Collection)
+            </div>
+        </div>
+    </section>
+
+    <partial name="Components/ScrollButton"/>
+}

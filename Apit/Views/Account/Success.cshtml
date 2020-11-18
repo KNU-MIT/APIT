@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Операція пройшла успішно!";
+
+    var user = await userManager.GetUserAsync(User);
+}
+
+<div class="profile__inner">
+
+    <h3 class="title__alert">@ViewData["Message"]</h3>
+
+    <form>
+        @if (user != null)
+        {
+            <a class="signin__button" asp-controller="account" asp-action="index" asp-route-x="@user.ProfileAddress">
+                Назад
+            </a>
+        }
+        else
+        {
+            <a class="signin__button" asp-action="login" asp-controller="account">Вхід</a>
+        }
+    </form>
+
+</div>

@@ -1,0 +1,50 @@
+﻿@model IEnumerable<ArticleViewModel>
+
+@foreach (var article in Model)
+{
+    <div class="articles__item">
+        <h3 class="articles__heading">
+            @article.Title
+        </h3>
+
+        <div class="articles__keywords">
+            @foreach (string keyWord in article.KeyWords)
+            {
+                <a href="#@keyWord">@keyWord </a>
+            }
+        </div>
+
+        <div class="articles__author">
+            @foreach (var author in article.Authors)
+            {
+                @if (author != null)
+                {
+                    @author.FullName
+                    <br/>
+                }
+            }
+        </div>
+
+        <div class="articles__description">
+            <h4>
+                @article.Topic?.Name
+            </h4>
+            @article.ShortDescription
+        </div>
+
+        <div class="articles__buttons">
+            <a class="articles__button" asp-action="document"
+               asp-controller="resources" asp-route-id="@article.DocFileAddress">
+                Завантажити
+            </a>
+            <a class="articles__button button" asp-action="index"
+               asp-controller="articles" asp-route-id="@article.UniqueAddress">
+                Переглянути
+            </a>
+        </div>
+
+        <div class="articles__date">
+            @article.GetFormatCreatingDate()
+        </div>
+    </div>
+}
