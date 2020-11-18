@@ -40,7 +40,7 @@ namespace BusinessLayer.Models
         public string InfoSourceName { get; set; }
 
 
-        [Compare("Password", ErrorMessage = "Введіть пароль та пидтвердіть його")]
+        [Compare("Password", ErrorMessage = "Введіть пароль та підтвердіть його")]
         public string PasswordConfirm { get; set; }
     }
 }

@@ -4,7 +4,7 @@ namespace DatabaseLayer.Enums
 {
     public enum ScienceDegree : short
     {
-        [Display(Name = "Відсутнє")] Other = 0,
+        [Display(Name = "Науковий ступінь (відсутній)")] Other = 0,
         [Display(Name = "Бакалавр")] Bachelor = 1,
         [Display(Name = "Магістр")] Master,
         [Display(Name = "Аспірант")] Graduate,

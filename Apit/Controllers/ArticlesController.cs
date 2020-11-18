@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.Models;
 using BusinessLayer;
 using BusinessLayer.DataServices.ConfigModels;
+using DatabaseLayer;
 using DatabaseLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
@@ -34,23 +36,17 @@ namespace Apit.Controllers
         }
 
 
+        [Authorize]
         public IActionResult Index(string x)
         {
-            if (!User.Identity.IsAuthenticated)
-                return RedirectToAction("login", "account");
-
             if (string.IsNullOrWhiteSpace(x)) Error();
             var article = _dataManager.Articles.GetByUniqueAddress(x);
             return article == null ? Error() : View(article);
         }
 
+        [Authorize(Roles = RoleNames.MANAGER)]
         public IActionResult List(ArticlesListViewModel model)
         {
-            if (!User.Identity.IsAuthenticated)
-                return RedirectToAction("login", "account");
-
-            ViewData["Title"] = "Articles page title";
-
             switch (model.Filter)
             {
                 case "all":
