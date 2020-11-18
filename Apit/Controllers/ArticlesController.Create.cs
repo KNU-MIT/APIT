@@ -106,6 +106,7 @@ namespace Apit.Controllers
                 {
                     Id = Guid.NewGuid(),
                     UserId = user.Id,
+                    IsCreator = true
                 }
             };
 
