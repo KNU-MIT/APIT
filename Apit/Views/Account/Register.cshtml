@@ -24,8 +24,9 @@
                     <input asp-for="FirstName" type="text" placeholder="Ім'я" maxlength="100">
                     <input asp-for="MiddleName" type="text" placeholder="По-батькові" maxlength="100">
                     <div style="height: 12px;"></div>
-                    <input asp-for="WorkingFor" type="text" placeholder="Працевлаштування">
+                    <input asp-for="WorkingFor" type="text" placeholder="Місце навчання/роботи">
                 </div>
+
                 <div class="form__blck form__blck--select form__blck--dbl">
                     <div class="signup__select">
                         <select type="select" asp-for="ScienceDegree" asp-items="Html.GetEnumSelectList<ScienceDegree>()">

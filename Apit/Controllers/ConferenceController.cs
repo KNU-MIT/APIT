@@ -84,7 +84,7 @@ namespace Apit.Controllers
         [Authorize]
         public IActionResult Archive()
         {
-            var conferences = _dataManager.Conferences.GetAll();
+            var conferences = _dataManager.Conferences.GetAll().Where(conf => !conf.IsActual);
             return View(conferences);
         }
 

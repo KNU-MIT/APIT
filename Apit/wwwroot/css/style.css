@@ -404,7 +404,9 @@ h3.title__alert {
 }
 
 .header__sign {
+  max-width: 230px;
   width: 100%;
+  position: absolute;
   margin-top: -5px;
   margin-bottom: 5px;
   font-size: 18px;
@@ -888,6 +890,7 @@ h3.title__alert {
 
 .preview .knu__logo {
   border-radius: 50%;
+  max-width: 65px;
 }
 
 .preview .knu__text {
@@ -2112,6 +2115,7 @@ input:-ms-input-placeholder {
 }
 
 .about__item img {
+  max-width: 500px;
   border-top-left-radius: 20px;
 }
 
@@ -2857,7 +2861,16 @@ input:-ms-input-placeholder {
 }
 
 .footer__rights a {
-  color: #fff;
+  color: #be0000;
+  text-decoration: underline;
+  -webkit-transition: all .4s ease;
+  -o-transition: all .4s ease;
+  transition: all .4s ease;
+}
+
+.footer__rights a:hover {
+  color: #810101;
+  text-decoration: none;
 }
 
 .date {
@@ -3000,8 +3013,7 @@ input:-ms-input-placeholder {
 .signin {
   position: relative;
   padding-top: 200px;
-  min-height: 990px;
-  max-height: 2000px;
+  min-height: 100vh;
   height: 100%;
   background: url("../img/bg--.jpg") center no-repeat;
   background-size: cover;
@@ -3094,8 +3106,7 @@ input:-ms-input-placeholder {
   padding: 100px 0;
   background: url("../img/bg.jpg") center no-repeat;
   background-size: cover;
-  min-height: 1300px;
-  max-height: 2000px;
+  min-height: 100vh;
 }
 
 .signup .form__blck--select {
@@ -4004,9 +4015,7 @@ input:-ms-input-placeholder {
   width: 100%;
   padding: 80px 0 100px;
   position: relative;
-  min-height: 1000px;
-  max-height: 2000px;
-  background: url("../img/bg-.jpg") center no-repeat;
+  background: url("../img/bg-.jpg") center repeat-y;
   background-size: cover;
 }
 
@@ -4565,7 +4574,7 @@ input:-ms-input-placeholder {
   margin-bottom: 55px;
   line-height: 1.4;
   font-size: 18px;
-  color: #a5a5a5;
+  color: #555;
 }
 
 .articlecreate .form__blck--txt textarea {
@@ -5792,9 +5801,21 @@ input:-ms-input-placeholder {
   }
 }
 
-@media (max-height: 630px) {
+@media (max-height: 650px) {
   .signin {
     padding: 70px 0;
+  }
+}
+
+@media (max-height: 525px) {
+  .signin {
+    min-height: 525px;
+  }
+}
+
+@media (max-height: 1020px) {
+  .signup {
+    min-height: 1020px;
   }
 }
 
@@ -5824,7 +5845,7 @@ input:-ms-input-placeholder {
 
 .webp .profile { background: url(../img/bg-.webp) center no-repeat; }
 
-.webp .conferencecreate { background: url(../img/bg-.webp) center no-repeat; }
+.webp .conferencecreate { background: url(../img/bg-.webp) center repeat-y; }
 
 .webp .update { background: url(../img/bg.webp) center no-repeat; }
 

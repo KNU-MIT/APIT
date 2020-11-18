@@ -34,13 +34,13 @@ namespace DatabaseLayer
 
             // Define uncertain relationships and linking tables
 
-            builder.Entity<UserOwnArticlesLinking>()
-                .HasKey(x => new {x.UserId, x.ArticleId});
+            // builder.Entity<UserOwnArticlesLinking>()
+            //     .HasKey(x => new {x.UserId, x.ArticleId});
 
-            builder.Entity<UserOwnArticlesLinking>()
-                .HasOne(a => a.Article)
-                .WithMany(a => a.Authors)
-                .HasForeignKey(a => a.ArticleId);
+            // builder.Entity<UserOwnArticlesLinking>()
+            //     .HasOne(a => a.Article)
+            //     .WithMany(a => a.Authors)
+            //     .HasForeignKey(a => a.ArticleId);
 
 
             builder.Entity<IdentityRole>().HasData(

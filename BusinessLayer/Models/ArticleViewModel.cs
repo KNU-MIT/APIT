@@ -37,6 +37,7 @@ namespace BusinessLayer.Models
         /// Users without permissions but appear as authors
         /// </summary>
         public IEnumerable<User> Authors { get; set; }
+        public IEnumerable<string> NonLinkedAuthors { get; set; }
 
 
         public string Title { get; set; }

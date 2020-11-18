@@ -76,15 +76,17 @@ namespace BusinessLayer.Repositories
             if (article == null) return null;
 
             var authors = _ctx.UserArticles.Where(a => a.ArticleId == article.Id).ToList();
-
+            string creatorId = authors.FirstOrDefault(a => a.IsCreator)?.UserId;
+            
             return new ArticleViewModel
             {
                 Id = article.Id,
                 UniqueAddress = article.UniqueAddress,
                 Topic = article.Topic,
 
-                Creator = authors.FirstOrDefault(a => a.IsCreator)?.User,
-                Authors = authors.Select(a => a.User),
+                Creator = _ctx.Users.FirstOrDefault(u => u.Id == creatorId),
+                Authors = authors.Select(a => _ctx.Users.FirstOrDefault(u => u.Id == a.UserId)),
+                NonLinkedAuthors = authors.Where(a => a.NameString != null).Select(a => a.NameString),
 
                 DocFileAddress = article.DocxFilePath,
                 HTMLContent = await DataUtil.LoadHtmlFile(article.HtmlFilePath),

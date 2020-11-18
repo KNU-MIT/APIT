@@ -1,11 +1,34 @@
 ﻿@model ErrorViewModel
+
 @{
-    ViewData["Title"] = "Упс, щось пішло не так...";
+    ViewData["Title"] = $"{ViewData["ErrorTitle"]} | {ViewData["ErrorMessage"]}";
+}
 }
 
-<h1 class="text-danger">@ViewData["ErrorTitle"]</h1>
-<h2 class="text-danger">@ViewData["ErrorMessage"]</h2>
+<div class="profile__inner">
 
-<a class="signin__button" style="padding-top: 15px;" asp-action="index" asp-controller="home">
-    На головну
-</a>
+    <h3 class="title__alert">@ViewData["ErrorTitle"]</h3>
+    <h3 class="title__alert" style="color: black; font-size: 26px; padding: 10px 17%;">@ViewData["ErrorMessage"]</h3>
+
+    <form class="passrecovery__form form">
+        <style>
+            .signin__button {
+                margin-top: 40px;
+                font-size: 24px;
+                border-radius: 40px;
+                padding: 12px 60px;
+                color: #BE0000;
+                text-transform: uppercase;
+                text-decoration: underline;
+            }
+            .signin__button:hover {
+                text-decoration: none;
+                color: black;
+            }
+        </style>
+        <div class="form__buttons">
+            <a class="signin__button" asp-controller="home" asp-action="index">На головну</a>
+        </div>
+    </form>
+
+</div>

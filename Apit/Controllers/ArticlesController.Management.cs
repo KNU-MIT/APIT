@@ -92,7 +92,7 @@ namespace Apit.Controllers
                 }
 
                 ViewData["ErrorTitle"] = 403;
-                ViewData["ErrorMessage"] = "Доступ заблоковано. Якщо Ви – автор статті ";
+                ViewData["ErrorMessage"] = "Доступ заблоковано :(";
                 return View("error");
             }
             catch (Exception e)

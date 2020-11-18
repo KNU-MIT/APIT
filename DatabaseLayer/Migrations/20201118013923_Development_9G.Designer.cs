@@ -4,14 +4,16 @@ using DatabaseLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatabaseLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201118013923_Development_9G")]
+    partial class Development_9G
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -299,11 +301,13 @@ namespace DatabaseLayer.Migrations
 
             modelBuilder.Entity("DatabaseLayer.Entities.UserOwnArticlesLinking", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid>("ArticleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsCreator")
@@ -312,14 +316,9 @@ namespace DatabaseLayer.Migrations
                     b.Property<string>("NameString")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
+                    b.HasKey("UserId", "ArticleId");
 
                     b.HasIndex("ArticleId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("UserArticles");
                 });
@@ -353,15 +352,15 @@ namespace DatabaseLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1fdb9724-e4dc-42a7-ac07-f2516e417ddd",
-                            ConcurrencyStamp = "6b574a1f-056f-4157-9cef-e88d74659030",
+                            Id = "ac0d5392-0259-468b-b17b-f06b33cd2e93",
+                            ConcurrencyStamp = "22dc329d-8fb0-489c-b6e2-cbbcf452abad",
                             Name = "root_admin",
                             NormalizedName = "ROOT_ADMIN"
                         },
                         new
                         {
-                            Id = "f1e64b51-a40c-4313-aca0-4c5ee10fa755",
-                            ConcurrencyStamp = "374dcf8d-bd67-468e-9096-24ff1c1e88e7",
+                            Id = "b3e3bba4-ba47-4b62-8205-143e2a58a67d",
+                            ConcurrencyStamp = "a4c8d24a-bcff-46e3-b242-16812447b8e2",
                             Name = "manager",
                             NormalizedName = "MANAGER"
                         });
@@ -532,7 +531,9 @@ namespace DatabaseLayer.Migrations
 
                     b.HasOne("DatabaseLayer.Entities.User", null)
                         .WithMany("OwnArticles")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

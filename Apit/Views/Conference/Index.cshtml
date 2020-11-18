@@ -10,7 +10,7 @@
     bool isAdmin = await userManager.IsInRoleAsync(user, RoleNames.ADMIN);
 
     bool isConfParticipant = Model.ParticipantChan?.UserId != null;
-    var eventDates = Utils.SplitIntoSubArrays(Model.Dates, 3).ToArray();
+    var eventDates = Utils.SplitIntoSubArrays(Model.Dates, 3).Distinct().ToArray();
 }
 
 

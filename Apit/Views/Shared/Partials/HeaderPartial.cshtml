@@ -1,5 +1,8 @@
 ﻿@{
     string currentYear = DateTime.Now.ToString("yyyy");
+
+    var user = await userManager.GetUserAsync(User);
+    var conference = dataManager.Conferences.Current;
 }
 
 <header class="header _anim-items">
@@ -26,6 +29,12 @@
                     <li class="nav__link">
                         <span class="nav__link--span">Учасникам <span></span></span>
                         <ul class="nav__subnav subnav">
+                            @if (conference != null && user.EmailConfirmed)
+                            {
+                                <li class="subnav__link">
+                                    <a asp-controller="articles" asp-action="create">Створити статтю</a>
+                                </li>
+                            }
                             <li class="subnav__link">
                                 <a asp-action="list" asp-controller="articles">Завантажені статті</a>
                             </li>

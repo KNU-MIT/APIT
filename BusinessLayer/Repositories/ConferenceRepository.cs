@@ -69,7 +69,7 @@ namespace BusinessLayer.Repositories
                     Id = Guid.NewGuid(),
                     Name = topic,
                 }).ToList();
-
+            
             var newConference = new Conference()
             {
                 Id = Guid.NewGuid(),
@@ -79,7 +79,6 @@ namespace BusinessLayer.Repositories
 
                 ShortDescription = entity.ShortDescription,
                 Description = entity.Description,
-
                 Topics = topics,
                 Dates = entity.Events.OrderBy(a => a.Date).ToArray(),
 
@@ -99,7 +98,6 @@ namespace BusinessLayer.Repositories
 
         public void Update(ConferenceViewModel model)
         {
-            // TODO ...
             throw new NotImplementedException();
         }
 
@@ -119,6 +117,8 @@ namespace BusinessLayer.Repositories
         {
             if (conf == null) return null;
 
+            var dates = GetConfDates(conf).ToArray();
+
             return new ConferenceViewModel
             {
                 IsActual = conf.IsActual,
@@ -132,7 +132,10 @@ namespace BusinessLayer.Repositories
                 Participants = GetConfParticipants(conf),
                 Articles = GetConfArticles(conf),
                 Images = GetConfImages(conf),
-                Dates = GetConfDates(conf),
+                Dates = dates,
+
+                DateStart = dates.Min(d => d.Date).GetValueOrDefault(DateTime.Now),
+                DateFinish = dates.Max(d => d.Date).GetValueOrDefault(DateTime.Now),
 
                 DateCreated = conf.DateCreated,
                 DateLastModified = conf.DateLastModified,
