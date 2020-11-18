@@ -30,7 +30,7 @@ namespace Apit.Controllers
                     "Невірно введено поштовий індекс");
                 return View(model);
             }
-            
+
             var user = new User
             {
                 Id = Guid.NewGuid().ToString(),
@@ -85,7 +85,9 @@ namespace Apit.Controllers
 
                 await _signInManager.SignInAsync(user, false);
                 _logger.LogInformation($"User {user.ProfileAddress} has successfully registered");
-                return LocalRedirect(model.ReturnUrl ?? "/");
+                
+                if (model.ReturnUrl != null) return LocalRedirect(model.ReturnUrl);
+                return RedirectToAction("index", "account", new {x = user.ProfileAddress});
             }
 
             ModelState.AddModelError(model.Email, "Неможливо створити користувача");

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Apit.Service;
 using Apit.Utils;
@@ -63,13 +64,13 @@ namespace Apit.Controllers
                     "задайте як мінімум одну тему");
                 hasIncorrectData = true;
             }
-            
+
             var dateNow = DateTime.Now;
-            
-            
+
+
             // Check event dates and description content
             // ^ => XOR (when a and b have difference values)
-            if (model.EventDates.PairAny(model.EventDescriptions, 
+            if (model.EventDates.PairAny(model.EventDescriptions,
                 (date, desc) => (date != null) ^ string.IsNullOrWhiteSpace(desc)))
             {
                 ModelState.AddModelError(nameof(NewConferenceViewModel.Topics),
@@ -90,12 +91,14 @@ namespace Apit.Controllers
 
 
             model.Events = model.EventDates
-                .Where(date => date != null)
-                .Select((date, i) => new ConferenceDate
+                .Where((date, i) => date != null).Select((date, i) =>
+                    new DateDescPair(date, model.EventDescriptions[i]))
+                .Distinct(new DatesEqualityComparer())
+                .Select(a => new ConferenceDate
                 {
                     Id = Guid.NewGuid(),
-                    Date = date.Value,
-                    Description = model.EventDescriptions[i]
+                    Date = a.Date,
+                    Description = a.Description,
                 }).OrderBy(date => date.Date).ToList();
 
 
@@ -110,7 +113,6 @@ namespace Apit.Controllers
         {
             // TODO: to do it... 
 
-
             return View("error");
         }
 
@@ -122,6 +124,32 @@ namespace Apit.Controllers
                 return RedirectToAction("index", "conference");
             _dataManager.Conferences.Delete(conference.Id);
             return RedirectToAction("index", "account");
+        }
+
+
+        private class DateDescPair
+        {
+            public DateTime? Date { get; set; }
+            public string Description { get; set; }
+
+            public DateDescPair(DateTime? date, string description)
+            {
+                Date = date;
+                Description = description;
+            }
+        }
+
+        private class DatesEqualityComparer : EqualityComparer<DateDescPair>
+        {
+            public override bool Equals(DateDescPair x, DateDescPair y)
+            {
+                if (x == y) return true; // null == null
+                if (x == null ^ y == null) return false;
+                return x.Date == y.Date && x.Description == y.Description;
+            }
+
+            public override int GetHashCode(DateDescPair obj) =>
+                obj.Date.GetHashCode() + obj.Description.GetHashCode();
         }
     }
 }

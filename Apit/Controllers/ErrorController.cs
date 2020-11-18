@@ -16,7 +16,7 @@ namespace Apit.Controllers
         public IActionResult HttpStatusCodeHandler()
         {
             if (ViewData["ErrorTitle"] == default) ViewData["ErrorTitle"] = 100500;
-            
+
             // string message;
             // switch (statusCode)
             // {
@@ -34,7 +34,7 @@ namespace Apit.Controllers
             // ViewData["ErrorTitle"] =  statusCode;
             // ViewData["ErrorMessage"] = message;
 
-            if ((string) ViewData["ErrorTitle"] != "404") 
+            if ((int) ViewData["ErrorTitle"] != 404)
                 _logger.LogError($"error handled [code:{ViewData["ErrorTitle"]}]");
             return View("error");
         }

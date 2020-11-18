@@ -213,52 +213,97 @@ if (document.querySelector('#articleDelete')) {
 		confirm('Ви дійсно хочете видалити статтю?')
 	})
 }
+                          
+// Event dates and descriptions input list
 
-// Admin create List до лучших времен
+if (document.querySelector('#eventsDateInput')) {
+    const dateInput = document.querySelector('#eventsDateInput'),
+          descInput = document.querySelector('#eventsDescInput'),
+          button = document.querySelector('#eventsButton'),
+          list = document.querySelector('#eventsList')
 
-// if (document.querySelector('#adminInput')) {
-// 	const input = document.querySelector('#adminInput'),
-// 		  button = document.querySelector('#adminButton'),
-// 		  list = document.querySelector('#adminList')
+    button.addEventListener('click', e => {
+        e.preventDefault()
 
-// 	button.addEventListener('click', e => {
-// 		e.preventDefault()
-// 		if (input.value == 0) {
-// 			return
-// 		} else {
-// 			createDeleteElem(input.value)
-			
-// 			// TODO ajax if status == 200
-// 			input.value = ''
-// 		}
-// 	})
+        const value = descInput.value.trim()
+        if (value === '') return
+        createDeleteElem(value)
+        input.value = ''
+    })
 
-// 	function createDeleteElem(value) {
-// 		const li = document.createElement('li'),,
-// 			  del = document.createElement('button')
-// 			  imp = document.createElement('input')
+    function createDeleteElem(value) {
+        const li = document.createElement('li'),
+              del = document.createElement('button'),
+              dateImp = document.createElement('input'),
+              descImp = document.createElement('input')
 
-// 		li.classList.add('conferencecreate__topic')
+        li.classList.add('conferencecreate__topic')
 
-// 		list.appendChild(li)
+        list.appendChild(li)
 
-// 		del.classList.add('conferencecreate__delete')
-// 		del.textContent = '-'
+        del.classList.add('conferencecreate__delete')
+        del.textContent = '-'
 
-// 		li.appendChild(del)
+        dateImp.value = dateInput.value
+        dateImp.setAttribute('name', 'EventDates')
+        dateImp.setAttribute('type', 'date')
 
-// 		imp.value = input.value
-// 		imp.setAttribute('name', 'Topics')
+        descImp.value = descInput.value.trim()
+        descImp.setAttribute('name', 'EventDescriptions')
+        descImp.setAttribute('placeholder', 'Опис події')
 
-// 		li.appendChild(imp)
+        li.appendChild(dateImp)
+        li.appendChild(descImp)
+        li.appendChild(del)
 
-// 		del.addEventListener('click', e => {
-// 			e.preventDefault()
+        del.addEventListener('click', e => {
+            e.preventDefault()
+            list.removeChild(li)
+        })
+    }
+}
 
-// 			list.removeChild(li)
-// 		})
-// 	}
-// }
+// Admin create List
+
+if (document.querySelector('#adminInput')) {
+	const input = document.querySelector('#adminInput'),
+		  button = document.querySelector('#adminButton'),
+		  list = document.querySelector('#adminList')
+
+	button.addEventListener('click', e => {
+		e.preventDefault()
+
+		if (input.value === '') return
+		createDeleteElem(input.value)
+		input.value = ''
+	})
+
+	function createDeleteElem(value) {
+		const li = document.createElement('li'),
+			  del = document.createElement('button'),
+			  imp = document.createElement('input')
+
+		li.classList.add('conferencecreate__topic')
+
+		list.appendChild(li)
+
+		del.classList.add('conferencecreate__delete')
+		del.textContent = '-'
+
+		imp.value = input.value
+		imp.setAttribute('name', 'Authors')
+
+		li.appendChild(imp)
+
+		li.appendChild(del)
+
+		del.addEventListener('click', e => {
+			e.preventDefault()
+
+			list.removeChild(li)
+		})
+	}
+}
 
 // Topic Create List
 

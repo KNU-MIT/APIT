@@ -94,7 +94,8 @@ namespace Apit.Controllers
 
 
             model.KeyWords = string.Join(";", keyWordsSeparatorRegex
-                .Replace(model.KeyWords, ";").Split(';').Distinct().ToArray());
+                .Replace(model.KeyWords, ";")
+                .Split(';').Select(s => s.Trim()).Distinct().ToArray());
 
             var dateNow = DateTime.Now;
             var user = await _userManager.GetUserAsync(User);
@@ -105,13 +106,13 @@ namespace Apit.Controllers
                 {
                     Id = Guid.NewGuid(),
                     UserId = user.Id,
-                    User = user
+                    IsCreator = true
                 }
             };
 
             foreach (string author in model.Authors)
             {
-                if (authors.Any(a => a.NameString == author || a.User.ProfileAddress == author)) continue;
+                if (authors.Any(a => a.NameString == author || a.UserId == author)) continue;
 
                 if (author.Length == _config.Content.UniqueAddress.UserAddressSize)
                 {
@@ -121,7 +122,6 @@ namespace Apit.Controllers
                         authors.Add(new UserOwnArticlesLinking
                         {
                             Id = Guid.NewGuid(),
-                            User = addressUser,
                             UserId = addressUser.Id
                         });
                         continue;
@@ -131,7 +131,8 @@ namespace Apit.Controllers
                 authors.Add(new UserOwnArticlesLinking
                 {
                     Id = Guid.NewGuid(),
-                    NameString = author
+                    NameString = author,
+                    UserId = user.Id
                 });
             }
 
@@ -159,14 +160,13 @@ namespace Apit.Controllers
             foreach (var author in article.Authors)
             {
                 author.ArticleId = article.Id;
-                author.Article = article;
             }
 
             var currentConf = _dataManager.Conferences.GetCurrentAsDbModel();
             _dataManager.Conferences.AddArticle(currentConf, article);
             _dataManager.Articles.Create(article);
 
-            return RedirectToAction("index", "articles", new {id = uniqueAddress});
+            return RedirectToAction("index", "articles", new {x = uniqueAddress});
         }
     }
 }

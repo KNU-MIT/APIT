@@ -19,8 +19,16 @@
             {
                 @if (author != null)
                 {
-                    @author.FullName
-                    <br/>
+                    <a asp-action="index" asp-controller="account" asp-route-x="@author.ProfileAddress">@author.FullName</a>
+                    <br>
+                }
+            }
+            @foreach (var authorName in article.NonLinkedAuthors)
+            {
+                @if (authorName != null)
+                {
+                    @authorName
+                    <br>
                 }
             }
         </div>
