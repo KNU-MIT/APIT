@@ -24,7 +24,8 @@ namespace Apit.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            if (!int.TryParse(model.MailboxIndex, out int mailboxIndex))
+            if (!string.IsNullOrWhiteSpace(model.MailboxIndex)
+                && !int.TryParse(model.MailboxIndex, out int mailboxIndex))
             {
                 ModelState.AddModelError(nameof(RegisterViewModel.MailboxIndex),
                     "Невірно введено поштовий індекс");
