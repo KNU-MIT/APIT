@@ -21,7 +21,7 @@ namespace BusinessLayer.Repositories
             _ctx.ConfImages.Where(a => a.Conference == conference);
 
         public IEnumerable<Topic> GetConfTopics(Conference conference) =>
-            _ctx.Topics.Where(a => a.Conference == conference).OrderBy(a => a.Name);
+            _ctx.Topics.Where(a => a.ConferenceId == conference.Id).OrderBy(a => a.Name);
 
         private IEnumerable<ConferenceDate> GetConfDates(Conference conference) =>
             _ctx.ConfDates.Where(a => a.Conference == conference).OrderBy(a => a.Date);

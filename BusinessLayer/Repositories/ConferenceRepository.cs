@@ -88,7 +88,7 @@ namespace BusinessLayer.Repositories
 
             foreach (var topic in newConference.Topics)
             {
-                topic.Conference = newConference;
+                topic.ConferenceId = newConference.Id;
                 _ctx.Topics.Add(topic);
             }
 
@@ -106,7 +106,7 @@ namespace BusinessLayer.Repositories
             var instance = _ctx.Conferences.FirstOrDefault(conf => conf.Id == id);
             if (instance == null) return;
 
-            foreach (var topic in _ctx.Topics.Where(a => a.Conference == instance))
+            foreach (var topic in _ctx.Topics.Where(a => a.ConferenceId == instance.Id))
                 _ctx.Entry(topic).State = EntityState.Deleted;
             _ctx.Entry(instance).State = EntityState.Deleted;
             SaveChanges();

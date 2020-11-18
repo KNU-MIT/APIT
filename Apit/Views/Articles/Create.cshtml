@@ -35,7 +35,7 @@
                 </div>
 
                 <ul id="adminList" class="conferencecreate__list">
-                    @if (Model.Authors != null)
+                    @if (Model?.Authors != null)
                     {
                         @foreach (string authorName in Model.Authors)
                         {

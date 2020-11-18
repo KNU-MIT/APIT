@@ -3,20 +3,21 @@
 @model ArticleViewModel
 
 @{
-    ViewData["Title"] = "Редагування матеріалу";
+    ViewData["Title"] = "Редагування – " + Model.Title;
     ViewData["DisableFooter"] = true;
 
-    var conference = dataManager.Conferences.Current;
-    var allTopics = conference?.Topics?.ToList() ?? new List<Topic>();
+    var config = projectConfig.Content.Conference;
 
+    var conference = dataManager.Conferences.Current;
+    // var allTopics = conference.Topics?.ToList() ?? new List<Topic>();
 
     IHtmlContent AddTopicOptions()
     {
         var options = new StringBuilder();
-
-        foreach (var topic in allTopics)
+        
+        foreach (var topic in conference?.Topics?.ToList() ?? new List<Topic>())
         {
-            string para = Model.Topic.Id == topic.Id ? "selected" : "";
+            string para = Model.Topic?.Id == topic.Id ? "selected" : "";
             options.Append($"<option value=\"{topic.Id}\" {para}>{topic.Name}</option>");
         }
 
@@ -25,30 +26,110 @@
 }
 
 
-<section class="conferencecreate conferencecreate--fullpage">
+<section class="articlecreate conferencecreate conferencecreate--fullpage">
+
+    <div asp-validation-summary="All"></div>
+
     <div class="container">
-
-        <div asp-validation-summary="All"></div>
-
         <div class="conferencecreate__inner">
 
-            <div class="conferencecreate__title title">
-                Редагувати статтю
-            </div>
+            <div class="conferencecreate__title title">Редагувати матеріал</div>
 
-            <form class="conferencecreate__form" enctype="multipart/form-data" asp-controller="articles"
-                  asp-action="edit" method="post" asp>
+            <form method="post" enctype="multipart/form-data" asp-controller="articles" asp-action="edit"
+                  asp-route-returnUrl="@Url.Action("index", "articles", new {x = Model.UniqueAddress})"
+                  class="conferencecreate__form" id="conferenceCreating">
 
-                @* <div class="form__blck form__blck--todo"> *@
-                @*     <input type="text" placeholder="Співавтор статті"> *@
-                @*     <button type="cancel" id="adminButton" class="button conferencecreate__button">Додати</button> *@
-                @* </div> *@
-                @* *@
-                @* <ul id="adminList" class="conferencecreate__list"></ul> *@
+                @*<div class="form__blck form__blck--todo">
+                    <input asp-for="Authors" type="text" id="adminInput" placeholder="Інші автори">
+                    <button id="adminButton" class="button conferencecreate__button">Додати</button>
+                </div>*@
 
-                <div class="form__blck form__blck--select form__blck--dbl">
-                    <div class="signup__select">
-                        <select asp-for="NewTopicId">
+                <div class="form__blck form__blck--todo">
+                    <input asp-for="Authors" type="text" value="" id="editauthorInput" placeholder="Інші співавтори">
+                    <button id="editauthorButton" class="button conferencecreate__button">Додати</button>
+                </div>
+
+                <ul id="editauthorList" class="conferencecreate__list">
+                    @if (Model?.Authors != null)
+                    {
+                        @foreach (var author in Model.Authors)
+                        {
+                            <li class="conferencecreate__topic">
+                                <input name="Authors" value="@author.FullName">
+                                <button class="conferencecreate__delete">-</button>
+                            </li>
+                        }
+                    }
+                    @if (Model?.NonLinkedAuthors != null)
+                    {
+                        @foreach(string authorName in Model.NonLinkedAuthors)
+                        {
+                            <li class="conferencecreate__topic">
+                                <input name="Authors" value="@authorName">
+                                <button class="conferencecreate__delete">-</button>
+                            </li>
+                        }
+                    }
+                </ul>
+
+                <script>
+                
+	                const input = document.querySelector('#editauthorInput'),
+		                  button = document.querySelector('#editauthorButton'),
+		                  list = document.querySelector('#editauthorList')
+		                  
+                    const authors = list.children
+                    const authorNames = []
+                    
+                    for (let author of authors) {
+                        const inputItem = author.getElementsByTagName('input')[0]
+                        authorNames.push(inputItem.value)
+                    }
+                    
+                    list.innerHTML = ''
+                    
+                    authorNames.forEach(authorName => {
+                        if (authorName) createDeleteElem(authorName)    
+                    })
+                    
+	                button.addEventListener('click', e => {
+		                e.preventDefault()
+
+		                if (input.value === '') return
+		                createDeleteElem(input.value)
+		                input.value = ''
+	                })
+
+	                function createDeleteElem(value) {
+		                const li = document.createElement('li'),
+			                  del = document.createElement('button'),
+			                  imp = document.createElement('input')
+
+		                li.classList.add('conferencecreate__topic')
+
+		                list.appendChild(li)
+
+		                del.classList.add('conferencecreate__delete')
+		                del.textContent = '-'
+
+		                imp.value = value
+		                imp.setAttribute('name', 'Authors')
+
+		                li.appendChild(imp)
+
+		                li.appendChild(del)
+
+		                del.addEventListener('click', e => {
+			                e.preventDefault()
+
+			                list.removeChild(li)
+		                })
+	                }
+                </script>
+
+                <div class="form__blck form__blck--select">
+                    <div class="signup__select" style="width: 100%;">
+                        <select asp-for="NewTopicId" style="max-width: none;">
                             <option value="" disabled>Тема статті</option>
                             @AddTopicOptions()
                         </select>
@@ -56,19 +137,20 @@
                 </div>
 
                 <div class="form__blck form__blck--dbl">
-                    <input class="form__input" asp-for="KeyWords" type="text" 
-                           value="@string.Join("; ", Model.KeyWords)" placeholder="Ключові слова">
-                    <input asp-for="Title" type="text" value="@Model.Title" placeholder="Заголовок">
+                    <input class="form__input" asp-for="KeyWords" type="text" maxlength="@config.TitleMaxLength"
+                           value="@string.Join("; ", Model.KeyWords)" placeholder="Ключові слова (через , або ;)">
+                    <input asp-for="Title" value="@Model.Title" type="text"
+                           placeholder="Заголовок" maxlength="@config.TitleMaxLength">
                 </div>
 
                 <div class="form__blck form__blck--dbl form__blck--txt">
-                    <textarea asp-for="ShortDescription" cols="50" rows="30" maxlength="150" placeholder="Короткий опис">
-                    @Model.ShortDescription
-                </textarea>
+                    <textarea asp-for="ShortDescription" maxlength="@config.ShortDescriptionMaxLength" placeholder="Короткий опис">
+                        @Model.ShortDescription
+                    </textarea>
 
                     <div class="form__blck--file">
+                        <label for="articleFile" data-multiple-caption="{count} обрано файлів">Новий файл</label>
                         <input asp-for="NewDocFile" type="file" accept=".docx, .doc" id="articleFile">
-                        <label data-multiple-caption="обрано {count} файл" for="articleFile">Новий файл</label>
                     </div>
                 </div>
 
@@ -77,13 +159,13 @@
                         На головну
                     </a>
                     <button class="button signin__button" type="submit">
-                        Створити
+                        Змінити
                         <partial name="Components/AtomIcon"/>
                     </button>
                 </div>
 
             </form>
-        </div>
 
+        </div>
     </div>
 </section>

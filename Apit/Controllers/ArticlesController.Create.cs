@@ -139,7 +139,7 @@ namespace Apit.Controllers
             var article = new Article
             {
                 Id = Guid.NewGuid(),
-                Topic = topic,
+                TopicId = topic.Id,
                 Authors = authors,
                 UniqueAddress = uniqueAddress,
 
@@ -158,9 +158,7 @@ namespace Apit.Controllers
             };
 
             foreach (var author in article.Authors)
-            {
                 author.ArticleId = article.Id;
-            }
 
             var currentConf = _dataManager.Conferences.GetCurrentAsDbModel();
             _dataManager.Conferences.AddArticle(currentConf, article);

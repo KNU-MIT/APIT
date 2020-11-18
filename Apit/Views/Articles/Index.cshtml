@@ -22,10 +22,11 @@
 <section class="article">
     <div class="container">
 
+        @*        
         @if (conference != null && (isMine || await userManager.IsInRoleAsync(user, RoleNames.ADMIN)))
         {
             <form class="profile__admin" method="post">
-            
+
                 <a class="profile__button" asp-controller="articles"
                    asp-action="edit" asp-route-x="@article.UniqueAddress">
                     Редагувати
@@ -33,14 +34,17 @@
                 <button class="profile__button" data-url="/articles/delete?x=@article.UniqueAddress">
                     Видалити
                 </button>
-                
+
             </form>
         }
-        
+        *@
+
         <div class="article__inner">
 
             <h2 class="article__title title">@article.Title</h2>
-            <h3 class="article__subtitle">@article.Topic</h3>
+            <h3 style="text-align: center;" class="article__subtitle">
+                Стаття по темі: <strong>@article.Topic.Name</strong>
+            </h3>
 
             <div class="article__date">@article.GetFormatCreatingDate()</div>
 
@@ -54,5 +58,6 @@
             }
 
         </div>
+        
     </div>
 </section>

@@ -29,12 +29,11 @@ namespace Apit.Controllers
             var user = await _userManager.GetUserAsync(User);
             bool isAdmin = await _userManager.IsInRoleAsync(user, RoleNames.ADMIN);
             var current = _dataManager.Conferences.Current;
-            var conference = model.Topic.Conference;
+            var conference = _dataManager.Conferences.GetById(model.Topic.ConferenceId);
 
             if (isAdmin || (conference.Id == current.Id && model.Creator == user))
                 return View(model);
-
-
+            
             ViewData["ErrorTitle"] = 403;
             ViewData["ErrorMessage"] = "Доступ до даної опції заблоковано";
             return View("error");
@@ -45,8 +44,16 @@ namespace Apit.Controllers
         /// Available option for the article creator and root admin 
         /// </summary>
         [HttpPost, Authorize]
-        public async Task<IActionResult> Edit(ArticleViewModel model)
+        public async Task<IActionResult> Edit(ArticleViewModel model, string returnUrl)
         {
+            var dbModel = _dataManager.Articles.GetByUniqueAddress(model.UniqueAddress);
+            if (dbModel == null)
+            {
+                ViewData["ErrorTitle"] = 404;
+                ViewData["ErrorMessage"] = "Нічого не знайдено :(";
+                return View("error");
+            }
+            
             var user = await _userManager.GetUserAsync(User);
             bool isAdmin = await _userManager.IsInRoleAsync(user, RoleNames.ADMIN);
 
@@ -68,7 +75,7 @@ namespace Apit.Controllers
                 ModelState.AddModelError(nameof(ArticleViewModel.NewTopicId),
                     "Дана тема не може бути використана");
 
-            return View(model);
+            return LocalRedirect(returnUrl ?? "/articles/list");
         }
 
         /// <summary>

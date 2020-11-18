@@ -82,7 +82,7 @@ namespace BusinessLayer.Repositories
             {
                 Id = article.Id,
                 UniqueAddress = article.UniqueAddress,
-                Topic = article.Topic,
+                Topic = _ctx.Topics.FirstOrDefault(t => t.Id == article.TopicId),
 
                 Creator = _ctx.Users.FirstOrDefault(u => u.Id == creatorId),
                 Authors = authors.Where(a => string.IsNullOrEmpty(a.NameString))

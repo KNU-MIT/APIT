@@ -64,7 +64,7 @@ namespace BusinessLayer.DataServices
         {
             string styles = GetFirstTagContent(htmlText, "style");
             string content = GetFirstTagContent(htmlText, "div", true);
-            content = Regex.Replace(content, "Trial ", "");
+            content = Regex.Replace(content, "[Tt]rial", "");
             htmlText = $"<article>\n{styles}{content}</article>";
         }
 

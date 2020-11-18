@@ -10,13 +10,14 @@ namespace DatabaseLayer.Entities
         public Guid Id { get; set; }
         [Required] public string UniqueAddress { get; set; }
 
-        [Required] public Topic Topic { get; set; }
-        
+        [Required] public Guid TopicId { get; set; }
+
+
         public ICollection<UserOwnArticlesLinking> Authors { get; set; }
         [Required] public string Title { get; set; }
 
         [Required] public string ShortDescription { get; set; }
-        
+
         public ArticleStatus Status { get; set; }
         public string KeyWords { get; set; }
 

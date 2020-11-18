@@ -15,7 +15,8 @@ namespace Apit.Controllers
         [Route("/error")]
         public IActionResult HttpStatusCodeHandler()
         {
-            if (ViewData["ErrorTitle"] == default) ViewData["ErrorTitle"] = 100500;
+            if (ViewData["ErrorTitle"] == default) ViewData["ErrorTitle"] = 500;
+            if (ViewData["ErrorMessage"] == default) ViewData["ErrorMessage"] = "Щось пішло не так...";
 
             // string message;
             // switch (statusCode)

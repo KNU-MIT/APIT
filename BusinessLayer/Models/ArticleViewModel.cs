@@ -22,7 +22,6 @@ namespace BusinessLayer.Models
         public Topic Topic { get; set; }
 
 
-        // TODO: please, me do something with it...
         public string NewTopicId { get; set; }
         public IFormFile NewDocFile { get; set; }
 
