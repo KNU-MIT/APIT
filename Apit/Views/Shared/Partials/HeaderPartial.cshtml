@@ -29,7 +29,7 @@
                     <li class="nav__link">
                         <span class="nav__link--span">Учасникам <span></span></span>
                         <ul class="nav__subnav subnav">
-                            @if (conference != null && user.EmailConfirmed)
+                            @if (conference != null && (user?.EmailConfirmed ?? false))
                             {
                                 <li class="subnav__link">
                                     <a asp-controller="articles" asp-action="create">Створити статтю</a>

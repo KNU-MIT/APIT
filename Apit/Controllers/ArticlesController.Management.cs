@@ -66,7 +66,7 @@ namespace Apit.Controllers
             }
             else
                 ModelState.AddModelError(nameof(ArticleViewModel.NewTopicId),
-                    "Дана тема не може буди використана");
+                    "Дана тема не може бути використана");
 
             return View(model);
         }

@@ -34,7 +34,17 @@
                     <button id="adminButton" class="button conferencecreate__button">Додати</button>
                 </div>
 
-                <ul id="adminList" class="conferencecreate__list"></ul>
+                <ul id="adminList" class="conferencecreate__list">
+                    @if (Model.Authors != null)
+                    {
+                        @foreach (string authorName in Model.Authors)
+                        {
+                            <li>
+                                <input name="Authors" value="@authorName">
+                            </li>
+                        }
+                    }
+                </ul>
 
 
                 <div class="form__blck form__blck--select">

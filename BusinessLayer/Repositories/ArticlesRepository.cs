@@ -90,7 +90,7 @@ namespace BusinessLayer.Repositories
                 NonLinkedAuthors = authors.Where(a => !string.IsNullOrEmpty(a.NameString)).Select(a => a.NameString),
 
                 DocFileAddress = article.DocxFilePath,
-                HTMLContent = await DataUtil.LoadHtmlFile(article.HtmlFilePath),
+                HTMLContent = await DataUtil.LoadHtmlFile(article.HtmlFilePath) ?? "Такої статті не існує",
 
                 Title = article.Title,
                 ShortDescription = article.ShortDescription,

@@ -13,8 +13,9 @@ namespace Apit.Areas.Admin.Controllers
         private readonly ILogger<ManageController> _logger;
         private readonly DataManager _dataManager;
 
-        public ManageController(DataManager dataManager)
+        public ManageController(ILogger<ManageController> logger, DataManager dataManager)
         {
+            _logger = logger;
             _dataManager = dataManager;
         }
 

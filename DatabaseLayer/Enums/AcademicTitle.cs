@@ -4,8 +4,8 @@ namespace DatabaseLayer.Enums
 {
     public enum AcademicTitle : short
     {
-        [Display(Name = "Студент(ка)")] Student = 0,
+        [Display(Name = "Відсутнє")] Other = 0,
         [Display(Name = "Доцент")] AssistantProfessor = 1,
-        [Display(Name = "Інше")] Other = 10
+        [Display(Name = "Професор")] Professor = 2,
     }
 }

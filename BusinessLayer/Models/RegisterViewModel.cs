@@ -28,7 +28,6 @@ namespace BusinessLayer.Models
         [Display(Name = "Форма участі")] public ParticipationForm ParticipationForm { get; set; }
 
 
-        [Required(ErrorMessage = "Введіть Ваш поштовий індекс")]
         [Display(Name = "Поштовий індекс")]
         public string MailboxIndex { get; set; }
 

@@ -79,6 +79,7 @@ namespace BusinessLayer.DataServices
         internal static async Task<string> LoadHtmlFile(string fileName)
         {
             var htmlPath = Path.Combine(Directory.GetCurrentDirectory(), HTML_DIR, fileName);
+            if (!File.Exists(htmlPath)) return null;
             using var file = new StreamReader(htmlPath);
             return await file.ReadToEndAsync();
         }
