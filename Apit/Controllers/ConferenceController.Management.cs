@@ -112,7 +112,9 @@ namespace Apit.Controllers
         public IActionResult Edit()
         {
             // TODO: to do it... 
-
+            
+            ViewData["ErrorTitle"] = 501;
+            ViewData["ErrorMessage"] = "У процесі реалізації";
             return View("error");
         }
 

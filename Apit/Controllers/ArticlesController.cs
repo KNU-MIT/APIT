@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.Models;
 using BusinessLayer;
@@ -37,11 +38,20 @@ namespace Apit.Controllers
 
 
         [Authorize]
-        public IActionResult Index(string x)
+        public async Task<IActionResult> Index(string x)
         {
-            if (string.IsNullOrWhiteSpace(x)) Error();
+            var user = await _userManager.GetUserAsync(User);
             var article = _dataManager.Articles.GetByUniqueAddress(x);
-            return article == null ? Error() : View(article);
+
+            if (user == article?.Creator || await _userManager.IsInRoleAsync(user, RoleNames.MANAGER))
+            {
+                if (string.IsNullOrWhiteSpace(x)) Error();
+                return article == null ? Error() : View(article);
+            }
+
+            ViewData["ErrorTitle"] = 403;
+            ViewData["ErrorMessage"] = "Лоступ заблоковано :(";
+            return View("error");
         }
 
         [Authorize(Roles = RoleNames.MANAGER)]
