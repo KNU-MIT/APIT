@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer.DataServices;
+using BusinessLayer.DataServices.ConfigModels;
 using BusinessLayer.Interfaces;
 using BusinessLayer.Models;
 using DatabaseLayer;
@@ -13,10 +14,12 @@ namespace BusinessLayer.Repositories
     public class ArticlesRepository : IArticlesRepository
     {
         private readonly AppDbContext _ctx;
+        private readonly ProjectConfig.ContentConfig _contentConfig;
 
-        public ArticlesRepository(AppDbContext context)
+        public ArticlesRepository(AppDbContext context, ProjectConfig config)
         {
             _ctx = context;
+            _contentConfig = config.Content;
         }
 
         public string GenerateUniqueAddress() => DataUtil.GenerateUniqueAddress(this, 8);
@@ -87,10 +90,12 @@ namespace BusinessLayer.Repositories
                 Creator = _ctx.Users.FirstOrDefault(u => u.Id == creatorId),
                 Authors = authors.Where(a => string.IsNullOrEmpty(a.NameString))
                     .Select(a => _ctx.Users.FirstOrDefault(u => u.Id == a.UserId)),
-                NonLinkedAuthors = authors.Where(a => !string.IsNullOrEmpty(a.NameString)).Select(a => a.NameString),
+                NonLinkedAuthors = authors.Where(a =>
+                    !string.IsNullOrEmpty(a.NameString)).Select(a => a.NameString),
 
                 DocFileAddress = article.DocxFilePath,
-                HTMLContent = await DataUtil.LoadHtmlFile(article.HtmlFilePath) ?? "Такої статті не існує",
+                HTMLContent = await DataUtil.LoadHtmlFile(article.HtmlFilePath,
+                    _contentConfig.DataPath) ?? "Такої статті не існує",
 
                 Title = article.Title,
                 ShortDescription = article.ShortDescription,

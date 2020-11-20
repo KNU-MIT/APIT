@@ -16,7 +16,7 @@ namespace BusinessLayer.Repositories
         private readonly AppDbContext _ctx;
         private readonly IUsersRepository _users;
         private readonly IArticlesRepository _articles;
-        private readonly ProjectConfig.UniqueAddressConfig _addressConfig;
+        private readonly ProjectConfig.ContentConfig _contentConfig;
 
         public ConferenceRepository(AppDbContext context,
             IUsersRepository usersRepo, IArticlesRepository articlesRepo, ProjectConfig config)
@@ -24,11 +24,11 @@ namespace BusinessLayer.Repositories
             _ctx = context;
             _users = usersRepo;
             _articles = articlesRepo;
-            _addressConfig = config.Content.UniqueAddress;
+            _contentConfig = config.Content;
         }
 
         public string GenerateUniqueAddress() =>
-            DataUtil.GenerateUniqueAddress(this, _addressConfig.ArticleAddressSize);
+            DataUtil.GenerateUniqueAddress(this, _contentConfig.UniqueAddress.ArticleAddressSize);
 
 
         public ConferenceViewModel Current => ConvertToViewModel(GetCurrentAsDbModel());
@@ -69,7 +69,7 @@ namespace BusinessLayer.Repositories
                     Id = Guid.NewGuid(),
                     Name = topic,
                 }).ToList();
-            
+
             var newConference = new Conference()
             {
                 Id = Guid.NewGuid(),

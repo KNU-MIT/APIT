@@ -14,30 +14,51 @@
     // ViewData["meta_socials_image"] = null;
 
     var user = await userManager.GetUserAsync(User);
-    var isMine = user != null && user == article.Creator;
     var conference = dataManager.Conferences.Current;
+
+    var isMine = user != null && user == article.Creator;
+    bool isAdmin = await userManager.IsInRoleAsync(user, RoleNames.ADMIN);
 }
 
 
 <section class="article">
     <div class="container">
 
-        @*        
-        @if (conference != null && (isMine || await userManager.IsInRoleAsync(user, RoleNames.ADMIN)))
+        @if (conference != null && (isMine || isAdmin))
         {
             <form class="profile__admin" method="post">
+
+                @if (isAdmin)
+                {
+                    @if (Model.Status == ArticleStatus.Uploaded)
+                    {
+                        <a class="profile__button" asp-controller="articles" asp-action="edit"
+                           asp-route-x="@article.UniqueAddress" asp-route-status="@ArticleStatus.Published.ToString()">
+                            Затвердити
+                        </a>
+                    }
+
+                    @if (Model.Status != ArticleStatus.Banned)
+                    {
+                        <a class="profile__button" asp-controller="articles" asp-action="edit"
+                           asp-route-x="@article.UniqueAddress" asp-route-status="@ArticleStatus.Uploaded.ToString()">
+                            Відізвати
+                        </a>
+                    }
+                }
 
                 <a class="profile__button" asp-controller="articles"
                    asp-action="edit" asp-route-x="@article.UniqueAddress">
                     Редагувати
                 </a>
+
                 <button class="profile__button" data-url="/articles/delete?x=@article.UniqueAddress">
                     Видалити
                 </button>
 
             </form>
         }
-        *@
+
 
         <div class="article__inner">
 
@@ -52,12 +73,13 @@
 
             @if (!string.IsNullOrWhiteSpace(article.DocFileAddress))
             {
-                <a class="article__button" asp-controller="resources" asp-action="document" asp-route-id="@article.DocFileAddress">
+                <a class="article__button" asp-controller="resources" 
+                   asp-action="document" asp-route-id="@article.DocFileAddress">
                     Завантажити документ
                 </a>
             }
 
         </div>
-        
+
     </div>
 </section>

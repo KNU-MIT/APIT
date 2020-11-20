@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using BusinessLayer.DataServices;
+using BusinessLayer.DataServices.ConfigModels;
 using DatabaseLayer.Entities;
 using DatabaseLayer.Enums;
 using Microsoft.AspNetCore.Http;
@@ -55,9 +56,9 @@ namespace BusinessLayer.Models
 
         public string GetFormatCreatingDate() => DateCreated.ToString("dd/MM/yyy");
 
-        public string GetPlaceholderImagePath()
+        public string GetPlaceholderImagePath(ProjectConfig.DataPathConfig config)
         {
-            string defaultDir = Path.Combine(DataUtil.DEST_IMG_DIR, UniqueAddress + Extension.Htm);
+            string defaultDir = Path.Combine(config.ArticleImagesDir, UniqueAddress + Extension.Htm);
             const string altDir = "../Apit/wwwroot/img/articles_placeholder";
 
             var rand = new Random();

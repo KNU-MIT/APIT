@@ -70,7 +70,8 @@ namespace Apit.Controllers
                 }
                 else if (!hasIncorrectData)
                 {
-                    string err = await DataUtil.TrySaveDocFile(model.ArticleFile, uniqueAddress, extension);
+                    string err = await DataUtil.TrySaveDocFile(model.ArticleFile,
+                        uniqueAddress, extension, _config.Content.DataPath);
                     if (err != null)
                     {
                         _logger.LogError("Document converter error\n" + err);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BusinessLayer.DataServices;
+using BusinessLayer.DataServices.ConfigModels;
 using BusinessLayer.Models;
 using DatabaseLayer.Entities;
 using Microsoft.AspNetCore.Http;
@@ -37,7 +38,7 @@ namespace BusinessLayer.Repositories
         public void AddImage(Conference conference, IFormFile imageFile)
         {
             var extension = "." + Path.GetExtension(imageFile.FileName);
-            var filePath = Path.Combine(DataUtil.IMAGES_DIR, Guid.NewGuid() + extension);
+            var filePath = Path.Combine(_contentConfig.DataPath.ConferenceImagesDir, Guid.NewGuid() + extension);
             DataUtil.SaveFile(imageFile, filePath);
 
             var image = new ConferenceImage

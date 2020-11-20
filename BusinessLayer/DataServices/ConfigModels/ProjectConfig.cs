@@ -41,9 +41,17 @@
             public ContentDataConfig Article { get; set; }
             public ContentDataConfig Conference { get; set; }
 
+            public DataPathConfig DataPath { get; set; }
             public UniqueAddressConfig UniqueAddress { get; set; }
         }
 
+        public class DataPathConfig
+        {
+            public string ArticleDocsDir { get; set; }
+            public string ArticleHtmlDir { get; set; }
+            public string ArticleImagesDir { get; set; }
+            public string ConferenceImagesDir  { get; set; }
+        }
 
         public class UniqueAddressConfig
         {

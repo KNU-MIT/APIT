@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer.Models;
 using DatabaseLayer;
+using DatabaseLayer.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,8 +16,9 @@ namespace Apit.Controllers
         /// Goto article edit view page
         /// </summary>
         /// <param name="x">Unique article route address</param>
+        /// <param name="status">Non required param to specify action type</param>
         [Authorize]
-        public async Task<IActionResult> Edit(string x)
+        public async Task<IActionResult> Edit(string x, string status = null)
         {
             var model = _dataManager.Articles.GetByUniqueAddress(x);
             if (model == null)
@@ -31,9 +33,17 @@ namespace Apit.Controllers
             var current = _dataManager.Conferences.Current;
             var conference = _dataManager.Conferences.GetById(model.Topic.ConferenceId);
 
-            if (isAdmin || (conference.Id == current.Id && model.Creator == user))
-                return View(model);
-            
+            if (!Enum.TryParse<ArticleStatus>(status, out var statusOption))
+            {
+                if (isAdmin || (conference.Id == current.Id && model.Creator == user))
+                    return View(model);
+            }
+            else if (statusOption == ArticleStatus.Published || statusOption == ArticleStatus.Banned)
+            {
+                model.Status = statusOption;
+                return RedirectToAction("index", "articles", new {x});
+            }
+
             ViewData["ErrorTitle"] = 403;
             ViewData["ErrorMessage"] = "Доступ до даної опції заблоковано";
             return View("error");
@@ -53,7 +63,7 @@ namespace Apit.Controllers
                 ViewData["ErrorMessage"] = "Нічого не знайдено :(";
                 return View("error");
             }
-            
+
             var user = await _userManager.GetUserAsync(User);
             bool isAdmin = await _userManager.IsInRoleAsync(user, RoleNames.ADMIN);
 
@@ -106,7 +116,7 @@ namespace Apit.Controllers
             {
                 _logger.LogError("Article not deleted with exception: " + e);
                 ViewData["ErrorTitle"] = 500;
-                ViewData["ErrorMessage"] = "На превеликий жаль, такої людини серед нас немає :(";
+                ViewData["ErrorMessage"] = "Щось пішло не так...";
                 return View("error");
             }
         }

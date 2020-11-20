@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using BusinessLayer.DataServices.ConfigModels;
 using BusinessLayer.Interfaces;
 using Microsoft.AspNetCore.Http;
 using SautinSoft;
@@ -10,12 +11,6 @@ namespace BusinessLayer.DataServices
 {
     public static class DataUtil
     {
-        public const string DOCS_DIR = "../Local/ArticlesDocs/";
-        public const string HTML_DIR = "../Local/ArticlesHtml/";
-        public const string DEST_IMG_DIR = "../Apit/wwwroot/img/articles/";
-        public const string IMAGES_DIR = "../Local/Gallery/";
-
-
         /// <summary>
         /// Generate some unique key to use it as object route address
         /// </summary>
@@ -37,12 +32,13 @@ namespace BusinessLayer.DataServices
         }
 
 
-        public static async Task<string> TrySaveDocFile(IFormFile docFile, string fileName, string extension)
+        public static async Task<string> TrySaveDocFile(IFormFile docFile,
+            string fileName, string extension, ProjectConfig.DataPathConfig config)
         {
             try
             {
-                string docxPath = Path.Combine(DOCS_DIR, fileName + extension);
-                string htmlPath = Path.Combine(HTML_DIR, fileName + Extension.Htm);
+                string docxPath = Path.Combine(config.ArticleDocsDir, fileName + extension);
+                string htmlPath = Path.Combine(config.ArticleHtmlDir, fileName + Extension.Htm);
 
                 await using (var stream = new FileStream(docxPath, FileMode.Create))
                     await docFile.CopyToAsync(stream);
@@ -53,7 +49,7 @@ namespace BusinessLayer.DataServices
                 string imagesPath = htmlPath + "_images";
 
                 if (!Directory.Exists(imagesPath)) return null;
-                string imgDestDir = Path.Combine(DEST_IMG_DIR, fileName + Extension.Htm);
+                string imgDestDir = Path.Combine(config.ArticleImagesDir, fileName + Extension.Htm);
                 if (!Directory.Exists(imgDestDir)) Directory.CreateDirectory(imgDestDir);
 
                 foreach (string imgPath in Directory.EnumerateFiles(imagesPath))
@@ -76,18 +72,18 @@ namespace BusinessLayer.DataServices
         }
 
 
-        internal static async Task<string> LoadHtmlFile(string fileName)
+        internal static async Task<string> LoadHtmlFile(string fileName, ProjectConfig.DataPathConfig config)
         {
-            var htmlPath = Path.Combine(Directory.GetCurrentDirectory(), HTML_DIR, fileName);
+            var htmlPath = Path.Combine(Directory.GetCurrentDirectory(), config.ArticleHtmlDir, fileName);
             if (!File.Exists(htmlPath)) return null;
             using var file = new StreamReader(htmlPath);
             return await file.ReadToEndAsync();
         }
 
 
-        public static PhysicalFileData GetLoadDocFileOptions(string fileName)
+        public static PhysicalFileData GetLoadDocFileOptions(string fileName, ProjectConfig.DataPathConfig config)
         {
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), DOCS_DIR, fileName);
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), config.ArticleDocsDir, fileName);
             if (!File.Exists(filePath)) return null;
 
             string mimeType;
