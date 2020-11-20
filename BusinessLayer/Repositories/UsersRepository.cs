@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BusinessLayer.DataServices;
-using BusinessLayer.DataServices.ConfigModels;
+using DatabaseLayer.ConfigModels;
 using BusinessLayer.Interfaces;
 using DatabaseLayer;
 using DatabaseLayer.Entities;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using BusinessLayer.DataServices.ConfigModels;
+using DatabaseLayer.ConfigModels;
 using BusinessLayer.Interfaces;
 using Microsoft.AspNetCore.Http;
 using SautinSoft;
@@ -35,7 +35,7 @@ namespace BusinessLayer.DataServices
         public static async Task<string> TrySaveDocFile(IFormFile docFile,
             string fileName, string extension, ProjectConfig.DataPathConfig config)
         {
-            try
+            // try
             {
                 string docxPath = Path.Combine(config.ArticleDocsDir, fileName + extension);
                 string htmlPath = Path.Combine(config.ArticleHtmlDir, fileName + Extension.Htm);
@@ -59,10 +59,10 @@ namespace BusinessLayer.DataServices
 
                 return null;
             }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
+            // catch (Exception e)
+            // {
+                // return e.Message;
+            // }
         }
 
         public static async void SaveFile(IFormFile sourceFile, string fileName)

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Apit.Service;
 using BusinessLayer;
-using BusinessLayer.DataServices.ConfigModels;
+using DatabaseLayer.ConfigModels;
 using BusinessLayer.Models;
 using DatabaseLayer;
 using DatabaseLayer.Entities;

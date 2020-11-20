@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer;
-using BusinessLayer.DataServices.ConfigModels;
+using DatabaseLayer.ConfigModels;
 using BusinessLayer.Models;
 using DatabaseLayer;
 using DatabaseLayer.Entities;

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using BusinessLayer.DataServices;
-using BusinessLayer.DataServices.ConfigModels;
+using DatabaseLayer.ConfigModels;
 using DatabaseLayer.Entities;
 using DatabaseLayer.Enums;
 using Microsoft.AspNetCore.Http;

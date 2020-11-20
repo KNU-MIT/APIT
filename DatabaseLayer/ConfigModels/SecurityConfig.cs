@@ -1,4 +1,4 @@
-﻿namespace BusinessLayer.DataServices.ConfigModels
+﻿namespace DatabaseLayer.ConfigModels
 {
     public class SecurityConfig
     {

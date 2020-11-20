@@ -4,7 +4,7 @@
     ViewData["Title"] = "Створення нового матеріалу";
     ViewData["DisableFooter"] = true;
 
-    var config = projectConfig.Content.Conference;
+    var config = projectConfig.Content.Article;
 
     var conference = dataManager.Conferences.Current;
     var allTopics = conference.Topics?.ToList() ?? new List<Topic>();

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Apit.Areas.Admin.Models;
 using BusinessLayer;
-using BusinessLayer.DataServices.ConfigModels;
+using DatabaseLayer.ConfigModels;
 using DatabaseLayer;
 using DatabaseLayer.Entities;
 using Microsoft.AspNetCore.Identity;

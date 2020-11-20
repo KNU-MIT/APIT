@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DatabaseLayer.Migrations
 {
-    public partial class Development_10A : Migration
+    public partial class Production_2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -323,12 +323,12 @@ namespace DatabaseLayer.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "03de5b1a-cea9-4daf-807d-e3ac0748e75e", "b38529c7-1ba6-40ef-bbe7-3ac86c255e6a", "root_admin", "ROOT_ADMIN" });
+                values: new object[] { "26a96ec8-1099-4a55-8517-c436caae6831", "0539ceba-47a0-44a1-8665-01a5ee267a04", "root_admin", "ROOT_ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "f7ee06aa-872b-40a1-abeb-a931bb049369", "1167422c-4d36-4b47-aca6-e309461953c1", "manager", "MANAGER" });
+                values: new object[] { "162d9584-0ead-4e4f-a472-07cfb75216ac", "0444e043-f841-4f81-8b1e-aba902528509", "manager", "MANAGER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Articles_ConferenceId",

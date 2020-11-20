@@ -1,17 +1,26 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.IO;
+using DatabaseLayer.ConfigModels;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+
 
 namespace DatabaseLayer
 {
     public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     {
+        private const string AppConfigPath = "../Apit/appsettings.json";
+        
         public AppDbContext CreateDbContext(string[] args)
         {
+            var configData = File.Exists(AppConfigPath)
+                ? JsonSerializer.Deserialize<ProjectConfig>(AppConfigPath)
+                : throw new FileNotFoundException("Config file not found: " + AppConfigPath);
+            
+            Console.WriteLine(" Using database connection is: " + configData.SelectedConnectionString);
+            
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            optionsBuilder.UseSqlServer(
-                // aspnet-Apit-C2FA6515-42E2-4E38-BBCB-5CEB88F889AD
-                // "Server=(localdb)\\mssqllocaldb;Database=apit_2;Trusted_Connection=True;MultipleActiveResultSets=true");
-            "Server=localhost,1433;Database=apit_1;User=sa;Password=reallyStrongPwd123;MultipleActiveResultSets=true");
+            optionsBuilder.UseSqlServer(configData.ConnectionStrings[configData.SelectedConnectionString]);
 
             return new AppDbContext(optionsBuilder.Options);
         }

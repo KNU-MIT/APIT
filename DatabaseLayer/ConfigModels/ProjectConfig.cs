@@ -1,10 +1,14 @@
-﻿namespace BusinessLayer.DataServices.ConfigModels
+﻿using System.Collections.Generic;
+
+namespace DatabaseLayer.ConfigModels
 {
     public class ProjectConfig
     {
         public FeedbackConfig Feedback { get; set; }
         public MailboxConfig MailboxDefaults { get; set; }
         public ContentConfig Content { get; set; }
+        public string SelectedConnectionString { get; set; }
+        public Dictionary<string, string> ConnectionStrings { get; set; }
 
 
         public class FeedbackConfig
@@ -24,6 +28,7 @@
 
             public string ServiceHost { get; set; }
             public int ServicePort { get; set; }
+            public bool UseSSL { get; set; }
 
             public MailSubjectsConfig MailSubjects { get; set; }
 
@@ -50,7 +55,7 @@
             public string ArticleDocsDir { get; set; }
             public string ArticleHtmlDir { get; set; }
             public string ArticleImagesDir { get; set; }
-            public string ConferenceImagesDir  { get; set; }
+            public string ConferenceImagesDir { get; set; }
         }
 
         public class UniqueAddressConfig

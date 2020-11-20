@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using BusinessLayer.DataServices.ConfigModels;
+using DatabaseLayer.ConfigModels;
 using MimeKit;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
@@ -82,13 +82,14 @@ namespace Apit.Service
                     }.ToMessageBody()
                 };
 
+                _config.AddressEmail ??= _config.RealEmail;
                 message.From.Add(new MailboxAddress(_config.AddressName, _config.AddressEmail));
                 message.To.Add(MailboxAddress.Parse(recipient));
 
                 using var client = new SmtpClient();
 
                 // use port 465 or 587
-                client.Connect(_config.ServiceHost, _config.ServicePort, true);
+                client.Connect(_config.ServiceHost, _config.ServicePort, _config.UseSSL);
 
                 client.Authenticate(_config.RealEmail, _config.RealEmailPassword);
                 client.Send(message);

@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Apit.Service;
 using BusinessLayer;
-using BusinessLayer.DataServices.ConfigModels;
+using DatabaseLayer.ConfigModels;
 using BusinessLayer.Interfaces;
 using BusinessLayer.Repositories;
 using DatabaseLayer;
@@ -52,7 +52,8 @@ namespace Apit
 
             // Connect to our database (edit connection string from "appsettings.json" file)
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                options.UseSqlServer(Configuration.GetConnectionString(
+                        Configuration.GetValue<string>("SelectedConnectionString")),
                     b => b.MigrationsAssembly("DatabaseLayer")));
 
             services.AddDefaultIdentity<User>(options =>
