@@ -35,10 +35,18 @@ namespace BusinessLayer.DataServices
         public static async Task<string> TrySaveDocFile(IFormFile docFile,
             string fileName, string extension, ProjectConfig.DataPathConfig config)
         {
+            if (config == null) throw new NullReferenceException();
+
             // try
             {
-                string docxPath = Path.Combine(config.ArticleDocsDir, fileName + extension);
-                string htmlPath = Path.Combine(config.ArticleHtmlDir, fileName + Extension.Htm);
+                string docsDir = "../" + config.ArticleDocsDir;
+                string htmlDir = "../" + config.ArticleHtmlDir;
+
+                string docxPath = Path.Combine(docsDir, fileName + extension);
+                string htmlPath = Path.Combine(htmlDir, fileName + Extension.Htm);
+ 
+                if (!Directory.Exists(docsDir)) Directory.CreateDirectory(docsDir);
+                if (!Directory.Exists(htmlDir)) Directory.CreateDirectory(htmlDir);
 
                 await using (var stream = new FileStream(docxPath, FileMode.Create))
                     await docFile.CopyToAsync(stream);
@@ -49,7 +57,7 @@ namespace BusinessLayer.DataServices
                 string imagesPath = htmlPath + "_images";
 
                 if (!Directory.Exists(imagesPath)) return null;
-                string imgDestDir = Path.Combine(config.ArticleImagesDir, fileName + Extension.Htm);
+                string imgDestDir = Path.Combine("../" + config.ArticleImagesDir, fileName + Extension.Htm);
                 if (!Directory.Exists(imgDestDir)) Directory.CreateDirectory(imgDestDir);
 
                 foreach (string imgPath in Directory.EnumerateFiles(imagesPath))
@@ -61,7 +69,7 @@ namespace BusinessLayer.DataServices
             }
             // catch (Exception e)
             // {
-                // return e.Message;
+            // return e.Message;
             // }
         }
 
@@ -74,7 +82,7 @@ namespace BusinessLayer.DataServices
 
         internal static async Task<string> LoadHtmlFile(string fileName, ProjectConfig.DataPathConfig config)
         {
-            var htmlPath = Path.Combine(Directory.GetCurrentDirectory(), config.ArticleHtmlDir, fileName);
+            var htmlPath = Path.Combine(Directory.GetCurrentDirectory(), "../" + config.ArticleHtmlDir, fileName);
             if (!File.Exists(htmlPath)) return null;
             using var file = new StreamReader(htmlPath);
             return await file.ReadToEndAsync();
@@ -83,7 +91,7 @@ namespace BusinessLayer.DataServices
 
         public static PhysicalFileData GetLoadDocFileOptions(string fileName, ProjectConfig.DataPathConfig config)
         {
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), config.ArticleDocsDir, fileName);
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "../" + config.ArticleDocsDir, fileName);
             if (!File.Exists(filePath)) return null;
 
             string mimeType;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using DatabaseLayer.Enums;
 
 namespace DatabaseLayer.Entities
@@ -35,6 +36,18 @@ namespace DatabaseLayer.Entities
         public Article()
         {
             Authors = new HashSet<UserOwnArticlesLinking>();
+        }
+
+
+        [NotMapped] public DisplayOptions Options { get; set; }
+
+
+        [NotMapped]
+        public class DisplayOptions
+        {
+            public Topic Topic { get; set; }
+            public string PageAbsoluteUrl { get; set; }
+            public string DocumentAbsoluteUrl { get; set; }
         }
     }
 }

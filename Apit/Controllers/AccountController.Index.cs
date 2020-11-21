@@ -53,7 +53,7 @@ namespace Apit.Controllers
         }
 
         [Authorize(Roles = RoleNames.ADMIN)]
-        public async Task<IActionResult> SetManager(string x, string newState)
+        public async Task<IActionResult> SetManager(string x, string newState) // TODO: ???
         {
             var user = _dataManager.Users.GetByUniqueAddress(x);
             if (user == null)
@@ -134,6 +134,25 @@ namespace Apit.Controllers
             ModelState.AddModelError(string.Empty,
                 "Дані змінено успішно");
             return RedirectToAction("index", "account");
+        }
+        
+        [Route("/account/send-confirm")]
+        public async Task<IActionResult> SendConfirm(string returnUrl)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            string confirmationToken = _userManager.GenerateEmailConfirmationTokenAsync(user).Result;
+
+            string confirmationLink = Url.Action
+            ("ConfirmEmail", "account", new
+            {
+                id = user.Id,
+                token = confirmationToken
+            }, protocol: HttpContext.Request.Scheme);
+                
+            _mailService.SendConfirmationEmail(user.Email, confirmationLink);
+            
+            if (returnUrl != null) return LocalRedirect(returnUrl);
+            return RedirectToAction("index", "account", new {x = user.ProfileAddress});
         }
     }
 }

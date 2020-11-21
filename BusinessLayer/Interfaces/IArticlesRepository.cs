@@ -11,6 +11,11 @@ namespace BusinessLayer.Interfaces
     {
         IEnumerable<ArticleViewModel> GetByKeyWord(string word);
         IEnumerable<ArticleViewModel> GetByAuthor(string userId);
+
+        Article GetByUniqueAddressAsDbObject(string address);
+
+
+        void DeleteLinkedUser(IEnumerable<UserOwnArticlesLinking> linking);
         IEnumerable<Article> GetByConference(Conference conf);
     }
 }

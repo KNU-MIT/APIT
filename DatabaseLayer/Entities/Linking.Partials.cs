@@ -6,6 +6,7 @@ namespace DatabaseLayer.Entities
     {
         public Guid Id { get; set; }
         public bool IsCreator { get; set; }
+        public bool IsRegisteredUser { get; set; }
 
         public string NameString { get; set; }
         

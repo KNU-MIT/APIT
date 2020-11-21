@@ -10,11 +10,12 @@
 
     var conference = dataManager.Conferences.Current;
     // var allTopics = conference.Topics?.ToList() ?? new List<Topic>();
+    var user = await userManager.GetUserAsync(User);
 
     IHtmlContent AddTopicOptions()
     {
         var options = new StringBuilder();
-        
+
         foreach (var topic in conference?.Topics?.ToList() ?? new List<Topic>())
         {
             string para = Model.Topic?.Id == topic.Id ? "selected" : "";
@@ -35,9 +36,9 @@
 
             <div class="conferencecreate__title title">Редагувати матеріал</div>
 
-            <form method="post" enctype="multipart/form-data" asp-controller="articles" asp-action="edit"
-                  asp-route-returnUrl="@Url.Action("index", "articles", new {x = Model.UniqueAddress})"
-                  class="conferencecreate__form" id="conferenceCreating">
+            <form class="conferencecreate__form" id="conferenceCreating" method="post" enctype="multipart/form-data"
+                  asp-controller="articles" asp-action="edit" asp-route-x="@Model.UniqueAddress"
+                  asp-route-returnUrl="@Url.Action("index", "articles", new {x = Model.UniqueAddress})">
 
                 @*<div class="form__blck form__blck--todo">
                     <input asp-for="Authors" type="text" id="adminInput" placeholder="Інші автори">
@@ -50,19 +51,29 @@
                 </div>
 
                 <ul id="editauthorList" class="conferencecreate__list">
-                    @if (Model?.Authors != null)
+                    @if (Model?.AuthorUsers != null)
                     {
-                        @foreach (var author in Model.Authors)
+                        @foreach (var author in Model.AuthorUsers)
                         {
-                            <li class="conferencecreate__topic">
-                                <input name="Authors" value="@author.FullName">
-                                <button class="conferencecreate__delete">-</button>
-                            </li>
+                            @if (author == user)
+                            {
+                                <li class="conferencecreate__topic">
+                                    <input value="Ви &mdash; @author.FullName">
+                                    <button class="conferencecreate__delete" disabled>-</button>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="conferencecreate__topic">
+                                    <input name="Authors" value="@author.FullName">
+                                    <button class="conferencecreate__delete">-</button>
+                                </li>
+                            }
                         }
                     }
                     @if (Model?.NonLinkedAuthors != null)
                     {
-                        @foreach(string authorName in Model.NonLinkedAuthors)
+                        @foreach (string authorName in Model.NonLinkedAuthors)
                         {
                             <li class="conferencecreate__topic">
                                 <input name="Authors" value="@authorName">
@@ -129,7 +140,7 @@
 
                 <div class="form__blck form__blck--select">
                     <div class="signup__select" style="width: 100%;">
-                        <select asp-for="NewTopicId" style="max-width: none;">
+                        <select asp-for="TopicId" style="max-width: none;">
                             <option value="" disabled>Тема статті</option>
                             @AddTopicOptions()
                         </select>
@@ -150,7 +161,7 @@
 
                     <div class="form__blck--file">
                         <label for="articleFile" data-multiple-caption="{count} обрано файлів">Новий файл</label>
-                        <input asp-for="NewDocFile" type="file" accept=".docx, .doc" id="articleFile">
+                        <input asp-for="ArticleFile" type="file" accept=".docx, .doc" id="articleFile">
                     </div>
                 </div>
 

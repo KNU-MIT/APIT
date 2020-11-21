@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Apit.Service;
 using BusinessLayer.Models;
 using DatabaseLayer;
 using DatabaseLayer.Entities;
@@ -59,7 +58,7 @@ namespace Apit.Controllers
 
             if (result.Succeeded)
             {
-                if (isFirst)
+                if (isFirst) // TODO: not secure part of code
                 {
                     var roleResult1 = await _userManager.AddToRoleAsync(user, RoleNames.ADMIN);
                     var roleResult2 = await _userManager.AddToRoleAsync(user, RoleNames.MANAGER);
@@ -70,6 +69,7 @@ namespace Apit.Controllers
                     else ModelState.AddModelError(string.Empty, "You are not admin!");
                 }
 
+
                 string confirmationToken = _userManager.GenerateEmailConfirmationTokenAsync(user).Result;
 
                 string confirmationLink = Url.Action
@@ -79,17 +79,17 @@ namespace Apit.Controllers
                     token = confirmationToken
                 }, protocol: HttpContext.Request.Scheme);
 
-                _mailService.SendActionEmail(user.Email,
-                    _config.MailboxDefaults.MailSubjects.ConfirmEmailSubject,
-                    MailService.Presets.ConfirmEmail, confirmationLink);
-                _logger.LogInformation("Confirmation email was sent to: " + user.Email);
+                _mailService.SendConfirmationEmail(user.Email, confirmationLink);
+
 
                 await _signInManager.SignInAsync(user, false);
                 _logger.LogInformation($"User {user.ProfileAddress} has successfully registered");
-                
-                if (model.ReturnUrl != null) return LocalRedirect(model.ReturnUrl);
-                return RedirectToAction("index", "account", new {x = user.ProfileAddress});
+
+                // Send confirmation email before redirect via return url 
+                return RedirectToAction("SendConfirm", "account", new {returnUrl = model.ReturnUrl});
             }
+
+            // if something goes wrong
 
             ModelState.AddModelError(model.Email, "Неможливо створити користувача");
             foreach (var error in result.Errors)

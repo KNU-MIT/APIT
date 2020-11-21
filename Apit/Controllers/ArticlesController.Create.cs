@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using BusinessLayer.DataServices;
 using BusinessLayer.Models;
 using DatabaseLayer.Entities;
 using DatabaseLayer.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace Apit.Controllers
@@ -30,6 +25,7 @@ namespace Apit.Controllers
         public async Task<IActionResult> Create(NewArticleViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
+            var user = await _userManager.GetUserAsync(User);
 
             // Combine all errors and return them back if this variable is set to true
             bool hasIncorrectData = false;
@@ -46,7 +42,7 @@ namespace Apit.Controllers
             }
 
             // "hello, wor/*+#ld1!" != "hello, world1!"
-            if (keyWordsAvailableRegex.Replace(model.KeyWords, "") != "")
+            if (!model.KeyWordsAreCorrect)
             {
                 ModelState.AddModelError(nameof(model.KeyWords),
                     "У ключових словах Ви можете використовувати лише " +
@@ -55,93 +51,67 @@ namespace Apit.Controllers
             }
 
             // Check uploaded file
-            string extension = default, uniqueAddress = default;
-            if (model.ArticleFile != null && model.ArticleFile.Length > 0)
-            {
-                extension = Path.GetExtension(model.ArticleFile.FileName);
-                uniqueAddress = _dataManager.Articles.GenerateUniqueAddress();
-                _logger.LogInformation("Upload file with extension: " + extension);
+            (string extension, string uniqueAddress, string errorMessage) =
+                await model.GetUploadedFile(_dataManager, _config.Content.DataPath);
 
-                if (!Regex.IsMatch(extension ?? "", @"\.docx?$"))
-                {
-                    ModelState.AddModelError(nameof(model.ArticleFile),
-                        "невірний формат файлу (доступно лише .doc і .docx)");
-                    hasIncorrectData = true;
-                }
-                else if (!hasIncorrectData)
-                {
-                    string err = await DataUtil.TrySaveDocFile(model.ArticleFile,
-                        uniqueAddress, extension, _config.Content.DataPath);
-                    if (err != null)
-                    {
-                        _logger.LogError("Document converter error\n" + err);
-                        ModelState.AddModelError(nameof(model.ArticleFile),
-                            "даний файл не може бути збереженим, оскільки може нести у собі загрозу для сервісу. " +
-                            "Якщо це не так, будь ласка, зверніться до адміністрації сайту");
-                        hasIncorrectData = true;
-                    }
-                }
-            }
-            else
-            {
-                ModelState.AddModelError(nameof(model.ArticleFile),
-                    "будь ласка, прикрепіть файл з матеріалом");
-                hasIncorrectData = true;
-            }
+            if (errorMessage != null) ModelState.AddModelError(nameof(model.ArticleFile), errorMessage);
+            else _logger.LogInformation($"{user.FullName} upload file {uniqueAddress}.{extension}");
 
             #endregion
 
             if (hasIncorrectData) return View(model);
 
-
-            model.KeyWords = string.Join(";", keyWordsSeparatorRegex
-                .Replace(model.KeyWords, ";")
-                .Split(';').Select(s => s.Trim()).Distinct().ToArray());
-
             var dateNow = DateTime.Now;
-            var user = await _userManager.GetUserAsync(User);
-
-            var authors = new List<UserOwnArticlesLinking>
-            {
-                new UserOwnArticlesLinking
+            
+            
+            var authorsList = model.GenerateAuthorsLinking(_dataManager, _config.Content.UniqueAddress, user);
+            authorsList.Add(new UserOwnArticlesLinking
                 {
                     Id = Guid.NewGuid(),
-                    UserId = user.Id,
-                    IsCreator = true
+                    IsCreator = true,
+                    IsRegisteredUser = true,
+                    UserId = user.Id
                 }
-            };
+            );
 
             foreach (string author in model.Authors)
             {
-                if (authors.Any(a => a.NameString == author || a.UserId == author)) continue;
+                if (authorsList.Any(a => a.NameString == author || a.UserId == author)) continue;
 
                 if (author.Length == _config.Content.UniqueAddress.UserAddressSize)
                 {
                     var addressUser = _dataManager.Users.GetByUniqueAddress(author);
                     if (addressUser != null)
                     {
-                        authors.Add(new UserOwnArticlesLinking
+                        authorsList.Add(new UserOwnArticlesLinking
                         {
                             Id = Guid.NewGuid(),
+                            IsCreator = false,
+                            IsRegisteredUser = true,
+                            NameString = addressUser.FullName,
                             UserId = addressUser.Id
                         });
                         continue;
                     }
                 }
 
-                authors.Add(new UserOwnArticlesLinking
+                authorsList.Add(new UserOwnArticlesLinking
                 {
                     Id = Guid.NewGuid(),
+                    IsCreator = false,
+                    IsRegisteredUser = false,
                     NameString = author,
                     UserId = user.Id
                 });
             }
 
+            string docxFilePath = uniqueAddress + extension;
+
             var article = new Article
             {
                 Id = Guid.NewGuid(),
                 TopicId = topic.Id,
-                Authors = authors,
+                Authors = authorsList,
                 UniqueAddress = uniqueAddress,
 
                 Title = model.Title,
@@ -150,20 +120,30 @@ namespace Apit.Controllers
                 KeyWords = model.KeyWords,
 
                 HtmlFilePath = uniqueAddress + ".htm",
-                DocxFilePath = uniqueAddress + extension,
+                DocxFilePath = docxFilePath,
 
                 Conference = _dataManager.Conferences.GetCurrentAsDbModel(),
 
                 DateCreated = dateNow,
-                DateLastModified = dateNow
+                DateLastModified = dateNow,
+
+                Options = new Article.DisplayOptions
+                {
+                    Topic = topic,
+                    PageAbsoluteUrl = Url.ActionLink("index", "articles", new {x = uniqueAddress}),
+                    DocumentAbsoluteUrl = Url.ActionLink("document", "resources", new {id = docxFilePath})
+                }
             };
 
             foreach (var author in article.Authors)
                 author.ArticleId = article.Id;
 
-            var currentConf = _dataManager.Conferences.GetCurrentAsDbModel();
-            _dataManager.Conferences.AddArticle(currentConf, article);
+            var currentConference = _dataManager.Conferences.GetCurrentAsDbModel();
+            _dataManager.Conferences.AddArticle(currentConference, article);
             _dataManager.Articles.Create(article);
+
+            foreach (string email in _config.EmailsForGetInfo)
+                _mailService.SendArticleInfoEmail(email, article, _dataManager);
 
             return RedirectToAction("index", "articles", new {x = uniqueAddress});
         }

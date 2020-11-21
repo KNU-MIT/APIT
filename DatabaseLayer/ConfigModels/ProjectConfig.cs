@@ -4,6 +4,7 @@ namespace DatabaseLayer.ConfigModels
 {
     public class ProjectConfig
     {
+        public List<string> EmailsForGetInfo { get; set; }
         public FeedbackConfig Feedback { get; set; }
         public MailboxConfig MailboxDefaults { get; set; }
         public ContentConfig Content { get; set; }
@@ -37,6 +38,7 @@ namespace DatabaseLayer.ConfigModels
             {
                 public string ConfirmEmailSubject { get; set; }
                 public string ResetPasswordSubject { get; set; }
+                public string ArticleStatsSubject { get; set; }
             }
         }
 

@@ -1,8 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Text;
+using BusinessLayer;
 using DatabaseLayer.ConfigModels;
+using DatabaseLayer.Entities;
 using MimeKit;
 using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace Apit.Service
@@ -11,6 +15,15 @@ namespace Apit.Service
     {
         private readonly ILogger<MailService> _logger;
         private readonly ProjectConfig.MailboxConfig _config;
+
+
+        public class Presets
+        {
+            public const string ConfirmEmail = "ConfirmEmail.htm";
+            public const string ResetPassword = "ResetPassword.htm";
+            public const string ArticleInfo = "ArticleInfo.htm";
+        }
+
 
         public MailService(ILogger<MailService> logger, ProjectConfig config)
         {
@@ -26,34 +39,69 @@ namespace Apit.Service
                                     ?? config.MailboxDefaults.RealEmailPassword,
                 AddressEmail = Environment.GetEnvironmentVariable("SERVICE_EMAIL_ADDRESS")
                                ?? config.MailboxDefaults.AddressEmail,
+
+                UseSSL = config.MailboxDefaults.UseSSL,
+                AddressName = config.MailboxDefaults.AddressName,
                 ServiceHost = Environment.GetEnvironmentVariable("SERVICE_EMAIL_HOST")
                               ?? config.MailboxDefaults.ServiceHost,
-                ServicePort = useEnvPort ? port : config.MailboxDefaults.ServicePort
+                ServicePort = useEnvPort ? port : config.MailboxDefaults.ServicePort,
+
+                MailSubjects = config.MailboxDefaults.MailSubjects ?? throw new NullReferenceException()
             };
+            int b = 5;
         }
 
 
-        public class Presets
+        public void SendArticleInfoEmail(string recipient, Article article, DataManager dataManager)
         {
-            public const string ConfirmEmail = "ConfirmEmail.htm";
-            public const string ResetPassword = "ResetPassword.htm";
+            var authors = new StringBuilder();
+            foreach (var author in article.Authors)
+            {
+                var user = dataManager.Users.GetById(author.UserId);
+                authors.Append($"<li>{author.NameString ?? user.FullName}</li>");
+            }
+
+            string html = GetMailHtmlPreset(Presets.ArticleInfo);
+
+            SetContent(ref html, "Title", article.Title);
+            SetContent(ref html, "TopicName", article.Options.Topic.Name);
+            SetContent(ref html, "KeyWords", article.KeyWords);
+            SetContent(ref html, "ShortDescription", article.ShortDescription);
+            SetContent(ref html, "ArticleAuthors", authors.ToString());
+
+            SetContent(ref html, "PageAbsoluteUrl", article.Options.PageAbsoluteUrl);
+            SetContent(ref html, "DocumentAbsoluteUrl", article.Options.DocumentAbsoluteUrl);
+            SetContent(ref html, "DateCreated", article.DateCreated.ToString("HH:mm - dd.MM.yyyy"));
+
+
+            SendEmail(recipient, _config.MailSubjects.ArticleStatsSubject, html);
         }
+
+
+        public void SendConfirmationEmail(string userEmail, string confirmationLink)
+        {
+            SendActionEmail(userEmail,
+                _config.MailSubjects.ConfirmEmailSubject,
+                Presets.ConfirmEmail, confirmationLink);
+            _logger.LogInformation("Confirmation email was sent to: " + userEmail);
+        }
+
 
         /// <summary>
         /// Send HTML email with linking button via SMTP-client
         /// </summary>
         /// <param name="recipient">User email address</param>
         /// <param name="subject">Mail title</param>
-        /// <param name="resourceName">Mail content name</param>
+        /// <param name="preset">Mail content name</param>
         /// <param name="href">Specific URL to embed in an email</param>
         public void SendActionEmail(string recipient,
-            string subject, string resourceName, string href)
+            string subject, string preset, string href)
         {
             try
             {
-                string html = File.ReadAllText(Path.Combine("Service/HtmlEmails/", resourceName));
+                string html = GetMailHtmlPreset(preset);
                 href = href.Replace("\n", "");
-                html = html.Replace("{{HYPERLINK}}", href);
+                SetContent(ref html, "HYPERLINK", href);
                 _logger.LogDebug(html);
                 SendEmail(recipient, subject, html);
             }
@@ -102,5 +150,14 @@ namespace Apit.Service
                 _logger.LogError(e.GetBaseException().Message);
             }
         }
+
+
+        private static void SetContent(ref string html, string variable, string content)
+        {
+            html = html.Replace("{{" + variable + "}}", content);
+        }
+
+        private static string GetMailHtmlPreset(string presetPath) =>
+            File.ReadAllText(Path.Combine("Service/HtmlEmails/", presetPath));
     }
 }

@@ -8,14 +8,15 @@
         </h3>
 
         <div class="articles__keywords">
-            @foreach (string keyWord in article.KeyWords)
+            @foreach (string keyWord in article.KeyWordsArray)
             {
-                <a href="#@keyWord">@keyWord</a><span>&nbsp;</span>
+                <a href="#@keyWord">@keyWord</a>
+                <span>&nbsp;</span>
             }
         </div>
 
         <div class="articles__author">
-            @foreach (var author in article.Authors)
+            @foreach (var author in article.AuthorUsers)
             {
                 @if (author != null)
                 {

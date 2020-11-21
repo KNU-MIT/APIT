@@ -39,9 +39,13 @@
                     {
                         @foreach (string authorName in Model.Authors)
                         {
-                            <li>
-                                <input name="Authors" value="@authorName">
-                            </li>
+                            @if (!string.IsNullOrWhiteSpace(authorName))
+                            {
+                                <li class="conferencecreate__topic">
+                                    <input name="Authors" value="@authorName">
+                                    <button class="conferencecreate__delete">-</button>
+                                </li>
+                            }
                         }
                     }
                 </ul>

@@ -32,7 +32,10 @@ namespace BusinessLayer.Repositories
         public bool IsExist(Guid id) => _ctx.Articles.Any(a => a.Id == id);
 
         public ArticleViewModel GetByUniqueAddress(string address) =>
-            ConvertToViewModel(_ctx.Articles.FirstOrDefault(a => a.UniqueAddress == address)).Result;
+            ConvertToViewModel(GetByUniqueAddressAsDbObject(address)).Result;
+
+        public Article GetByUniqueAddressAsDbObject(string address) =>
+            _ctx.Articles.FirstOrDefault(a => a.UniqueAddress == address);
 
         public IEnumerable<ArticleViewModel> GetByKeyWord(string word)
         {
@@ -67,11 +70,19 @@ namespace BusinessLayer.Repositories
             SaveChanges();
         }
 
+        
         public void Delete(Guid id)
         {
             _ctx.Articles.Remove(_ctx.Articles.First(a => a.Id == id));
             SaveChanges();
         }
+
+        public void DeleteLinkedUser(IEnumerable<UserOwnArticlesLinking> linking)
+        {
+            _ctx.UserArticles.RemoveRange(linking);
+            SaveChanges();
+        }
+        
 
         // It will be more convenient to do this using specific constructor
         private async Task<ArticleViewModel> ConvertToViewModel(Article article)
@@ -88,7 +99,7 @@ namespace BusinessLayer.Repositories
                 Topic = _ctx.Topics.FirstOrDefault(t => t.Id == article.TopicId),
 
                 Creator = _ctx.Users.FirstOrDefault(u => u.Id == creatorId),
-                Authors = authors.Where(a => string.IsNullOrEmpty(a.NameString))
+                AuthorUsers = authors.Where(a => string.IsNullOrEmpty(a.NameString))
                     .Select(a => _ctx.Users.FirstOrDefault(u => u.Id == a.UserId)),
                 NonLinkedAuthors = authors.Where(a =>
                     !string.IsNullOrEmpty(a.NameString)).Select(a => a.NameString),
@@ -100,7 +111,7 @@ namespace BusinessLayer.Repositories
                 Title = article.Title,
                 ShortDescription = article.ShortDescription,
                 Status = article.Status,
-                KeyWords = article.KeyWords.Split(';'),
+                KeyWords = article.KeyWords,
 
                 DateCreated = article.DateCreated,
                 DateLastModified = article.DateLastModified

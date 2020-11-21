@@ -17,7 +17,7 @@ namespace DatabaseLayer
                 ? JsonSerializer.Deserialize<ProjectConfig>(AppConfigPath)
                 : throw new FileNotFoundException("Config file not found: " + AppConfigPath);
             
-            Console.WriteLine(" Using database connection is: " + configData.SelectedConnectionString);
+            Console.WriteLine("Using database connection is: " + configData.SelectedConnectionString);
             
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optionsBuilder.UseSqlServer(configData.ConnectionStrings[configData.SelectedConnectionString]);

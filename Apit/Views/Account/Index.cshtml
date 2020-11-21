@@ -66,7 +66,10 @@
                 <h3 class="profile__name">@Model.FullName</h3>
                 @if (needToConfirmEmail)
                 {
-                    <div class="profile__status">Підтвердіть вашу пошту</div>
+                    <div class="profile__status">
+                        Підтвердіть вашу пошту
+                        <a asp-action="SendConfirm" asp-controller="account">(відправити лист повторно)</a>
+                    </div>
                 }
                 else if (isManager || isAdmin)
                 {

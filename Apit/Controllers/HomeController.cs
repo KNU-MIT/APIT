@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Apit.Controllers
 {
@@ -21,7 +22,7 @@ namespace Apit.Controllers
             return View();
         }
 
-        [Route("/manage/developers")]
+        [Route("/manage/developers"), AllowAnonymous]
         public IActionResult DevelopersHiddenPage()
         {
             return View();

@@ -41,16 +41,26 @@
                     @if (Model.Status != ArticleStatus.Banned)
                     {
                         <a class="profile__button" asp-controller="articles" asp-action="edit"
-                           asp-route-x="@article.UniqueAddress" asp-route-status="@ArticleStatus.Uploaded.ToString()">
+                           asp-route-x="@article.UniqueAddress" asp-route-status="@ArticleStatus.Banned.ToString()">
                             Відізвати
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="profile__button" asp-controller="articles" asp-action="edit"
+                           asp-route-x="@article.UniqueAddress" asp-route-status="@ArticleStatus.Uploaded.ToString()">
+                            Відновити
                         </a>
                     }
                 }
 
-                <a class="profile__button" asp-controller="articles"
-                   asp-action="edit" asp-route-x="@article.UniqueAddress">
-                    Редагувати
-                </a>
+                @if (Model.Status != ArticleStatus.Banned)
+                {
+                    <a class="profile__button" asp-controller="articles"
+                       asp-action="edit" asp-route-x="@article.UniqueAddress">
+                        Редагувати
+                    </a>
+                }
 
                 <button class="profile__button" data-url="/articles/delete?x=@article.UniqueAddress">
                     Видалити
@@ -63,8 +73,12 @@
         <div class="article__inner">
 
             <h2 class="article__title title">@article.Title</h2>
-            <h3 style="text-align: center;" class="article__subtitle">
-                Стаття по темі: <strong>@article.Topic.Name</strong>
+            <h3 class="article__subtitle" style="text-align: center; font-size: 22px;">
+                ТЕМА: <strong>@article.Topic.Name</strong>
+            </h3>
+
+            <h3 class="article__subtitle" style="text-align: center; font-size: 22px;">
+                СТАТУС: <strong>@(EnumParser<ArticleStatus>.GetDisplayValue(article.Status))</strong>
             </h3>
 
             <div class="article__date">@article.GetFormatCreatingDate()</div>
@@ -73,7 +87,7 @@
 
             @if (!string.IsNullOrWhiteSpace(article.DocFileAddress))
             {
-                <a class="article__button" asp-controller="resources" 
+                <a class="article__button" asp-controller="resources"
                    asp-action="document" asp-route-id="@article.DocFileAddress">
                     Завантажити документ
                 </a>

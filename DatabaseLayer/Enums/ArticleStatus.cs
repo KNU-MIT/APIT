@@ -1,10 +1,17 @@
-﻿namespace DatabaseLayer.Enums
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DatabaseLayer.Enums
 {
     public enum ArticleStatus : short
     {
-        Uploaded = 0,
-        Published = 1,
-        Edited = 2,
-        Banned = 3
+        [Display(Name = "Не підтверджено")] Uploaded = 0,
+        [Display(Name = "Підтверджено")] Published = 1,
+
+        [Display(Name = "Не підтверджено (редаговано)")]
+        UploadedEdited = 3,
+
+        [Display(Name = "Підтверджено (редаговано)")]
+        PublishedEdited = 4,
+        [Display(Name = "Відізвано")] Banned = 5
     }
 }

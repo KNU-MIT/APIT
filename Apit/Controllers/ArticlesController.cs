@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Apit.Service;
 using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.Models;
 using BusinessLayer;
@@ -20,20 +21,16 @@ namespace Apit.Controllers
         private readonly UserManager<User> _userManager;
         private readonly DataManager _dataManager;
         private readonly ProjectConfig _config;
+        private readonly MailService _mailService;
 
-        private static readonly Regex keyWordsAvailableRegex =
-            new Regex(@"^[а-яА-Яa-zA-Z0-9- ,;'іїєґ!]+$", RegexOptions.Compiled);
-
-        private static readonly Regex keyWordsSeparatorRegex =
-            new Regex(@"[,;]+", RegexOptions.Compiled);
-
-        public ArticlesController(ILogger<ArticlesController> logger,
-            UserManager<User> userManager, DataManager dataManager, ProjectConfig config)
+        public ArticlesController(ILogger<ArticlesController> logger, UserManager<User> userManager,
+            DataManager dataManager, ProjectConfig config, MailService mailService)
         {
             _logger = logger;
             _userManager = userManager;
             _dataManager = dataManager;
             _config = config;
+            _mailService = mailService;
         }
 
 

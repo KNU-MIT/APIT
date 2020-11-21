@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace BusinessLayer.Models
 {
-    public class ArticleViewModel
+    public class ArticleViewModel : NewArticleViewModel
     {
         public Guid Id { get; set; }
 
@@ -23,13 +23,6 @@ namespace BusinessLayer.Models
         public Topic Topic { get; set; }
 
 
-        public string NewTopicId { get; set; }
-        public IFormFile NewDocFile { get; set; }
-
-
-        public string ShortDescription { get; set; }
-
-
         /// <summary>
         /// User with full access to the current article controls
         /// </summary>
@@ -38,21 +31,25 @@ namespace BusinessLayer.Models
         /// <summary>
         /// Users without permissions but appear as authors
         /// </summary>
-        public IEnumerable<User> Authors { get; set; }
-
+        public IEnumerable<User> AuthorUsers { get; set; }
+        
+        
         public IEnumerable<string> NonLinkedAuthors { get; set; }
 
-
-        public string Title { get; set; }
         public ArticleStatus Status { get; set; }
-        public IEnumerable<string> KeyWords { get; set; }
+
+
+        public IEnumerable<string> KeyWordsArray => KeyWords?.Split(';').Select(kw => kw.Trim());
+
+        // override without Required attribute for use it to Update  
+        public new IFormFile ArticleFile { get; set; }
 
 
         [DataType(DataType.DateTime)] public DateTime DateCreated { get; set; }
         [DataType(DataType.DateTime)] public DateTime DateLastModified { get; set; }
 
 
-        public bool IsAuthor(User user) => Authors.Any(a => a == user);
+        public bool IsAuthor(User user) => AuthorUsers.Any(a => a == user);
 
         public string GetFormatCreatingDate() => DateCreated.ToString("dd/MM/yyy");
 

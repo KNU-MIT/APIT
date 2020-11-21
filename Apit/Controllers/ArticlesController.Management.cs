@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer.Models;
 using DatabaseLayer;
+using DatabaseLayer.Entities;
 using DatabaseLayer.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,27 +21,29 @@ namespace Apit.Controllers
         [Authorize]
         public async Task<IActionResult> Edit(string x, string status = null)
         {
-            var model = _dataManager.Articles.GetByUniqueAddress(x);
-            if (model == null)
+            var articleViewModel = _dataManager.Articles.GetByUniqueAddress(x);
+            if (articleViewModel == null)
             {
                 ViewData["ErrorTitle"] = 404;
                 ViewData["ErrorMessage"] = "Нічого не знайдено :(";
                 return View("error");
             }
 
+            var article = _dataManager.Articles.GetByUniqueAddressAsDbObject(x);
             var user = await _userManager.GetUserAsync(User);
             bool isAdmin = await _userManager.IsInRoleAsync(user, RoleNames.ADMIN);
             var current = _dataManager.Conferences.Current;
-            var conference = _dataManager.Conferences.GetById(model.Topic.ConferenceId);
+            var conference = _dataManager.Conferences.GetById(articleViewModel.Topic.ConferenceId);
 
             if (!Enum.TryParse<ArticleStatus>(status, out var statusOption))
             {
-                if (isAdmin || (conference.Id == current.Id && model.Creator == user))
-                    return View(model);
+                if (isAdmin || (conference.Id == current.Id && articleViewModel.Creator == user))
+                    return View(articleViewModel);
             }
-            else if (statusOption == ArticleStatus.Published || statusOption == ArticleStatus.Banned)
+            else
             {
-                model.Status = statusOption;
+                article.Status = statusOption;
+                _dataManager.Articles.SaveChanges();
                 return RedirectToAction("index", "articles", new {x});
             }
 
@@ -54,38 +57,107 @@ namespace Apit.Controllers
         /// Available option for the article creator and root admin 
         /// </summary>
         [HttpPost, Authorize]
-        public async Task<IActionResult> Edit(ArticleViewModel model, string returnUrl)
+        public async Task<IActionResult> Edit(ArticleViewModel model, string x, string returnUrl)
         {
-            var dbModel = _dataManager.Articles.GetByUniqueAddress(model.UniqueAddress);
-            if (dbModel == null)
+            if (!ModelState.IsValid) return View(model);
+
+            var article = _dataManager.Articles.GetByUniqueAddressAsDbObject(x);
+            if (article == null)
             {
                 ViewData["ErrorTitle"] = 404;
-                ViewData["ErrorMessage"] = "Нічого не знайдено :(";
+                ViewData["ErrorMessage"] = "Стаття не знайдена, або її не існує :(";
                 return View("error");
             }
 
+            returnUrl ??= "/articles/list";
             var user = await _userManager.GetUserAsync(User);
             bool isAdmin = await _userManager.IsInRoleAsync(user, RoleNames.ADMIN);
 
-            if (model.Creator != user || !isAdmin)
+            if (model.Creator != user && !isAdmin)
             {
                 ModelState.AddModelError(string.Empty,
                     "Ви не маєте доступу до цієї опції");
                 return View(model);
             }
 
-            if (!string.IsNullOrWhiteSpace(model.NewTopicId)
-                && model.NewTopicId != model.Topic.Id.ToString())
+            bool hasChanges = false;
+
+            // Set new article topic
+            if (!string.IsNullOrWhiteSpace(model.TopicId))
             {
                 var topic = _dataManager.Conferences.Current.Topics
-                    .FirstOrDefault(a => a.Id.ToString() == model.NewTopicId);
-                if (topic != null) model.Topic = topic;
+                    .FirstOrDefault(a => a.Id.ToString() == model.TopicId);
+
+                if (topic != null)
+                {
+                    article.TopicId = topic.Id;
+                    hasChanges = true;
+                }
             }
             else
-                ModelState.AddModelError(nameof(ArticleViewModel.NewTopicId),
+                ModelState.AddModelError(nameof(ArticleViewModel.TopicId),
                     "Дана тема не може бути використана");
 
-            return LocalRedirect(returnUrl ?? "/articles/list");
+            // Set new article title
+            if (!string.IsNullOrEmpty(model.Title) && model.Title != article.Title)
+            {
+                article.Title = model.Title;
+                hasChanges = true;
+            }
+
+            // Set new article key words
+            if (model.KeyWordsAreCorrect && model.KeyWords != article.KeyWords)
+            {
+                article.KeyWords = model.KeyWords;
+                hasChanges = true;
+            }
+
+            // Set new article short description
+            if (!string.IsNullOrEmpty(model.ShortDescription) &&
+                model.ShortDescription != article.ShortDescription)
+            {
+                article.ShortDescription = model.ShortDescription;
+                hasChanges = true;
+            }
+
+            // Set new article document file
+            (string extension, string uniqueAddress, string errorMessage) =
+                await model.GetUploadedFile(_dataManager, _config.Content.DataPath);
+
+            if (errorMessage == null)
+            {
+                _logger.LogInformation($"{user.FullName} changed file {uniqueAddress}.{extension}");
+                hasChanges = true;
+            }
+            else ModelState.AddModelError(nameof(model.ArticleFile), errorMessage);
+
+
+            // Set new article authors
+            var oldAuthorsInDb = article.Authors.Where(aa =>
+                !model.Authors.Contains(aa.NameString) && !aa.IsCreator);
+
+            model.Authors = model.Authors.Where(ma => article.Authors
+                    .FirstOrDefault(aa =>
+                        aa.NameString != null && ma == aa.NameString) == null)
+                .ToArray();
+
+            var newInModelList = model.GenerateAuthorsLinking(_dataManager, _config.Content.UniqueAddress, user);
+            foreach (var newAuthor in newInModelList) article.Authors.Add(newAuthor);
+
+            _dataManager.Articles.DeleteLinkedUser(oldAuthorsInDb);
+
+
+            // Update database content
+            if (hasChanges)
+            {
+                article.Status = article.Status == ArticleStatus.Published ||
+                                 article.Status == ArticleStatus.PublishedEdited
+                    ? ArticleStatus.PublishedEdited
+                    : ArticleStatus.UploadedEdited;
+                _dataManager.Articles.SaveChanges();
+            }
+
+            return LocalRedirect(returnUrl);
         }
 
         /// <summary>
@@ -102,7 +174,8 @@ namespace Apit.Controllers
                 var article = _dataManager.Articles.GetByUniqueAddress(x);
                 var user = await _userManager.GetUserAsync(User);
 
-                if (article.IsAuthor(user) || await _userManager.IsInRoleAsync(user, RoleNames.ADMIN))
+                bool isAdmin = await _userManager.IsInRoleAsync(user, RoleNames.ADMIN);
+                if (article.IsAuthor(user) || isAdmin)
                 {
                     _dataManager.Articles.Delete(article.Id);
                     return LocalRedirect(returnUrl ?? "/");
