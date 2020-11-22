@@ -62,8 +62,8 @@ namespace Apit.Controllers
             if (hasIncorrectData) return View(model);
 
             var dateNow = DateTime.Now;
-            
-            
+
+
             var authorsList = model.GenerateAuthorsLinking(
                 _dataManager, _config.Content.UniqueAddress, user, null);
             authorsList.Add(new UserOwnArticlesLinking
@@ -145,7 +145,8 @@ namespace Apit.Controllers
             _dataManager.Articles.Create(article);
 
             foreach (string email in _config.EmailsForGetInfo)
-                _mailService.SendArticleInfoEmail(email, article, _dataManager);
+                _mailService.SendArticleInfoEmail(email, article, _dataManager,
+                    _config.MailboxDefaults.MailSubjects.ArticleEditedSubject);
 
             return RedirectToAction("index", "articles", new {x = uniqueAddress});
         }

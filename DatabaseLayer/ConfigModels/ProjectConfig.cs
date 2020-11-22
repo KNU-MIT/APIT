@@ -38,7 +38,8 @@ namespace DatabaseLayer.ConfigModels
             {
                 public string ConfirmEmailSubject { get; set; }
                 public string ResetPasswordSubject { get; set; }
-                public string ArticleStatsSubject { get; set; }
+                public string ArticleUploadedSubject { get; set; }
+                public string ArticleEditedSubject { get; set; }
             }
         }
 

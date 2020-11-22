@@ -188,6 +188,17 @@ namespace Apit.Controllers
 
                 _dataManager.Articles.Update(article);
                 _logger.LogInformation($"Article {article.UniqueAddress} edited via user {user.FullName}");
+
+                article.Options = new Article.DisplayOptions
+                {
+                    Topic = _dataManager.Topics.GetById(article.TopicId),
+                    PageAbsoluteUrl = Url.ActionLink("index", "articles", new {x = uniqueAddress}),
+                    DocumentAbsoluteUrl = Url.ActionLink("document", "resources", new {id = article.DocxFilePath})
+                };
+
+                foreach (string email in _config.EmailsForGetInfo)
+                    _mailService.SendArticleInfoEmail(email, article, _dataManager,
+                        _config.MailboxDefaults.MailSubjects.ArticleEditedSubject);
             }
 
             return LocalRedirect(returnUrl);

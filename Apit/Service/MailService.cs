@@ -52,8 +52,10 @@ namespace Apit.Service
         }
 
 
-        public void SendArticleInfoEmail(string recipient, Article article, DataManager dataManager)
+        public void SendArticleInfoEmail(string recipient, Article article, DataManager dataManager, string subject)
         {
+            if (article.Options == null) throw new NullReferenceException(nameof(article.Options));
+            
             var authors = new StringBuilder();
             foreach (var author in article.Authors)
             {
@@ -74,7 +76,7 @@ namespace Apit.Service
             SetContent(ref html, "DateCreated", article.DateCreated.ToString("HH:mm - dd.MM.yyyy"));
 
 
-            SendEmail(recipient, _config.MailSubjects.ArticleStatsSubject, html);
+            SendEmail(recipient, subject, html);
         }
 
 
