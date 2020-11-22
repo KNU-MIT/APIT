@@ -123,15 +123,25 @@ namespace BusinessLayer.Models
                     }
                 }
 
-                authors.Add(new UserOwnArticlesLinking
-                {
-                    Id = Guid.NewGuid(),
-                    IsCreator = false,
-                    IsRegisteredUser = false,
-                    NameString = author,
-                    UserId = user.Id,
-                    ArticleId = article.Id
-                });
+                authors.Add(article == null
+                    ? new UserOwnArticlesLinking
+                    {
+                        Id = Guid.NewGuid(),
+                        IsCreator = false,
+                        IsRegisteredUser = false,
+                        NameString = author,
+                        UserId = user.Id
+                    }
+                    : new UserOwnArticlesLinking
+                    {
+                        Id = Guid.NewGuid(),
+                        IsCreator = false,
+                        IsRegisteredUser = false,
+                        NameString = author,
+                        UserId = user.Id,
+                        ArticleId = article.Id // article NOT null
+                    }
+                );
             }
 
             return authors;

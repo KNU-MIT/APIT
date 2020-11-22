@@ -1,8 +1,11 @@
 # Specific project ignores
-Local/ArticlesDocs/*.htm
-Local/ArticlesDocs/*.html
-Local/ArticlesHtml/*.doc
-Local/ArticlesHtml/*.docx
+Local/
+
+#Local/Docs/
+#Local/Docs/*.docx
+#Local/Html/
+#Local/Html/*.htm
+
 
 ## Ignore Visual Studio temporary files, build results, and
 ## Ignore Visual Studio temporary files, build results, and

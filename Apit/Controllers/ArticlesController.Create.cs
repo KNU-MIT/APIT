@@ -25,7 +25,7 @@ namespace Apit.Controllers
         public async Task<IActionResult> Create(NewArticleViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User); // included [Authorize]!
 
             // Combine all errors and return them back if this variable is set to true
             bool hasIncorrectData = false;
