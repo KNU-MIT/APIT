@@ -65,8 +65,6 @@ namespace Apit.Controllers
 
                     if (roleResult1.Succeeded && roleResult2.Succeeded)
                         _logger.LogInformation("First user authorized as admin with full access");
-
-                    else ModelState.AddModelError(string.Empty, "You are not admin!");
                 }
 
 
@@ -91,7 +89,7 @@ namespace Apit.Controllers
 
             // if something goes wrong
 
-            ModelState.AddModelError(model.Email, "Неможливо створити користувача");
+            ModelState.AddModelError(model.Email, "Користувач з такою поштою, скоріш за все, вже існує");
             foreach (var error in result.Errors)
                 ModelState.AddModelError(string.Empty, error.Description);
 
