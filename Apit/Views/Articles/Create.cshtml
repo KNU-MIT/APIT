@@ -20,9 +20,8 @@
 
             <div class="conferencecreate__title title">Додати новий матеріал</div>
 
-            <form method="post" enctype="multipart/form-data" asp-controller="articles" asp-action="create"
-                  asp-route-returnUrl="@Url.Action("index", "articles")"
-                  class="conferencecreate__form" id="conferenceCreating">
+            <form method="post" enctype="multipart/form-data" class="conferencecreate__form"
+                  id="conferenceCreating" asp-controller="articles" asp-action="create">
 
                 @*<div class="form__blck form__blck--todo">
                     <input asp-for="Authors" type="text" id="adminInput" placeholder="Інші автори">

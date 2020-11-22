@@ -14,8 +14,12 @@ namespace BusinessLayer.Interfaces
 
         Article GetByUniqueAddressAsDbObject(string address);
 
-
-        void DeleteLinkedUser(IEnumerable<UserOwnArticlesLinking> linking);
+        
+        
+        void CreateLinkedUsers(IEnumerable<UserOwnArticlesLinking> linking);
+        IEnumerable<UserOwnArticlesLinking> GetLinkedUsers(Guid articleId);
+        void DeleteLinkedUsers(IEnumerable<UserOwnArticlesLinking> linking);
+        
         IEnumerable<Article> GetByConference(Conference conf);
     }
 }

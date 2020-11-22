@@ -36,8 +36,8 @@
 
             <div class="conferencecreate__title title">Редагувати матеріал</div>
 
-            <form class="conferencecreate__form" id="conferenceCreating" method="post" enctype="multipart/form-data"
-                  asp-controller="articles" asp-action="edit" asp-route-x="@Model.UniqueAddress"
+            <form class="conferencecreate__form" enctype="multipart/form-data" id="conferenceCreating"
+                  method="post" asp-controller="articles" asp-action="edit" asp-route-x="@Model.UniqueAddress"
                   asp-route-returnUrl="@Url.Action("index", "articles", new {x = Model.UniqueAddress})">
 
                 @*<div class="form__blck form__blck--todo">
@@ -57,9 +57,9 @@
                         {
                             @if (author == user)
                             {
-                                <li class="conferencecreate__topic">
-                                    <input value="Ви &mdash; @author.FullName">
-                                    <button class="conferencecreate__delete" disabled>-</button>
+                                <li class="conferencecreate__topic disabled">
+                                    <input name="" value="Ви &mdash; @author.FullName" disabled>
+                                    <button class="conferencecreate__delete" disabled>+</button>
                                 </li>
                             }
                             else
@@ -91,13 +91,21 @@
 		                  
                     const authors = list.children
                     const authorNames = []
+                    const disabled = []
                     
                     for (let author of authors) {
-                        const inputItem = author.getElementsByTagName('input')[0]
-                        authorNames.push(inputItem.value)
+                        if (author.classList.contains("disabled")) {
+                            disabled.push(author);
+                        }
+                        else {
+                            const inputItem = author.getElementsByTagName('input')[0]
+                            authorNames.push(inputItem.value)
+                        }
                     }
                     
                     list.innerHTML = ''
+                    for (let author of disabled) list.appendChild(author)
+                    
                     
                     authorNames.forEach(authorName => {
                         if (authorName) createDeleteElem(authorName)    

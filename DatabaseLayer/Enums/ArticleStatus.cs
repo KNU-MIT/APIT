@@ -8,10 +8,10 @@ namespace DatabaseLayer.Enums
         [Display(Name = "Підтверджено")] Published = 1,
 
         [Display(Name = "Не підтверджено (редаговано)")]
-        UploadedEdited = 3,
+        UploadedEdited = 2,
 
         [Display(Name = "Підтверджено (редаговано)")]
-        PublishedEdited = 4,
-        [Display(Name = "Відізвано")] Banned = 5
+        PublishedEdited = 3,
+        [Display(Name = "Відізвано")] Banned = 4
     }
 }

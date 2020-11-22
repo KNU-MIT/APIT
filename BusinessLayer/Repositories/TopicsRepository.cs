@@ -39,9 +39,15 @@ namespace BusinessLayer.Repositories
             SaveChanges();
         }
 
-        public void Delete(Guid id)
+        public async void Update(Topic entity)
         {
-            _ctx.Topics.Remove(new Topic {Id = id});
+            _ctx.Topics.Update(entity);
+            await _ctx.SaveChangesAsync();
+        }
+
+        public void Delete(Topic entity)
+        {
+            _ctx.Topics.Remove(entity);
             SaveChanges();
         }
     }

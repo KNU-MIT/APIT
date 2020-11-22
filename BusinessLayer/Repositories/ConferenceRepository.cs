@@ -33,6 +33,10 @@ namespace BusinessLayer.Repositories
 
         public ConferenceViewModel Current => ConvertToViewModel(GetCurrentAsDbModel());
         public Conference GetCurrentAsDbModel() => _ctx.Conferences.FirstOrDefault(a => a.IsActual);
+        public void Update(ConferenceViewModel model)
+        {
+            throw new NotImplementedException();
+        }
 
 
         public ConferenceViewModel GetById(Guid id) =>
@@ -96,20 +100,28 @@ namespace BusinessLayer.Repositories
             SaveChanges();
         }
 
-        public void Update(ConferenceViewModel model)
+        public void Update(NewConferenceViewModel entity)
         {
-            throw new NotImplementedException();
+            // TODO: ...
+            // _ctx.Conferences.Update(entity);
+            // SaveChanges();
         }
 
-        public void Delete(Guid id)
-        {
-            var instance = _ctx.Conferences.FirstOrDefault(conf => conf.Id == id);
-            if (instance == null) return;
 
-            foreach (var topic in _ctx.Topics.Where(a => a.ConferenceId == instance.Id))
+        public void Delete(Conference entity)
+        {
+            if (entity == null) return;
+
+            foreach (var topic in _ctx.Topics.Where(a => a.ConferenceId == entity.Id))
                 _ctx.Entry(topic).State = EntityState.Deleted;
-            _ctx.Entry(instance).State = EntityState.Deleted;
+            _ctx.Entry(entity).State = EntityState.Deleted;
             SaveChanges();
+        }
+        
+        // TODO: do something with this unusable implementation...
+        public void Delete(NewConferenceViewModel entity)
+        {
+            throw new NotImplementedException();
         }
 
 

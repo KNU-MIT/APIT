@@ -42,15 +42,13 @@ namespace BusinessLayer.Models
         public IEnumerable<string> KeyWordsArray => KeyWords?.Split(';').Select(kw => kw.Trim());
 
         // override without Required attribute for use it to Update  
-        public new IFormFile ArticleFile { get; set; }
+        public override IFormFile ArticleFile { get; set; }
 
 
         [DataType(DataType.DateTime)] public DateTime DateCreated { get; set; }
         [DataType(DataType.DateTime)] public DateTime DateLastModified { get; set; }
 
-
-        public bool IsAuthor(User user) => AuthorUsers.Any(a => a == user);
-
+        
         public string GetFormatCreatingDate() => DateCreated.ToString("dd/MM/yyy");
 
         public string GetPlaceholderImagePath(ProjectConfig.DataPathConfig config)

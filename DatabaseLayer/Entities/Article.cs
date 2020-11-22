@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using DatabaseLayer.Enums;
 
 namespace DatabaseLayer.Entities
@@ -38,6 +39,8 @@ namespace DatabaseLayer.Entities
             Authors = new HashSet<UserOwnArticlesLinking>();
         }
 
+
+        public static bool IsAuthor(User user, IEnumerable<User> authors) => authors.Any(a => a == user);
 
         [NotMapped] public DisplayOptions Options { get; set; }
 

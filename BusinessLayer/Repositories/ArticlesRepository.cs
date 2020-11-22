@@ -8,6 +8,7 @@ using BusinessLayer.Interfaces;
 using BusinessLayer.Models;
 using DatabaseLayer;
 using DatabaseLayer.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLayer.Repositories
 {
@@ -70,26 +71,48 @@ namespace BusinessLayer.Repositories
             SaveChanges();
         }
 
-        
-        public void Delete(Guid id)
+        public void Update(Article entity)
         {
-            _ctx.Articles.Remove(_ctx.Articles.First(a => a.Id == id));
+            foreach (var author in entity.Authors)
+                _ctx.UserArticles.Update(author);
+
+            _ctx.Entry(entity).State = EntityState.Modified;
+            _ctx.SaveChanges();
+        }
+
+
+        public void Delete(Article entity)
+        {
+            _ctx.Articles.Remove(entity);
+            var linkingUsers = GetLinkedUsers(entity.Id);
+            _ctx.UserArticles.RemoveRange(linkingUsers);
             SaveChanges();
         }
 
-        public void DeleteLinkedUser(IEnumerable<UserOwnArticlesLinking> linking)
+
+        public void CreateLinkedUsers(IEnumerable<UserOwnArticlesLinking> linking)
+        {
+            _ctx.UserArticles.AddRange(linking);
+            SaveChanges();
+        }
+
+        public IEnumerable<UserOwnArticlesLinking> GetLinkedUsers(Guid articleId) =>
+            _ctx.UserArticles.Where(a => a.ArticleId == articleId);
+
+        public void DeleteLinkedUsers(IEnumerable<UserOwnArticlesLinking> linking)
         {
             _ctx.UserArticles.RemoveRange(linking);
             SaveChanges();
         }
-        
+
 
         // It will be more convenient to do this using specific constructor
         private async Task<ArticleViewModel> ConvertToViewModel(Article article)
         {
             if (article == null) return null;
 
-            var authors = _ctx.UserArticles.Where(a => a.ArticleId == article.Id).ToList();
+
+            var authors = _ctx.UserArticles.Where(a => a.ArticleId == article.Id).ToArray();
             string creatorId = authors.FirstOrDefault(a => a.IsCreator)?.UserId;
 
             return new ArticleViewModel
@@ -99,8 +122,9 @@ namespace BusinessLayer.Repositories
                 Topic = _ctx.Topics.FirstOrDefault(t => t.Id == article.TopicId),
 
                 Creator = _ctx.Users.FirstOrDefault(u => u.Id == creatorId),
-                AuthorUsers = authors.Where(a => string.IsNullOrEmpty(a.NameString))
-                    .Select(a => _ctx.Users.FirstOrDefault(u => u.Id == a.UserId)),
+                Authors = authors.Select(a => a.NameString).ToArray(),
+                AuthorUsers = authors.Where(a => a.IsCreator).Select(a =>
+                    _ctx.Users.FirstOrDefault(u => u.Id == a.UserId)),
                 NonLinkedAuthors = authors.Where(a =>
                     !string.IsNullOrEmpty(a.NameString)).Select(a => a.NameString),
 

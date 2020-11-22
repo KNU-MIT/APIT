@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BusinessLayer.Interfaces
 {
@@ -10,7 +11,8 @@ namespace BusinessLayer.Interfaces
 
         // IEnumerable<TData> GetAll();
         void Create(TBaseData entity);
-        void Delete(TKey id);
+        void Update(TBaseData entity);
+        void Delete(TBaseData entity);
         bool IsExist(TKey id);
         void SaveChanges();
     }

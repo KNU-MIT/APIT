@@ -26,7 +26,8 @@
 
         @if (conference != null && (isMine || isAdmin))
         {
-            <form class="profile__admin" method="post">
+            <form class="profile__admin" method="post" asp-action="delete" asp-controller="articles"
+                  asp-route-x="@article.UniqueAddress" asp-route-returnUrl="/">
 
                 @if (isAdmin)
                 {

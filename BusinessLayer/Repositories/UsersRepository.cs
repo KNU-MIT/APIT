@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BusinessLayer.DataServices;
 using DatabaseLayer.ConfigModels;
 using BusinessLayer.Interfaces;
@@ -37,9 +38,15 @@ namespace BusinessLayer.Repositories
             SaveChanges();
         }
 
-        public void Delete(string id)
+        public void Update(User entity)
         {
-            _ctx.Users.Remove(new User {Id = id});
+            // TODO: ...
+            throw new NotImplementedException();
+        }
+
+        public void Delete(User entity)
+        {
+            _ctx.Users.Remove(entity);
             SaveChanges();
         }
 

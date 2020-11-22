@@ -291,7 +291,7 @@ if (document.querySelector('#adminInput')) {
 		del.textContent = '-'
 
 		imp.value = input.value
-		imp.setAttribute('name', 'Articles')
+		imp.setAttribute('name', 'Authors')
 
 		li.appendChild(imp)
 

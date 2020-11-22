@@ -26,5 +26,8 @@ namespace BusinessLayer.Interfaces
         void RemoveParticipant(Conference conference, User user);
         void RemoveArticle(Conference conference, Article article);
         void RemoveImage(Conference conference, string path);
+
+        // TODO: костыли ...
+        void Delete(Conference entity);
     }
 }

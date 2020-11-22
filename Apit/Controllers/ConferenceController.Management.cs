@@ -121,10 +121,10 @@ namespace Apit.Controllers
         [Authorize(Roles = RoleNames.SEMPAI)]
         public IActionResult Delete()
         {
-            var conference = _dataManager.Conferences.Current;
+            var conference = _dataManager.Conferences.GetCurrentAsDbModel();
             if (conference.Participants.Any())
                 return RedirectToAction("index", "conference");
-            _dataManager.Conferences.Delete(conference.Id);
+            _dataManager.Conferences.Delete(conference);
             return RedirectToAction("index", "account");
         }
 

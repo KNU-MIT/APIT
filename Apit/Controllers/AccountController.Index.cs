@@ -22,6 +22,7 @@ namespace Apit.Controllers
         private readonly MailService _mailService;
         private readonly ProjectConfig _config;
 
+
         public AccountController(ILogger<AccountController> logger, SignInManager<User> signInManager,
             UserManager<User> userManager, DataManager dataManager, MailService mailService, ProjectConfig config)
         {
@@ -46,11 +47,13 @@ namespace Apit.Controllers
             return user == null ? View("error") : View(user);
         }
 
+
         [Route("/account/access-denied")]
         public IActionResult AccessDenied()
         {
             return View();
         }
+
 
         [Authorize(Roles = RoleNames.ADMIN)]
         public async Task<IActionResult> SetManager(string x, string newState) // TODO: ???
@@ -74,6 +77,7 @@ namespace Apit.Controllers
                 ? RedirectToAction("index", "account", new {x})
                 : (IActionResult) ViewBag("error");
         }
+
 
         [Authorize, HttpPost]
         public async Task<IActionResult> Edit(EditUserViewModel model)
@@ -135,7 +139,8 @@ namespace Apit.Controllers
                 "Дані змінено успішно");
             return RedirectToAction("index", "account");
         }
-        
+
+
         [Route("/account/send-confirm")]
         public async Task<IActionResult> SendConfirm(string returnUrl)
         {
@@ -148,9 +153,9 @@ namespace Apit.Controllers
                 id = user.Id,
                 token = confirmationToken
             }, protocol: HttpContext.Request.Scheme);
-                
+
             _mailService.SendConfirmationEmail(user.Email, confirmationLink);
-            
+
             if (returnUrl != null) return LocalRedirect(returnUrl);
             return RedirectToAction("index", "account", new {x = user.ProfileAddress});
         }

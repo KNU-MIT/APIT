@@ -27,7 +27,7 @@ namespace BusinessLayer.Models
 
 
         [Required(ErrorMessage = "Прикрепіть файл з матеріалом")] // Display(Name = "Файл із матеріалами")
-        public IFormFile ArticleFile { get; set; }
+        public virtual IFormFile ArticleFile { get; set; }
 
         [Required(ErrorMessage = "Оберіть тему Вашої роботи"), Display(Name = "Тематика")]
         public string TopicId { get; set; }
@@ -79,10 +79,12 @@ namespace BusinessLayer.Models
                     string err = await DataUtil.TrySaveDocFile(ArticleFile,
                         uniqueAddress, extension, dataPathConfig);
 
-                    if (string.IsNullOrEmpty(err))
+                    if (!string.IsNullOrEmpty(err))
+                    {
                         errorMessage =
                             "даний файл не може бути збереженим, оскільки може нести у собі загрозу для " +
-                            "сервісу. Якщо це не так, будь ласка, зверніться до адміністрації сайту";
+                            "сервісу. Якщо це не так, будь ласка, зверніться до адміністрації сайту\n" + err;
+                    }
                 }
                 else errorMessage = "невірний формат файлу (доступно лише .doc і .docx)";
             }
@@ -93,13 +95,14 @@ namespace BusinessLayer.Models
 
 
         public IList<UserOwnArticlesLinking> GenerateAuthorsLinking(DataManager dataManager,
-            ProjectConfig.UniqueAddressConfig addressConfig, User user)
+            ProjectConfig.UniqueAddressConfig addressConfig, User user, Article article)
         {
             var authors = new List<UserOwnArticlesLinking>();
 
             foreach (string author in Authors)
             {
                 if (string.IsNullOrEmpty(author)) continue;
+                // is author already exist in dest cellection
                 if (authors.Any(a => a.NameString == author || a.UserId == author)) continue;
 
                 if (author.Length == addressConfig.UserAddressSize)
@@ -113,7 +116,8 @@ namespace BusinessLayer.Models
                             IsCreator = false,
                             IsRegisteredUser = true,
                             NameString = addressUser.FullName,
-                            UserId = addressUser.Id
+                            UserId = addressUser.Id,
+                            ArticleId = article.Id
                         });
                         continue;
                     }
@@ -125,7 +129,8 @@ namespace BusinessLayer.Models
                     IsCreator = false,
                     IsRegisteredUser = false,
                     NameString = author,
-                    UserId = user.Id
+                    UserId = user.Id,
+                    ArticleId = article.Id
                 });
             }
 

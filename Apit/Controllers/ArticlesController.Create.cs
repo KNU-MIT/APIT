@@ -64,12 +64,14 @@ namespace Apit.Controllers
             var dateNow = DateTime.Now;
             
             
-            var authorsList = model.GenerateAuthorsLinking(_dataManager, _config.Content.UniqueAddress, user);
+            var authorsList = model.GenerateAuthorsLinking(
+                _dataManager, _config.Content.UniqueAddress, user, null);
             authorsList.Add(new UserOwnArticlesLinking
                 {
                     Id = Guid.NewGuid(),
                     IsCreator = true,
                     IsRegisteredUser = true,
+                    NameString = user.FullName,
                     UserId = user.Id
                 }
             );
@@ -115,7 +117,7 @@ namespace Apit.Controllers
                 UniqueAddress = uniqueAddress,
 
                 Title = model.Title,
-                ShortDescription = model.ShortDescription,
+                ShortDescription = model.ShortDescription.Trim(),
                 Status = ArticleStatus.Uploaded,
                 KeyWords = model.KeyWords,
 

@@ -61,15 +61,7 @@ namespace Apit.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var article = _dataManager.Articles.GetByUniqueAddressAsDbObject(x);
-            if (article == null)
-            {
-                ViewData["ErrorTitle"] = 404;
-                ViewData["ErrorMessage"] = "Стаття не знайдена, або її не існує :(";
-                return View("error");
-            }
-
-            returnUrl ??= "/articles/list";
+            returnUrl ??= "/articles?x=" + x;
             var user = await _userManager.GetUserAsync(User);
             bool isAdmin = await _userManager.IsInRoleAsync(user, RoleNames.ADMIN);
 
@@ -80,7 +72,19 @@ namespace Apit.Controllers
                 return View(model);
             }
 
+            var article = _dataManager.Articles.GetByUniqueAddressAsDbObject(x);
+            if (article == null)
+            {
+                ViewData["ErrorTitle"] = 404;
+                ViewData["ErrorMessage"] = "Стаття не знайдена, або її не існує :(";
+                return View("error");
+            }
+
+            var articleAuthorsList = _dataManager.Articles.GetLinkedUsers(article.Id).ToList();
+
+
             bool hasChanges = false;
+
 
             // Set new article topic
             if (!string.IsNullOrWhiteSpace(model.TopicId))
@@ -88,10 +92,11 @@ namespace Apit.Controllers
                 var topic = _dataManager.Conferences.Current.Topics
                     .FirstOrDefault(a => a.Id.ToString() == model.TopicId);
 
-                if (topic != null)
+                if (topic != null && topic.Id != article.TopicId)
                 {
                     article.TopicId = topic.Id;
                     hasChanges = true;
+                    // Console.WriteLine("New Topic: " + article.TopicId);
                 }
             }
             else
@@ -103,6 +108,7 @@ namespace Apit.Controllers
             {
                 article.Title = model.Title;
                 hasChanges = true;
+                // Console.WriteLine("New Title: " + article.Title);
             }
 
             // Set new article key words
@@ -110,14 +116,17 @@ namespace Apit.Controllers
             {
                 article.KeyWords = model.KeyWords;
                 hasChanges = true;
+                // Console.WriteLine("New KeyWords: " + article.KeyWords);
             }
 
             // Set new article short description
+            model.ShortDescription = model.ShortDescription.Trim();
             if (!string.IsNullOrEmpty(model.ShortDescription) &&
                 model.ShortDescription != article.ShortDescription)
             {
                 article.ShortDescription = model.ShortDescription;
                 hasChanges = true;
+                // Console.WriteLine("New ShortDescription: " + article.ShortDescription);
             }
 
             // Set new article document file
@@ -127,24 +136,44 @@ namespace Apit.Controllers
             if (errorMessage == null)
             {
                 _logger.LogInformation($"{user.FullName} changed file {uniqueAddress}.{extension}");
+                article.HtmlFilePath = uniqueAddress + ".htm";
+                article.DocxFilePath = uniqueAddress + extension;
+
                 hasChanges = true;
+                Console.WriteLine("New DocxFilePath: " + article.DocxFilePath);
             }
-            else ModelState.AddModelError(nameof(model.ArticleFile), errorMessage);
+            else
+            {
+                ModelState.AddModelError(nameof(model.ArticleFile), errorMessage);
+                _logger.LogError(errorMessage);
+            }
 
 
             // Set new article authors
-            var oldAuthorsInDb = article.Authors.Where(aa =>
-                !model.Authors.Contains(aa.NameString) && !aa.IsCreator);
+            var oldAuthorsInDbList = articleAuthorsList.Where(aa =>
+                !model.Authors.Contains(aa.NameString) && !aa.IsCreator).ToList();
 
-            model.Authors = model.Authors.Where(ma => article.Authors
-                    .FirstOrDefault(aa =>
-                        aa.NameString != null && ma == aa.NameString) == null)
-                .ToArray();
+            model.Authors = model.Authors.Where(ma => ma != null && articleAuthorsList
+                .FirstOrDefault(aa => ma == aa.NameString) == null).ToArray();
 
-            var newInModelList = model.GenerateAuthorsLinking(_dataManager, _config.Content.UniqueAddress, user);
-            foreach (var newAuthor in newInModelList) article.Authors.Add(newAuthor);
+            var newInModelList = model.GenerateAuthorsLinking(
+                _dataManager, _config.Content.UniqueAddress, user, article);
 
-            _dataManager.Articles.DeleteLinkedUser(oldAuthorsInDb);
+            if (newInModelList.Count > 0)
+            {
+                _dataManager.Articles.CreateLinkedUsers(newInModelList);
+                hasChanges = true;
+                // Console.WriteLine("New CreateLinkedUsers: " + string.Join(", ",
+                // newInModelList.Select(a => a.NameString)));
+            }
+
+            if (oldAuthorsInDbList.Count > 0)
+            {
+                _dataManager.Articles.DeleteLinkedUsers(oldAuthorsInDbList);
+                hasChanges = true;
+                // Console.WriteLine("New DeleteLinkedUser: " + string.Join(", ",
+                // oldAuthorsInDbList.Select(a => a.NameString)));
+            }
 
 
             // Update database content
@@ -154,7 +183,11 @@ namespace Apit.Controllers
                                  article.Status == ArticleStatus.PublishedEdited
                     ? ArticleStatus.PublishedEdited
                     : ArticleStatus.UploadedEdited;
-                _dataManager.Articles.SaveChanges();
+                // Console.WriteLine("New Status: " + article.Status);
+                article.DateLastModified = DateTime.Now;
+
+                _dataManager.Articles.Update(article);
+                _logger.LogInformation($"Article {article.UniqueAddress} edited via user {user.FullName}");
             }
 
             return LocalRedirect(returnUrl);
@@ -166,18 +199,27 @@ namespace Apit.Controllers
         /// </summary>
         /// <param name="x">Unique article route address</param>
         /// <param name="returnUrl">Route to redirect after processing request</param>
-        [Authorize]
+        [Authorize, HttpPost]
         public async Task<IActionResult> Delete(string x, string returnUrl = null)
         {
             try
             {
-                var article = _dataManager.Articles.GetByUniqueAddress(x);
+                var article = _dataManager.Articles.GetByUniqueAddressAsDbObject(x);
+
+                if (article == null)
+                {
+                    ViewData["ErrorTitle"] = 404;
+                    ViewData["ErrorMessage"] = "Статтю не знайдено, або її не існує";
+                    return View("error");
+                }
+
+                var authors = _dataManager.Articles.GetByUniqueAddress(x).AuthorUsers;
                 var user = await _userManager.GetUserAsync(User);
 
                 bool isAdmin = await _userManager.IsInRoleAsync(user, RoleNames.ADMIN);
-                if (article.IsAuthor(user) || isAdmin)
+                if (Article.IsAuthor(user, authors) || isAdmin)
                 {
-                    _dataManager.Articles.Delete(article.Id);
+                    _dataManager.Articles.Delete(article);
                     return LocalRedirect(returnUrl ?? "/");
                 }
 
