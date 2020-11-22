@@ -78,12 +78,13 @@ namespace Apit.Controllers
 
             foreach (string author in model.Authors)
             {
+                if (string.IsNullOrWhiteSpace(author)) continue;
                 if (authorsList.Any(a => a.NameString == author || a.UserId == author)) continue;
 
                 if (author.Length == _config.Content.UniqueAddress.UserAddressSize)
                 {
                     var addressUser = _dataManager.Users.GetByUniqueAddress(author);
-                    if (addressUser != null)
+                    if (addressUser != null && addressUser != user)
                     {
                         authorsList.Add(new UserOwnArticlesLinking
                         {

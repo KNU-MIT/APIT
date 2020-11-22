@@ -125,8 +125,7 @@ namespace BusinessLayer.Repositories
                 Authors = authors.Select(a => a.NameString).ToArray(),
                 AuthorUsers = authors.Where(a => a.IsCreator).Select(a =>
                     _ctx.Users.FirstOrDefault(u => u.Id == a.UserId)),
-                NonLinkedAuthors = authors.Where(a =>
-                    !string.IsNullOrEmpty(a.NameString)).Select(a => a.NameString),
+                NonLinkedAuthors = authors.Where(a => !a.IsRegisteredUser).Select(a => a.NameString),
 
                 DocFileAddress = article.DocxFilePath,
                 HTMLContent = await DataUtil.LoadHtmlFile(article.HtmlFilePath,

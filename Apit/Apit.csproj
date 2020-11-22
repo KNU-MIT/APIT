@@ -136,6 +136,8 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+    <Content Remove="wwwroot\img\articles\933714d6.htm\image2.png" />
+    <Content Remove="wwwroot\img\articles\731daf87.htm\image2.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -150,6 +152,8 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\css" />
+    <Folder Include="wwwroot\img\articles\731daf87.htm" />
+    <Folder Include="wwwroot\img\articles\933714d6.htm" />
   </ItemGroup>
 
 </Project>

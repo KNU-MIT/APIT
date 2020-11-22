@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using BusinessLayer.DataServices;
 using BusinessLayer.Models;
 using DatabaseLayer;
 using DatabaseLayer.Entities;
@@ -135,12 +136,12 @@ namespace Apit.Controllers
 
             if (errorMessage == null)
             {
-                _logger.LogInformation($"{user.FullName} changed file {uniqueAddress}.{extension}");
-                article.HtmlFilePath = uniqueAddress + ".htm";
+                _logger.LogInformation($"File {uniqueAddress}{extension} changed via {user.FullName}");
+                article.HtmlFilePath = uniqueAddress + Extension.Htm;
                 article.DocxFilePath = uniqueAddress + extension;
 
                 hasChanges = true;
-                Console.WriteLine("New DocxFilePath: " + article.DocxFilePath);
+                // Console.WriteLine("New DocxFilePath: " + article.DocxFilePath);
             }
             else
             {
@@ -187,7 +188,7 @@ namespace Apit.Controllers
                 article.DateLastModified = DateTime.Now;
 
                 _dataManager.Articles.Update(article);
-                _logger.LogInformation($"Article {article.UniqueAddress} edited via user {user.FullName}");
+                _logger.LogDebug($"Article {article.UniqueAddress} edited via user {user.FullName}");
 
                 article.Options = new Article.DisplayOptions
                 {

@@ -102,7 +102,7 @@ namespace BusinessLayer.Models
             foreach (string author in Authors)
             {
                 if (string.IsNullOrEmpty(author)) continue;
-                // is author already exist in dest cellection
+                // is author already exist in dest collection
                 if (authors.Any(a => a.NameString == author || a.UserId == author)) continue;
 
                 if (author.Length == addressConfig.UserAddressSize)
@@ -110,15 +110,24 @@ namespace BusinessLayer.Models
                     var addressUser = dataManager.Users.GetByUniqueAddress(author);
                     if (addressUser != null)
                     {
-                        authors.Add(new UserOwnArticlesLinking
-                        {
-                            Id = Guid.NewGuid(),
-                            IsCreator = false,
-                            IsRegisteredUser = true,
-                            NameString = addressUser.FullName,
-                            UserId = addressUser.Id,
-                            ArticleId = article.Id
-                        });
+                        authors.Add(article == null
+                            ? new UserOwnArticlesLinking
+                            {
+                                Id = Guid.NewGuid(),
+                                IsCreator = false,
+                                IsRegisteredUser = false,
+                                NameString = author,
+                                UserId = user.Id
+                            }
+                            : new UserOwnArticlesLinking
+                            {
+                                Id = Guid.NewGuid(),
+                                IsCreator = false,
+                                IsRegisteredUser = false,
+                                NameString = author,
+                                UserId = user.Id,
+                                ArticleId = article.Id // article NOT null
+                            });
                         continue;
                     }
                 }
