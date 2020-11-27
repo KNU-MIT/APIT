@@ -33,6 +33,7 @@ namespace BusinessLayer.Repositories
 
         public ConferenceViewModel Current => ConvertToViewModel(GetCurrentAsDbModel());
         public Conference GetCurrentAsDbModel() => _ctx.Conferences.FirstOrDefault(a => a.IsActual);
+
         public void Update(ConferenceViewModel model)
         {
             throw new NotImplementedException();
@@ -117,7 +118,7 @@ namespace BusinessLayer.Repositories
             _ctx.Entry(entity).State = EntityState.Deleted;
             SaveChanges();
         }
-        
+
         // TODO: do something with this unusable implementation...
         public void Delete(NewConferenceViewModel entity)
         {
@@ -131,6 +132,10 @@ namespace BusinessLayer.Repositories
 
             var dates = GetConfDates(conf).ToArray();
 
+            var participants = GetConfParticipants(conf).ToList();
+            foreach (var participant in participants)
+                participant.User = _users.GetById(participant.UserId);
+
             return new ConferenceViewModel
             {
                 IsActual = conf.IsActual,
@@ -141,7 +146,7 @@ namespace BusinessLayer.Repositories
                 Description = conf.Description,
 
                 Topics = GetConfTopics(conf),
-                Participants = GetConfParticipants(conf),
+                Participants = participants,
                 Articles = GetConfArticles(conf),
                 Images = GetConfImages(conf),
                 Dates = dates,

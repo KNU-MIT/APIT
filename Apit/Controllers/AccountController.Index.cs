@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using Apit.Service;
 using BusinessLayer;
@@ -68,8 +69,7 @@ namespace Apit.Controllers
 
             return str.ToString();
         }
-        
-        
+
 
         [Authorize]
         public async Task<IActionResult> Index(string x)
@@ -91,32 +91,43 @@ namespace Apit.Controllers
         }
 
 
-        [Authorize(Roles = RoleNames.ADMIN)]
-        public async Task<IActionResult> SetManager(string x, string newState) // TODO: ???
+        [HttpPost]
+        public async Task<IActionResult> SetManager(string x, string newState)
         {
-            var user = _dataManager.Users.GetByUniqueAddress(x);
-            if (user == null)
+            var targetUser = _dataManager.Users.GetByUniqueAddress(x);
+            if (targetUser == null)
             {
                 ViewData["ErrorTitle"] = 404;
                 ViewData["ErrorMessage"] = "На превеликий жаль, такої людини серед нас немає :(";
                 return View("error");
             }
 
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null || !await _userManager.IsInRoleAsync(user, RoleNames.ADMIN))
+            {
+                ViewData["ErrorTitle"] = 403;
+                ViewData["ErrorMessage"] = "У вас немає доступу до цієї опції.";
+                return View("error");
+            }
+
             var result = newState == "manager"
-                ? await _userManager.AddToRoleAsync(user, RoleNames.MANAGER)
-                : await _userManager.RemoveFromRoleAsync(user, RoleNames.MANAGER);
+                ? await _userManager.AddToRoleAsync(targetUser, RoleNames.MANAGER)
+                : await _userManager.RemoveFromRoleAsync(targetUser, RoleNames.MANAGER);
+
+            if (result.Succeeded)
+            {
+                _logger.LogInformation($"User {targetUser} role changed to {newState}");
+                return RedirectToAction("index", "account", new {x});
+            }
 
             ViewData["ErrorTitle"] = 403;
             ViewData["ErrorMessage"] = "Щось пішло не так...";
-
-            return result.Succeeded
-                ? RedirectToAction("index", "account", new {x})
-                : (IActionResult) ViewBag("error");
+            return View("error");
         }
 
 
         [Authorize, HttpPost]
-        public async Task<IActionResult> Edit(EditUserViewModel model)
+        public async Task<IActionResult> Edit(User model)
         {
             // TODO: check why this commented code block not works
             // if (!ModelState.IsValid)
@@ -167,6 +178,15 @@ namespace Apit.Controllers
             if (user.AcademicTitle != model.AcademicTitle)
                 user.AcademicTitle = model.AcademicTitle;
 
+
+            model.MailboxIndex = model.MailboxIndex.Trim();
+            if (!string.IsNullOrWhiteSpace(model.MailboxIndex))
+                user.MailboxIndex = model.MailboxIndex;
+
+            model.PhoneNumber = model.PhoneNumber.Trim();
+            if (!string.IsNullOrWhiteSpace(model.PhoneNumber))
+                user.PhoneNumber = model.PhoneNumber;
+
             _dataManager.Users.SaveChanges();
 
             _logger.LogInformation($"User {user.ProfileAddress} has changed his data");
@@ -181,6 +201,8 @@ namespace Apit.Controllers
         public async Task<IActionResult> SendConfirm(string returnUrl)
         {
             var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("index", "home");
+
             string confirmationToken = _userManager.GenerateEmailConfirmationTokenAsync(user).Result;
 
             string confirmationLink = Url.Action

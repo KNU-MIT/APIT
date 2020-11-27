@@ -91,11 +91,10 @@ namespace Apit.Controllers
                     }, protocol: HttpContext.Request.Scheme);
 
                     _mailService.SendConfirmationEmail(user.Email, confirmationLink);
-
-
-                    await _signInManager.SignInAsync(user, false);
-                    _logger.LogInformation($"User {user.ProfileAddress} has successfully registered");
                 }
+
+                await _signInManager.SignInAsync(user, false);
+                _logger.LogInformation($"User {user.ProfileAddress} has successfully registered");
 
                 // Send confirmation email before redirect via return url 
                 return RedirectToAction("SendConfirm", "account", new {returnUrl = model.ReturnUrl});

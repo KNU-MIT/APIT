@@ -11,7 +11,7 @@ namespace BusinessLayer.Interfaces
         IAddressedData<ConferenceViewModel>
     {
         ConferenceViewModel Current { get; }
-        
+
         Conference GetCurrentAsDbModel();
         void Update(ConferenceViewModel model);
 

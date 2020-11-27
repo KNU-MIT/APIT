@@ -112,7 +112,7 @@ namespace Apit.Controllers
         public IActionResult Edit()
         {
             // TODO: to do it... 
-            
+
             ViewData["ErrorTitle"] = 501;
             ViewData["ErrorMessage"] = "У процесі реалізації";
             return View("error");
@@ -128,6 +128,33 @@ namespace Apit.Controllers
             return RedirectToAction("index", "account");
         }
 
+
+        public IActionResult Statistics(string x)
+        {
+            var conference = x == null
+                ? _dataManager.Conferences.Current
+                : _dataManager.Conferences.GetByUniqueAddress(x);
+            
+            return View(conference);
+        }
+
+        public JsonResult GetParticipantsData(string conf, string field)
+        {
+            _logger.LogInformation("Attempt to get participants data detected");
+            var conference = _dataManager.Conferences.GetByUniqueAddress(conf);
+            if (conference == null) return new JsonResult(null);
+            var users = conference.Participants.Select(u => _dataManager.Users.GetById(u.UserId));
+
+            return field.ToLower() switch
+            {
+                "email" => new JsonResult(users.Select(u => u.Email)),
+                "name" => new JsonResult(users.Select(u => u.FullName)),
+                "address" => new JsonResult(users.Select(u => u.ProfileAddress)),
+                _ => new JsonResult(null)
+            };
+        }
+
+        // =============================================================== //
 
         private class DateDescPair
         {

@@ -1,0 +1,114 @@
+﻿@model ConferenceViewModel
+
+@{
+    ViewData["Title"] = "Статистика по конференції";
+}
+
+
+<style>
+    html, body {
+        overflow-x: scroll !important;
+    }
+
+    table, tr, td, th {
+        border-collapse: collapse;
+        border: #808080 1px solid;
+        margin-right: 40px;
+    }
+    
+    th {
+        padding: 12px 15px;
+        text-align: center;
+    }
+    
+    td {
+        padding: 7px 15px;
+    }
+    
+    .archive h3 {
+        font-size: 24px;
+        font-weight: bold;
+        margin: 25px;
+    }
+    
+    .one-line {
+        white-space: nowrap;
+    }
+</style>
+
+<section class="archive">
+    <div class="container">
+        <div class="archive__inner">
+
+            <h3 class="title__alert">Статистика конференції</h3>
+
+            @*     @if (Model.IsActual) *@
+            @*     { *@
+            @*         <a asp-area="" asp-action="" asp-controller="conference"></a> *@
+            @*     } *@
+
+            @*             <h3>Теми (@Model.Topics.Count())</h3> *@
+            @*             <ul> *@
+            @*                 @foreach (var topic in Model.Topics) *@
+            @*                 { *@
+            @*                     <li>@topic.Name</li> *@
+            @*                 } *@
+            @*             </ul> *@
+
+            <div style="width: 100%; height: 25px;"></div>
+
+            <h3>Учасники (@Model.Participants.Count)</h3>
+            <table>
+                <tr>
+                    <th>#</th>
+                    <th>П.І.Б.</th>
+                    <th>Пошта</th>
+                    <th>Форма участі</th>
+                    <th>Місце навчання/роботи</th>
+                    <th>Академічна посада</th>
+                    <th>Науковий ступінь</th>
+                    <th>Поштовий індекс</th>
+                    <th>Номер телефону</th>
+                </tr>
+
+                @for (int i = 0; i < Model.Participants.Count; i++)
+                {
+                    <tr>
+                        <td>@i</td>
+                        <td class="one-line">
+
+                            <a style="color: #BE0000; text-decoration: underline;" asp-action="index"
+                               asp-controller="account" asp-route-x="@Model.Participants[i].User.ProfileAddress">
+                                @Model.Participants[i].User.FullName
+                            </a>
+                        </td>
+                        <td>@Model.Participants[i].User.Email</td>
+                        <td>
+                            @(EnumParser<ParticipationForm>.GetDisplayValue(Model.Participants[i].ParticipationForm))
+                            @if (await userManager.IsInRoleAsync(Model.Participants[i].User, RoleNames.MANAGER))
+                            {
+                                <span> (менеджер)</span>
+                            }
+                        </td>
+                        <td>@Model.Participants[i].User.WorkingFor</td>
+                        <td>
+                            @if (Model.Participants[i].User.AcademicTitle != AcademicTitle.Other)
+                            {
+                                @(EnumParser<AcademicTitle>.GetDisplayValue(Model.Participants[i].User.AcademicTitle))
+                            }
+                        </td>
+                        <td>
+                            @if (Model.Participants[i].User.ScienceDegree != ScienceDegree.Other)
+                            {
+                                @(EnumParser<ScienceDegree>.GetDisplayValue(Model.Participants[i].User.ScienceDegree))
+                            }
+                        </td>
+                        <td>@Model.Participants[i].User.MailboxIndex</td>
+                        <td class="one-line">@Model.Participants[i].User.PhoneNumber</td>
+                    </tr>
+                }
+            </table>
+
+        </div>
+    </div>
+</section>

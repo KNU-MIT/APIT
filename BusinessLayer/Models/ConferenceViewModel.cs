@@ -20,7 +20,7 @@ namespace BusinessLayer.Models
         public string ShortDescription { get; set; }
         public string Description { get; set; }
 
-        public IEnumerable<ConferenceParticipant> Participants { get; set; }
+        public IList<ConferenceParticipant> Participants { get; set; }
         public IEnumerable<ArticleViewModel> Articles { get; set; }
         public IEnumerable<ConferenceImage> Images { get; set; }
         public IEnumerable<Topic> Topics { get; set; }
