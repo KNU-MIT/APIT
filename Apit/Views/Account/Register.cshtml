@@ -64,6 +64,8 @@
                 </div>
 
                 <div class="form__blck form__blck--mb" style="padding-left: 20px; padding-right: 20px;">
+                    <span class="form__span">@Html.Raw(Model.PasswordRules)</span>
+                    <br>
                     <span class="form__span">Реєструючись Ви авторматично погоджуєтеся з нашими</span>
                     <a class="form__link" target="_blank" asp-action="privacy" asp-controller="home">політиками конфіденційності інформації</a>
                     <span class="form__span">та вважається, що Ви ознайомлені з</span>
@@ -72,7 +74,7 @@
 
                 @* --------------- *@
 
-                <div class="form__buttons">
+                <div class="form__buttons" style="margin-bottom: 100px;">
                     <a class="signin__button" href="@(Model.ReturnUrl ?? "/")">
                         Назад
                     </a>

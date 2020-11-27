@@ -34,12 +34,13 @@ namespace Apit
         public void ConfigureServices(IServiceCollection services)
         {
             // Set configuration singleton from appsettings.json file
-            var projConfig = new ProjectConfig();
-            Configuration.Bind("Project", projConfig);
-            services.AddSingleton(projConfig);
+            var PROJECT = new ProjectConfig();
+            Configuration.Bind("Project", PROJECT);
+            services.AddSingleton(PROJECT);
 
             var SECURITY = new SecurityConfig();
             Configuration.Bind("Security", SECURITY);
+            services.AddSingleton(SECURITY);
 
             services.AddTransient<MailService>();
 

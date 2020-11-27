@@ -33,12 +33,10 @@ namespace BusinessLayer.Models
         public string[] Topics { get; set; }
 
 
-        [Required(ErrorMessage = MSG.OnRequired)]
+        [Required(ErrorMessage = "Вкажіть як мінімум 1 подію та опис до неї (не забувайте про кнопку \"Додати\")")]
         public DateTime?[] EventDates { get; set; }
 
-
-        [Required(ErrorMessage = MSG.OnRequired)]
-        public string[] EventDescriptions { get; set; }
+        [Required] public string[] EventDescriptions { get; set; }
 
 
         public ICollection<ConferenceDate> Events { get; set; }

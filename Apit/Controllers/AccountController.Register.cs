@@ -15,12 +15,18 @@ namespace Apit.Controllers
         public IActionResult Register(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View(new RegisterViewModel {ReturnUrl = returnUrl});
+            return View(new RegisterViewModel
+            {
+                ReturnUrl = returnUrl,
+                PasswordRules = _passwordRules
+            });
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            model.PasswordRules = _passwordRules;
             if (!ModelState.IsValid) return View(model);
 
             if (!string.IsNullOrWhiteSpace(model.MailboxIndex)
@@ -68,28 +74,36 @@ namespace Apit.Controllers
                 }
 
 
-                string confirmationToken = _userManager.GenerateEmailConfirmationTokenAsync(user).Result;
-
-                string confirmationLink = Url.Action
-                ("ConfirmEmail", "account", new
+                if (_security.User.AutoConfirmEmail)
                 {
-                    id = user.Id,
-                    token = confirmationToken
-                }, protocol: HttpContext.Request.Scheme);
+                    user.EmailConfirmed = true;
+                    _dataManager.Users.SaveChanges();
+                }
+                else
+                {
+                    string confirmationToken = _userManager.GenerateEmailConfirmationTokenAsync(user).Result;
 
-                _mailService.SendConfirmationEmail(user.Email, confirmationLink);
+                    string confirmationLink = Url.Action
+                    ("ConfirmEmail", "account", new
+                    {
+                        id = user.Id,
+                        token = confirmationToken
+                    }, protocol: HttpContext.Request.Scheme);
+
+                    _mailService.SendConfirmationEmail(user.Email, confirmationLink);
 
 
-                await _signInManager.SignInAsync(user, false);
-                _logger.LogInformation($"User {user.ProfileAddress} has successfully registered");
+                    await _signInManager.SignInAsync(user, false);
+                    _logger.LogInformation($"User {user.ProfileAddress} has successfully registered");
+                }
 
                 // Send confirmation email before redirect via return url 
                 return RedirectToAction("SendConfirm", "account", new {returnUrl = model.ReturnUrl});
             }
 
             // if something goes wrong
-
-            ModelState.AddModelError(model.Email, "Користувач з такою поштою, скоріш за все, вже існує");
+            ModelState.AddModelError(model.Email,
+                "Пароль не відповідає крітеріям або користувач з такою поштою вже існує");
             foreach (var error in result.Errors)
                 ModelState.AddModelError(string.Empty, error.Description);
 

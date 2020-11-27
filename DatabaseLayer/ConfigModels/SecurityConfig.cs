@@ -31,6 +31,7 @@
 
         public class UserConfig
         {
+            public bool AutoConfirmEmail { get; set; }
             public string CookieName { get; set; }
             public int ExpireTimeSpanMinutes { get; set; }
 

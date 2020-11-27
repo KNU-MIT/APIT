@@ -45,5 +45,7 @@ namespace BusinessLayer.Models
 
         [Compare("Password", ErrorMessage = "Введіть пароль та підтвердіть його")]
         public string PasswordConfirm { get; set; }
+
+        public string PasswordRules { get; set; }
     }
 }

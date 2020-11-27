@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text;
+using System.Threading.Tasks;
 using Apit.Service;
 using BusinessLayer;
 using DatabaseLayer.ConfigModels;
@@ -21,19 +22,54 @@ namespace Apit.Controllers
         private readonly DataManager _dataManager;
         private readonly MailService _mailService;
         private readonly ProjectConfig _config;
+        private readonly SecurityConfig _security;
+
+        private readonly string _passwordRules;
 
 
         public AccountController(ILogger<AccountController> logger, SignInManager<User> signInManager,
-            UserManager<User> userManager, DataManager dataManager, MailService mailService, ProjectConfig config)
+            UserManager<User> userManager, DataManager dataManager, MailService mailService,
+            ProjectConfig projectConfig, SecurityConfig securityConfig)
         {
             _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
             _dataManager = dataManager;
             _mailService = mailService;
-            _config = config;
+            _config = projectConfig;
+            _security = securityConfig;
+
+            _passwordRules = GeneratePasswordRules();
         }
 
+        private string GeneratePasswordRules()
+        {
+            var str = new StringBuilder();
+            var pass = _security.Password;
+
+            str.Append("<b>Пароль повинен відповідати наступним критеріям:</b><br>");
+
+            str.Append($"Мінімальна довжина: {pass.RequiredLength} символів<br>");
+            str.Append($"Унікальних символів: {pass.RequiredUniqueChars}<br>");
+
+            if (pass.RequireNonAlphanumeric)
+                str.Append("Як мінімум 1 спецсимвол (@#$%)<br>");
+
+            if (pass.RequireNonAlphanumeric)
+                str.Append("Як мінімум 1 цифра (1234)<br>");
+
+            if (pass.RequireLowercase && pass.RequireUppercase)
+                str.Append(
+                    "Як мінімум 1 символ латинського алфавіту у нижньому (abcd) і 1 у верхньому регістрі (ABCD)<br>");
+            else if (pass.RequireLowercase)
+                str.Append("Як мінімум 1 символ латинського алфавіту у нижньому регістрі (abcd)<br>");
+            else if (pass.RequireUppercase)
+                str.Append("Як мінімум 1 символ латинського алфавіту у верхньому регістрі (ABCD)<br>");
+
+            return str.ToString();
+        }
+        
+        
 
         [Authorize]
         public async Task<IActionResult> Index(string x)

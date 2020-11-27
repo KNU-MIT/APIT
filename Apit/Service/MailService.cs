@@ -48,7 +48,6 @@ namespace Apit.Service
 
                 MailSubjects = config.MailboxDefaults.MailSubjects ?? throw new NullReferenceException()
             };
-            int b = 5;
         }
 
 
