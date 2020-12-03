@@ -20,7 +20,7 @@ namespace BusinessLayer.Models
     public class NewArticleViewModel
     {
         private static readonly Regex keyWordsAvailableRegex =
-            new Regex(@"^[а-яА-Яa-zA-Z0-9- ,;`'іїєґ!]+$", RegexOptions.Compiled);
+            new Regex(@"^[а-яА-Яa-zA-Z0-9- ,;`'ІіЇїЄєҐґ!]+$", RegexOptions.Compiled);
 
         private static readonly Regex keyWordsSeparatorRegex =
             new Regex(@"[,;]+", RegexOptions.Compiled);
@@ -86,7 +86,7 @@ namespace BusinessLayer.Models
                             "сервісу. Якщо це не так, будь ласка, зверніться до адміністрації сайту\n" + err;
                     }
                 }
-                else errorMessage = "невірний формат файлу (доступно лише .doc і .docx)";
+                else errorMessage = "невірний формат файлу (доступно лише і .docx)";
             }
             else errorMessage = "будь ласка, прикрепіть файл з матеріалом";
 
